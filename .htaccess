@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Если файл или папка существует — отдать напрямую
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Иначе — всё кидаем в index.php для Yii
+RewriteRule . index.php

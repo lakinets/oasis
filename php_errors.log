@@ -1,0 +1,65 @@
+[19-Jul-2025 16:33:36 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 21
+[19-Jul-2025 16:45:42 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 21
+[19-Jul-2025 16:47:13 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 21
+[19-Jul-2025 16:47:17 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 21
+[19-Jul-2025 16:47:19 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 21
+[19-Jul-2025 16:54:48 Europe/Berlin] PHP Fatal error:  Cannot redeclare CWebApplication::runController() in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 46
+[19-Jul-2025 16:54:50 Europe/Berlin] PHP Fatal error:  Cannot redeclare CWebApplication::runController() in D:\XAMPP\htdocs\l2\framework\web\CWebApplication.php on line 46
+[20-Jul-2025 14:05:09 Europe/Berlin] PHP Fatal error:  Cannot redeclare CWebApplication::runController() in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 46
+[20-Jul-2025 14:09:21 Europe/Berlin] PHP Fatal error:  Cannot redeclare CWebApplication::runController() in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 46
+[20-Jul-2025 14:11:50 Europe/Berlin] PHP Fatal error:  Cannot redeclare CWebApplication::runController() in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 46
+[20-Jul-2025 15:32:45 Europe/Berlin] PHP Fatal error:  Class CWebApplication contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (CApplication::processRequest) in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 3
+[20-Jul-2025 15:34:16 Europe/Berlin] PHP Fatal error:  Declaration of CWebApplication::processRequest() must be compatible with CApplication::processRequest(): void in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 8
+[20-Jul-2025 15:39:01 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 30
+[20-Jul-2025 15:42:04 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 30
+[20-Jul-2025 15:42:07 Europe/Berlin] PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 262144 bytes) in D:\XAMPP\htdocs\framework\web\CWebApplication.php on line 30
+[20-Jul-2025 15:47:26 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 15:47:26 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 15:58:52 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 15:58:52 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:45 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:45 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:46 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:46 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:47 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[20-Jul-2025 20:47:47 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:03 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:03 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:04 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:04 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:05 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:06 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 00:12:06 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 15:27:05 Europe/Berlin] PHP Warning:  require_once(D:\XAMPP\htdocs/framework/yii.php): Failed to open stream: No such file or directory in D:\XAMPP\htdocs\index-debug.php on line 9
+[21-Jul-2025 15:27:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\XAMPP\htdocs/framework/yii.php' (include_path='D:\XAMPP\php\PEAR') in D:\XAMPP\htdocs\index-debug.php:9
+Stack trace:
+#0 {main}
+  thrown in D:\XAMPP\htdocs\index-debug.php on line 9

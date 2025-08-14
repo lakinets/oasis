@@ -1,0 +1,22 @@
+Выводится через main \themes\ваша_тема\views\layouts
+Статус сервера
+ <?= \app\widgets\ServerStatus\ServerStatusWidget::widget() ?>
+
+Топ ПК
+<?= \app\widgets\TopPk\TopPkWidget::widget() ?>
+
+Топ ПВП
+<?= \app\widgets\TopPvp\TopPvpWidget::widget() ?>
+
+Выводит текст на главную с таблицы pages
+<div class="container">
+    <div class="news-block">
+        <?= $content ?> <!-- Добавьте эту строку -->
+    </div>
+</div>
+
+
+-----------------------------------
+Создай:
+/web/uploads/gallery/
+и дайте права 775.

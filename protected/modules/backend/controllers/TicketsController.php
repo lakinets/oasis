@@ -2,19 +2,18 @@
 namespace app\modules\backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 use app\modules\backend\models\Tickets;
 use app\modules\backend\models\TicketsSearch;
 use app\modules\backend\models\TicketsAnswers;
 use app\modules\backend\models\TicketsCategories;
 use app\modules\backend\models\Gs;
 
-class TicketsController extends Controller
+class TicketsController extends BackendController
 {
-    /** {@inheritdoc} */
     public function behaviors()
     {
         return [
@@ -27,7 +26,8 @@ class TicketsController extends Controller
         ];
     }
 
-    /* ---------- 1. Список тикетов ---------- */
+    /************  TICKETS  ************/
+
     public function actionIndex()
     {
         $searchModel  = new TicketsSearch();
@@ -41,7 +41,6 @@ class TicketsController extends Controller
         ]);
     }
 
-    /* ---------- 2. Создание тикета ---------- */
     public function actionCreate()
     {
         $model       = new Tickets();
@@ -53,18 +52,19 @@ class TicketsController extends Controller
         if (
             Yii::$app->request->isPost &&
             $model->load(Yii::$app->request->post()) &&
-            $answerModel->load(Yii::$app->request->post()) &&
-            $model->validate() && $answerModel->validate()
+            $answerModel->load(Yii::$app->request->post())
         ) {
-            $model->user_id = Yii::$app->user->id;
-            $model->save(false);
+            $model->user_id    = Yii::$app->user->id;
+            $model->status     = Tickets::STATUS_OPEN;
+            $model->created_at = date('Y-m-d H:i:s');
+            $model->updated_at = date('Y-m-d H:i:s');
 
-            $answerModel->ticket_id = $model->id;
-            $answerModel->user_id   = Yii::$app->user->id;
-            $answerModel->save(false);
+            $answerModel->user_id = Yii::$app->user->id;
 
-            Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет создан'));
-            return $this->redirect(['edit', 'id' => $model->id]);
+            if ($model->save(false) && $answerModel->save(false)) {
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет создан'));
+                return $this->redirect(['edit', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -75,12 +75,9 @@ class TicketsController extends Controller
         ]);
     }
 
-    /* ---------- 3. Просмотр / редактирование тикета + ответы ---------- */
     public function actionEdit($id)
     {
         $ticket = $this->findTicket($id);
-
-        // Сбросить флаг "новое сообщение для админа"
         if ($ticket->new_message_for_admin == Tickets::STATUS_NEW_MESSAGE_ON) {
             $ticket->updateAttributes(['new_message_for_admin' => Tickets::STATUS_NEW_MESSAGE_OFF]);
         }
@@ -94,8 +91,11 @@ class TicketsController extends Controller
         ]);
 
         $answerModel = new TicketsAnswers(['ticket_id' => $id]);
-
-        if (Yii::$app->request->isPost && $answerModel->load(Yii::$app->request->post()) && $answerModel->save()) {
+        if (
+            Yii::$app->request->isPost &&
+            $answerModel->load(Yii::$app->request->post()) &&
+            $answerModel->save()
+        ) {
             $ticket->updateAttributes(['new_message_for_user' => Tickets::STATUS_NEW_MESSAGE_ON]);
             Yii::$app->session->setFlash('success', Yii::t('backend', 'Ответ добавлен'));
             return $this->redirect(['edit', 'id' => $id]);
@@ -108,7 +108,28 @@ class TicketsController extends Controller
         ]);
     }
 
-    /* ---------- 4. Управление категориями ---------- */
+    public function actionToggle($id)
+    {
+        $model = $this->findTicket($id);
+        $model->updateAttributes([
+            'status' => $model->status === Tickets::STATUS_OPEN
+                ? Tickets::STATUS_CLOSED
+                : Tickets::STATUS_OPEN
+        ]);
+
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Статус изменён'));
+        return $this->redirect(['index']);
+    }
+
+    public function actionDelete($id)
+    {
+        $this->findTicket($id)->delete();
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет удалён'));
+        return $this->redirect(['index']);
+    }
+
+    /************  CATEGORIES  ************/
+
     public function actionCategories()
     {
         $dataProvider = new ActiveDataProvider([
@@ -121,13 +142,10 @@ class TicketsController extends Controller
 
     public function actionCategoryForm($id = null)
     {
-        $model = $id ? $this->findCategory($id) : new TicketsCategories();
+        $model = $id ? TicketsCategories::findOne($id) : new TicketsCategories();
 
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash(
-                'success',
-                $id ? Yii::t('backend', 'Изменения сохранены') : Yii::t('backend', 'Категория добавлена')
-            );
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Категория сохранена'));
             return $this->redirect(['categories']);
         }
 
@@ -136,35 +154,30 @@ class TicketsController extends Controller
 
     public function actionCategoryAllow($id)
     {
-        $model = $this->findCategory($id);
-        $model->updateAttributes(['status' => $model->status ? 0 : 1]);
-
-        Yii::$app->session->setFlash('success', Yii::t('backend', 'Статус изменён'));
+        $model = TicketsCategories::findOne($id);
+        if ($model) {
+            $model->status = $model->status == TicketsCategories::STATUS_ON
+                ? TicketsCategories::STATUS_OFF
+                : TicketsCategories::STATUS_ON;
+            $model->save(false);
+        }
         return $this->redirect(['categories']);
     }
 
     public function actionCategoryDel($id)
     {
-        $this->findCategory($id)->delete();
+        TicketsCategories::findOne($id)?->delete();
         Yii::$app->session->setFlash('success', Yii::t('backend', 'Категория удалена'));
         return $this->redirect(['categories']);
     }
 
-    /* ---------- 5. Служебные методы ---------- */
+    /************  SERVICE  ************/
+
     private function findTicket($id)
     {
         $model = Tickets::find()->with(['category', 'user'])->where(['id' => $id])->one();
-        if ($model === null) {
+        if (!$model) {
             throw new NotFoundHttpException(Yii::t('backend', 'Тикет не найден'));
-        }
-        return $model;
-    }
-
-    private function findCategory($id)
-    {
-        $model = TicketsCategories::findOne($id);
-        if ($model === null) {
-            throw new NotFoundHttpException(Yii::t('backend', 'Категория не найдена'));
         }
         return $model;
     }

@@ -4,8 +4,6 @@
  * @var app\modules\backend\models\Tickets $ticket
  * @var app\modules\backend\models\TicketsAnswers $answerModel
  * @var yii\data\ActiveDataProvider $answersDataProvider
- * @var array $gsList
- * @var array $categories
  */
 
 use yii\helpers\Html;
@@ -49,7 +47,7 @@ $this->params['breadcrumbs'] = [
     </tr>
     <tr>
         <td><?= Yii::t('backend', 'Приоритет') ?></td>
-        <td><?= $ticket->getPriority() ?></td>
+        <td><?= $ticket->getPriorityLabel() ?></td>
     </tr>
     <tr>
         <td><?= Yii::t('backend', 'Дата инцидента') ?></td>

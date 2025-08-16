@@ -1,15 +1,13 @@
 <?php
-
 namespace app\modules\backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
 use app\modules\backend\models\Users;
 use app\modules\backend\models\EditUserForm;
 
-class UsersController extends Controller
+class UsersController extends BackendController 
 {
     /**
      * Список пользователей.

@@ -36,9 +36,7 @@
 
   "autoload": {
     "psr-4": {
-      "app\\": "protected/",
-      "app\\widgets\\": "protected/widgets/",
-      "app\\modules\\backend\\": "protected/modules/backend/"
+      "app\\": "protected/"
     }
   },
 

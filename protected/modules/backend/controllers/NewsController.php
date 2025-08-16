@@ -2,7 +2,6 @@
 namespace app\modules\backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
@@ -10,7 +9,7 @@ use yii\data\ActiveDataProvider;
 use app\modules\backend\models\News;
 use app\modules\backend\models\NewsSearch;
 
-class NewsController extends Controller
+class NewsController extends BackendController
 {
     public function behaviors()
     {

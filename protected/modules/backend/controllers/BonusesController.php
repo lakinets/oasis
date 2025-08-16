@@ -10,7 +10,7 @@ use app\modules\backend\models\BonusesSearch;
 use app\modules\backend\models\BonusCodes;
 use app\modules\backend\models\BonusCodesSearch;
 
-class BonusesController extends Controller
+class BonusesController extends \app\modules\backend\controllers\BackendController
 {
     /* ------------ Бонусы ------------ */
 

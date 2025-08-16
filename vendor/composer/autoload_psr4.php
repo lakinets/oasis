@@ -14,8 +14,6 @@ return array(
     'yii\\bootstrap5\\' => array($vendorDir . '/yiisoft/yii2-bootstrap5/src'),
     'yii\\' => array($vendorDir . '/yiisoft/yii2'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
-    'app\\widgets\\' => array($baseDir . '/protected/widgets'),
-    'app\\modules\\backend\\' => array($baseDir . '/protected/modules/backend'),
     'app\\' => array($baseDir . '/protected'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),

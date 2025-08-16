@@ -2,13 +2,12 @@
 namespace app\modules\backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\modules\backend\models\LoginServers;
 use app\modules\backend\models\LoginServersSearch;
 
-class LoginServersController extends Controller
+class LoginServersController extends BackendController
 {
     public function behaviors()
     {

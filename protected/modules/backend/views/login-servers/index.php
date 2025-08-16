@@ -1,9 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
-use yii\helpers\ArrayHelper;
 use app\modules\backend\models\LoginServers;
 
 /** @var yii\web\View $this */
@@ -13,18 +11,16 @@ use app\modules\backend\models\LoginServers;
 $this->title = Yii::t('backend', 'Логин сервера');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="login-servers-index">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('backend', 'Создать'), ['form'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+            '<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('backend', 'Создать'),
+            ['form'],
+            ['class' => 'btn btn-success']
+        ) ?>
     </p>
-
-    <?php $form = ActiveForm::begin([
-        'method' => 'get',
-        'action' => Url::to(['index']),
-    ]); ?>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -36,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th width="5%"><?= Yii::t('backend', 'Порт') ?></th>
                     <th width="15%"><?= Yii::t('backend', 'Версия') ?></th>
                     <th width="10%"><?= Yii::t('backend', 'Статус') ?></th>
-                    <th width="20%"><?= Yii::t('backend', 'Действия') ?></th>
+                    <th width="25%" class="text-center"><?= Yii::t('backend', 'Действия') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -52,20 +48,44 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= $row->getStatusLabel() ?>
                             </span>
                         </td>
-                        <td>
-                            <div class="btn-group btn-group-xs">
-                                <?= Html::a('Изменить', ['/backend/login-servers/form', 'id' => $row->id], ['class' => 'btn btn-primary btn-xs']) ?>
-                                <?= Html::a('Удалить', ['/backend/login-servers/del', 'id' => $row->id], ['class' => 'btn btn-danger btn-xs']) ?>
-                                <?= Html::a('Вкл/Откл', ['/backend/login-servers/allow', 'id' => $row->id], ['class' => 'btn btn-default btn-xs']) ?>
-                            </div>
+                        <td class="text-center">
+                            <?= Html::a(
+                                '<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('backend', 'Ред.'),
+                                ['/backend/login-servers/form', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs btn-warning',
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;'
+                                ]
+                            ) ?>
+
+                            <?= Html::a(
+                                '<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('backend', 'Удал.'),
+                                ['/backend/login-servers/del', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs btn-danger',
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
+                                    'data-confirm' => Yii::t('backend', 'Удалить безвозвратно?'),
+                                    'data-method'  => 'post',
+                                ]
+                            ) ?>
+
+                            <?= Html::a(
+                                '<i class="glyphicon ' . ($row->isStatusOn() ? 'glyphicon-eye-close' : 'glyphicon-eye-open') . '"></i> ' .
+                                ($row->isStatusOn() ? Yii::t('backend', 'Выкл.') : Yii::t('backend', 'Вкл.')),
+                                ['/backend/login-servers/allow', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs ' . ($row->isStatusOn() ? 'btn-danger' : 'btn-success'),
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
+                                    'data-confirm' => Yii::t('backend', 'Изменить статус?'),
+                                    'data-method'  => 'post',
+                                ]
+                            ) ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
-
-    <?php ActiveForm::end(); ?>
 
     <?= LinkPager::widget(['pagination' => $dataProvider->pagination]) ?>
 </div>

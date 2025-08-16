@@ -16,7 +16,7 @@ class Config extends ActiveRecord
     {
         return [
             [['param'], 'required'],
-            [['param', 'value', 'label', 'options'], 'string'],
+            [['param', 'value', 'label', 'options', 'method', 'field_type'], 'string'],
             [['param'], 'unique'],
         ];
     }
@@ -31,110 +31,174 @@ class Config extends ActiveRecord
         ];
     }
 
-    /* ---------- универсальные списки ---------- */
+    /* ===================== Select options helpers ===================== */
 
-    public function getListOptions(): array
+    protected function yesNoOptions(): array
     {
-        if (!empty($this->method) && method_exists($this, $this->method)) {
-            return $this->{$this->method}();
-        }
-        return $this->field_type === 'dropDownList'
-            ? [0 => 'Нет', 1 => 'Да']
-            : [];
+        return ['0' => 'Нет', '1' => 'Да'];
     }
-
-    /* ---------- конкретные списки ---------- */
 
     public function getThemes(): array
     {
-        $root = Yii::getAlias('@themesRoot');
+        $candidates = [];
+        $t1 = Yii::getAlias('@themesRoot', false);
+        if ($t1) $candidates[] = $t1;
+        $t2 = Yii::getAlias('@app/themes', false);
+        if ($t2) $candidates[] = $t2;
+
         $items = [];
-        if (is_dir($root)) {
-            foreach (scandir($root) as $dir) {
-                if ($dir !== '.' && $dir !== '..' && is_dir($root . DIRECTORY_SEPARATOR . $dir)) {
-                    $items[$dir] = $dir;
+        foreach ($candidates as $root) {
+            if (is_dir($root)) {
+                foreach (scandir($root) as $dir) {
+                    if ($dir === '.' || $dir === '..') continue;
+                    if (is_dir($root . DIRECTORY_SEPARATOR . $dir)) {
+                        $items[$dir] = $dir;
+                    }
                 }
+                if (!empty($items)) break;
             }
         }
         return empty($items) ? ['ghtweb' => 'ghtweb'] : $items;
     }
 
-    public function getIndexPageTypes(): array
+    protected function indexPageTypes(): array
     {
         return ['page' => 'Страница', 'news' => 'Новости'];
     }
 
-    public function getPages(): array
+    protected function pagesList(): array
     {
-        return ['main' => 'main']; // при необходимости подключить реальные страницы
+        return ['main' => 'main'];
     }
 
-    public function getForumTypes(): array
+    protected function forumTypes(): array
     {
         return ['phpbb' => 'phpBB', 'ipb' => 'IP.Board', 'smf' => 'SMF'];
     }
 
-    public function getGs(): array
+    protected function gameServers(): array
     {
-        return [1 => 'Server 1']; // при необходимости подключить реальные серверы
+        return [1 => 'Server 1'];
     }
 
-    /* ---------- генерация поля ---------- */
+    protected function dateFormatOptions(): array
+    {
+        return [
+            'Y-m-d H:i'     => '2025-08-11 21:30',
+            'd.m.Y H:i'     => '11.08.2025 21:30',
+            'd/m/Y H:i'     => '11/08/2025 21:30',
+            'd.m.Y'         => '11.08.2025',
+            'd/m/Y'         => '11/08/2025',
+            'j F Y, H:i'    => '11 августа 2025, 21:30',
+            'D, M j, Y H:i' => 'Sun, Aug 11, 2025 21:30',
+            'c'             => '2025-08-11T21:30:00+03:00',
+        ];
+    }
+
+    /* ===================== Поле формы для одного параметра ===================== */
 
     public function getField(): string
     {
-        $inputName = "Config[{$this->id}][value]";
-        $value     = (string)$this->value;
+        $name  = "Config[{$this->id}][value]";
+        $value = (string)$this->value;
 
-        /* 1. темы */
-        if ($this->param === 'theme') {
-            return Html::dropDownList($inputName, $value, $this->getThemes(), ['class' => 'form-control']);
-        }
+        switch ($this->param) {
 
-        /* 2. формат даты новостей */
-        if ($this->param === 'date_format' || $this->param === 'news.date_format') {
-            return Html::dropDownList($inputName, $value, [
-                'Y-m-d H:i'     => '2025-08-11 21:30',
-                'd.m.Y H:i'     => '11.08.2025 21:30',
-                'd/m/Y H:i'     => '11/08/2025 21:30',
-                'd.m.Y'         => '11.08.2025',
-                'd/m/Y'         => '11/08/2025',
-                'j F Y, H:i'    => '11 августа 2025, 21:30',
-                'D, M j, Y H:i' => 'Sun, Aug 11, 2025 21:30',
-                'c'             => '2025-08-11T21:30:00+03:00',
-            ], ['class' => 'form-control']);
-        }
+            /* ---- Основное ---- */
+            case 'theme':
+                return Html::dropDownList($name, $value, $this->getThemes(), ['class' => 'form-select']);
 
-        /* 3. формат даты RSS */
-        if ($this->param === 'index.rss.date_format') {
-            return Html::dropDownList($inputName, $value, [
-                'Y-m-d H:i'     => '2025-08-11 21:30',
-                'd.m.Y H:i'     => '11.08.2025 21:30',
-                'd/m/Y H:i'     => '11/08/2025 21:30',
-                'd.m.Y'         => '11.08.2025',
-                'd/m/Y'         => '11/08/2025',
-                'j F Y, H:i'    => '11 августа 2025, 21:30',
-                'D, M j, Y H:i' => 'Sun, Aug 11, 2025 21:30',
-                'c'             => '2025-08-11T21:30:00+03:00',
-            ], ['class' => 'form-control']);
-        }
+            case 'index.type':
+                return Html::dropDownList($name, $value, $this->indexPageTypes(), ['class' => 'form-select']);
 
-        /* 4. выпадающие списки по field_type */
-        if ($this->field_type === 'dropDownList') {
-            return Html::dropDownList($inputName, $value, $this->getListOptions(), ['class' => 'form-control']);
-        }
+            case 'index.page':
+                return Html::dropDownList($name, $value, $this->pagesList(), ['class' => 'form-select']);
 
-        /* 5. остальные типы */
-        switch ($this->field_type) {
-            case 'textarea':
-                return Html::textarea($inputName, $value, ['class' => 'form-control', 'rows' => 4]);
+            case 'index.rss.date_format':
+            case 'forum_threads.date_format':
+                return Html::dropDownList($name, $value, $this->dateFormatOptions(), ['class' => 'form-select']);
 
-            case 'passwordField':
-                return Html::passwordInput($inputName, $value, ['class' => 'form-control']);
+            /* ---- Да/Нет ---- */
+            case 'register.captcha.allow':
+            case 'register.allow':
+            case 'register.confirm_email':
+            case 'register.multiemail':
+            case 'mail.smtp':
+            case 'forgotten_password.captcha.allow':
+            case 'forum_threads.allow':
+            case 'robokassa.test':
+            case 'waytopay.sms.allow':
+            case 'server_status.allow':
+            case 'top.pk.allow':
+            case 'top.pvp.allow':
+            case 'login.captcha.allow':
+            case 'referral_program.allow':
+            case 'prefixes.allow':
+                return Html::dropDownList($name, $value, $this->yesNoOptions(), ['class' => 'form-select']);
 
-            case 'textField':
+            /* ---- Серверы ---- */
+            case 'top.pk.gs_id':
+            case 'top.pvp.gs_id':
+                return Html::dropDownList($name, $value, $this->gameServers(), ['class' => 'form-select']);
+
+            /* ---- Форум ---- */
+            case 'forum_threads.type':
+                return Html::dropDownList($name, $value, $this->forumTypes(), ['class' => 'form-select']);
+
+            /* ---- Числовые ---- */
+            case 'index.rss.cache':
+            case 'index.rss.limit':
+            case 'register.confirm_email.time':
+            case 'captcha.min_length':
+            case 'captcha.max_length':
+            case 'captcha.width':
+            case 'captcha.height':
+            case 'forum_threads.cache':
+            case 'forum_threads.limit':
+            case 'forum_threads.db_port':
+            case 'robokassa.password':
+            case 'robokassa.password2':
+            case 'unitpay.secret_key':
+            case 'unitpay.project_id':
+            case 'unitpay.public_key':
+            case 'waytopay.project_id':
+            case 'waytopay.key':
+            case 'waytopay.sms.key':
+            case 'waytopay.sms.project_id':
+            case 'server_status.cache':
+            case 'top.pk.limit':
+            case 'top.pk.cache':
+            case 'top.pvp.limit':
+            case 'top.pvp.cache':
+            case 'login.count_failed_attempts_for_blocked':
+            case 'login.failed_attempts_blocked_time':
+            case 'referral_program.percent':
+            case 'cabinet.referals.limit':
+            case 'cabinet.transaction_history.limit':
+            case 'cabinet.auth_logs_limit':
+            case 'cabinet.user_messages_limit':
+            case 'cabinet.tickets.limit':
+            case 'cabinet.bonuses.limit':
+            case 'cabinet.tickets.answers.limit':
+            case 'shop.item.limit':
+            case 'gallery.limit':
+            case 'gallery.big.width':
+            case 'gallery.big.height':
+            case 'gallery.small.width':
+            case 'gallery.small.height':
+            case 'prefixes.length':
+            case 'prefixes.count_for_list':
+            case 'prefixes.count_for_list':
+                return Html::textInput($name, $value, ['class' => 'form-control', 'inputmode' => 'numeric']);
+
+            /* ---- Пароли ---- */
+            case 'mail.smtp_password':
+            case 'forum_threads.db_pass':
+                return Html::passwordInput($name, $value, ['class' => 'form-control']);
+
+            /* ---- Обычный текст ---- */
             default:
-                return Html::textInput($inputName, $value, ['class' => 'form-control']);
+                return Html::textInput($name, $value, ['class' => 'form-control']);
         }
     }
 }

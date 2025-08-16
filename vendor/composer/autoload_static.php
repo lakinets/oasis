@@ -41,8 +41,6 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         ),
         'a' => 
         array (
-            'app\\widgets\\' => 12,
-            'app\\modules\\backend\\' => 20,
             'app\\' => 4,
         ),
         'S' => 
@@ -139,14 +137,6 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         'cebe\\markdown\\' => 
         array (
             0 => __DIR__ . '/..' . '/cebe/markdown',
-        ),
-        'app\\widgets\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/protected/widgets',
-        ),
-        'app\\modules\\backend\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/protected/modules/backend',
         ),
         'app\\' => 
         array (

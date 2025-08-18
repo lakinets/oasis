@@ -2,9 +2,9 @@
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-// Значение темы берём только из базы
+// --- Тема из БД ---
 $themeName = null;
-$dbConfig = [];
+$dbConfig  = [];
 
 if (file_exists(__DIR__ . '/db.php')) {
     $dbConfig = require __DIR__ . '/db.php';
@@ -14,7 +14,7 @@ if (file_exists(__DIR__ . '/db.php')) {
 
         $stmt = $pdo->prepare('SELECT value FROM config WHERE param = :param LIMIT 1');
         $stmt->execute([':param' => 'theme']);
-        $themeName = $stmt->fetchColumn();
+        $themeName = $stmt->fetchColumn() ?: null;
     } catch (\Throwable $e) {
         if (YII_DEBUG) {
             error_log('Theme load error: ' . $e->getMessage());
@@ -22,19 +22,16 @@ if (file_exists(__DIR__ . '/db.php')) {
     }
 }
 
-// Fallback
 $themeName = $themeName ?: 'ghtweb';
 
-// Алиасы
+// --- Алиасы ---
 \Yii::setAlias('@themesRoot', dirname(__DIR__, 2) . '/themes');
 \Yii::setAlias('@themes', "@themesRoot/{$themeName}");
 \Yii::setAlias('@modules', dirname(__DIR__, 2) . '/modules');
-\Yii::setAlias('@app', dirname(__DIR__));
 
-// --- Добавляем алиас для backend-модуля (ВАЖНО) ---
+// Алиасы для backend
 \Yii::setAlias('@backend', dirname(__DIR__) . '/modules/backend');
 \Yii::setAlias('@backendAssets', '@backend/assets');
-// ----------------------------------------------------
 
 if (!is_dir(\Yii::getAlias('@themes'))) {
     $themeName = 'ghtweb';
@@ -58,7 +55,6 @@ return [
     'bootstrap' => ['log'],
 
     'components' => [
-
         'request' => [
             'cookieValidationKey' => 'Qt0TUb2LME-ES9T5l5srJJh2n9QAbbwT',
             'enableCsrfValidation' => true,
@@ -66,10 +62,10 @@ return [
 
         'view' => [
             'theme' => [
-                'class'  => \yii\base\Theme::class,
+                'class'    => \yii\base\Theme::class,
                 'basePath' => '@themes',
                 'baseUrl'  => "@web/themes/{$themeName}",
-                'pathMap' => [
+                'pathMap'  => [
                     '@app/views'   => '@themes/views',
                     '@app/widgets' => '@themes/widgets',
                 ],
@@ -88,14 +84,22 @@ return [
                 'backend/users/<action:\w+>' => 'backend/users/<action>',
                 'backend/users/<action:\w+>/<id:\d+>' => 'backend/users/<action>/<id>',
 
-                'install' => 'install/index',
+                'install'  => 'install/index',
                 'register' => 'register/index',
-                'stats' => 'stats/default/index',
-                'news' => 'news/index',
-                'gallery' => 'gallery/index',
-                'login' => 'login/index',
-                'cabinet' => 'cabinet/index',
+                'stats'    => 'stats/default/index',
+                'news'     => 'news/index',
+                'gallery'  => 'gallery/index',
+
+                'login'  => 'login/index',
+                'logout' => 'login/logout',
+
+                'cabinet' => 'cabinet/default/index',
+                'cabinet/<controller:\w+>' => 'cabinet/<controller>/index',
+                'cabinet/<controller:\w+>/<action:\w+>' => 'cabinet/<controller>/<action>',
+                'cabinet/<controller:\w+>/<action:\w+>/<id:\d+>' => 'cabinet/<controller>/<action>/<id>',
+
                 'page/<page:\w+>' => 'site/view',
+
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
@@ -105,9 +109,9 @@ return [
         ],
 
         'user' => [
-            'identityClass' => \app\modules\backend\models\Users::class,
+            'identityClass'   => \app\models\User::class,
             'enableAutoLogin' => true,
-            'loginUrl' => ['/backend/default/login'],
+            'loginUrl'        => ['/login/index'],
         ],
 
         'errorHandler' => [
@@ -126,7 +130,7 @@ return [
             'targets' => [
                 [
                     'class' => \yii\log\FileTarget::class,
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                 ],
             ],
         ],
@@ -167,9 +171,11 @@ return [
             'class' => \app\modules\backend\Module::class,
             'layout' => '@app/modules/backend/views/layouts/main',
         ],
+
         'cabinet' => [
-            'class' => \app\modules\cabinet\CabinetModule::class,
+            'class' => \app\modules\cabinet\Module::class,
         ],
+
         'register' => [
             'class' => \app\modules\register\RegisterModule::class,
         ],
@@ -184,9 +190,6 @@ return [
         ],
         'install' => [
             'class' => \app\modules\install\InstallModule::class,
-        ],
-        'login' => [
-            'class' => \app\modules\login\LoginModule::class,
         ],
         'forgottenPassword' => [
             'class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class,

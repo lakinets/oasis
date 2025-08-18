@@ -1,13 +1,23 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $gs app\modules\backend\models\Gs */
 /* @var $category app\modules\backend\models\ShopCategories */
 /* @var $pack app\modules\backend\models\ShopItemsPacks */
 /* @var $items app\modules\backend\models\ShopItems[] */
 ?>
-<h3><?= Html::encode($pack->title) ?></h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><?= Html::encode($pack->title) ?></h3>
+    <?= Html::a(
+        'Добавить предмет',
+        ['/backend/game-servers/shop-item-form', 'gs_id' => $gs->id, 'category_id' => $category->id, 'pack_id' => $pack->id],
+        ['class' => 'btn btn-success']
+    ) ?>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -23,13 +33,9 @@ use yii\helpers\Url;
             <tr>
                 <td>
                     <?php
-                    // Имя файла без расширения
                     $baseName = $info ? $info->icon : '';
-                    // Формируем путь с .jpg
                     $iconPath = '/images/items/' . ($baseName ? $baseName . '.jpg' : 'no-image.jpg');
-                    // Полный путь для проверки
                     $iconFull = Yii::getAlias('@webroot') . $iconPath;
-                    // Если файла нет — подставляем no-image
                     $src = is_file($iconFull) ? $iconPath : '/images/items/no-image.jpg';
                     ?>
                     <?= Html::img($src, [
@@ -43,12 +49,14 @@ use yii\helpers\Url;
                 <td><?= nl2br(Html::encode($info ? $info->description : $item->description)) ?></td>
                 <td><?= $item->cost ?> Web Adena</td>
                 <td>
-                    <button class="btn btn-success btn-sm buy-btn"
-                            data-item-id="<?= $item->id ?>"
-                            data-gs-id="<?= $gs->id ?>"
-                            data-player-id="<?= Yii::$app->user->id ?>">
-                        <?= Yii::t('backend', 'Купить') ?>
-                    </button>
+                    <?= Html::a(
+                        'Удалить',
+                        ['/backend/game-servers/shop-item-del', 'item_id' => $item->id],
+                        [
+                            'class' => 'btn btn-danger btn-sm',
+                            'data-confirm' => 'Точно удалить?',
+                        ]
+                    ) ?>
                 </td>
             </tr>
         <?php endforeach; ?>

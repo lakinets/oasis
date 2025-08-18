@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\backend\controllers;
 
 use Yii;
@@ -9,13 +10,16 @@ use app\modules\backend\models\LoginServersSearch;
 
 class LoginServersController extends BackendController
 {
+    /**
+     * Разрешаем GET и POST для удаления внутри админки
+     */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class'   => VerbFilter::class,
                 'actions' => [
-                    'del' => ['POST'],  // исправлено: actionDel - HTTP POST
+                    'del' => ['GET', 'POST'],
                 ],
             ],
         ];
@@ -36,26 +40,22 @@ class LoginServersController extends BackendController
     }
 
     /**
-     * Форма добавления/редактирования логин-сервера
-     * @param int|null $id
-     * @return string|\yii\web\Response
+     * Форма добавления/редактирования
      */
     public function actionForm($id = null)
     {
-        if ($id !== null) {
-            $model = $this->findModel($id);
-        } else {
-            $model = new LoginServers();
-        }
+        $model = $id ? $this->findModel($id) : new LoginServers();
 
-        // Получаем список версий из папки components/versions
         $versionsDir = Yii::getAlias('@app/modules/backend/components/versions');
-        $files = scandir($versionsDir);
-        $versions = [];
+        $versions    = [];
 
-        foreach ($files as $file) {
-            if (is_file($versionsDir . DIRECTORY_SEPARATOR . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $versions[pathinfo($file, PATHINFO_FILENAME)] = pathinfo($file, PATHINFO_FILENAME);
+        if (is_dir($versionsDir)) {
+            foreach (scandir($versionsDir) as $file) {
+                $path = $versionsDir . DIRECTORY_SEPARATOR . $file;
+                if (is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === 'php') {
+                    $key = pathinfo($file, PATHINFO_FILENAME);
+                    $versions[$key] = $key;
+                }
             }
         }
 
@@ -76,35 +76,39 @@ class LoginServersController extends BackendController
     }
 
     /**
-     * Включение/выключение логин-сервера
-     * @param int $id
-     * @return \yii\web\Response
+     * Переключение статуса
      */
     public function actionAllow($id)
     {
         $model = $this->findModel($id);
-        $model->status = $model->status == LoginServers::STATUS_ON ? LoginServers::STATUS_OFF : LoginServers::STATUS_ON;
+        $model->status = $model->status == LoginServers::STATUS_ON
+            ? LoginServers::STATUS_OFF
+            : LoginServers::STATUS_ON;
         $model->save(false);
+
+        Yii::$app->session->setFlash(
+            'success',
+            $model->status
+                ? Yii::t('backend', 'Сервер включён.')
+                : Yii::t('backend', 'Сервер выключен.')
+        );
         return $this->redirect(['index']);
     }
 
     /**
-     * Удаление логин-сервера
-     * @param int $id
-     * @return \yii\web\Response
+     * Удаление сервера (GET и POST)
      */
     public function actionDel($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
+
         Yii::$app->session->setFlash('success', Yii::t('backend', 'Сервер удалён.'));
         return $this->redirect(['index']);
     }
 
     /**
      * Поиск модели по ID
-     * @param int $id
-     * @return LoginServers
-     * @throws NotFoundHttpException
      */
     protected function findModel($id): LoginServers
     {

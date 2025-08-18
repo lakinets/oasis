@@ -2,101 +2,67 @@
 
 namespace app\models;
 
-use yii\base\BaseObject;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
-class User extends BaseObject implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
-    public function __construct($config = [])
+    public static function tableName()
     {
-        if (isset($config['id'])) {
-            $this->id = $config['id'];
-        }
-        if (isset($config['username'])) {
-            $this->username = $config['username'];
-        }
-        if (isset($config['password'])) {
-            $this->password = $config['password'];
-        }
-        if (isset($config['authKey'])) {
-            $this->authKey = $config['authKey'];
-        }
-        if (isset($config['accessToken'])) {
-            $this->accessToken = $config['accessToken'];
-        }
-        parent::__construct($config);
+        return 'users';
     }
 
     public static function findIdentity($id)
     {
-        foreach (self::$users as $user) {
-            if ($user['id'] === $id) {
-                return new static($user);
-            }
-        }
-        return null;
+        return static::findOne(['user_id' => $id]);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
         return null;
     }
 
-    public static function findByUsername($username)
+    public static function findByUsername($login)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-        return null;
+        return static::findOne(['login' => $login]);
     }
 
     public function getId()
     {
-        return $this->id;
+        return $this->user_id;
     }
 
     public function getAuthKey()
     {
-        return $this->authKey;
+        return $this->auth_hash;
     }
 
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return $this->auth_hash === $authKey;
     }
 
+    /**
+     * Проверяет пароль:
+     * - bcrypt (начинается с $2a$)
+     * - plain (roottest)
+     */
     public function validatePassword($password)
     {
+        // 1. bcrypt
+        if (strpos($this->password, '$2a$') === 0) {
+            return \Yii::$app->security->validatePassword($password, $this->password);
+        }
+
+        // 2. plain text (roottest)
         return $this->password === $password;
+    }
+
+    /**
+     * Устанавливает bcrypt-пароль
+     */
+    public function setPassword($password)
+    {
+        $this->password = \Yii::$app->security->generatePasswordHash($password);
     }
 }

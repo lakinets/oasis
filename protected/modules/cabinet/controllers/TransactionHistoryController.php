@@ -18,7 +18,7 @@ class TransactionHistoryController extends CabinetBaseController
             ],
         ]);
 
-        return $this->render('transaction-history/index', [
+        return $this->render('index', [ 
             'dataProvider' => $dataProvider,
         ]);
     }

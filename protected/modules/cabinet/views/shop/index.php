@@ -1,4 +1,7 @@
 <?php
+
+use yii\helpers\Html;
+
 $this->title = 'Магазин';
 ?>
 <h1>Категории магазина</h1>
@@ -9,7 +12,7 @@ $this->title = 'Магазин';
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><?= Html::encode($category->name) ?></h5>
-                    <a href="/cabinet/shop/category?category_link=<?= $category->link ?>" class="btn btn-primary">Перейти</a>
+                    <a href="/cabinet/shop/category?category_link=<?= Html::encode($category->link) ?>" class="btn btn-primary">Перейти</a>
                 </div>
             </div>
         </div>

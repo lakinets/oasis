@@ -1,184 +1,97 @@
 <?php
 
+namespace app\models;
+
+use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
+
 /**
- * This is the model class for table "{{transactions}}".
+ * Модель транзакций (таблица `transactions`)
  *
- * The followings are the available columns in table '{{transactions}}':
- * @property string $id
+ * @property int $id
  * @property string $payment_system
- * @property string $user_id
- * @property integer $sum
- * @property integer $count
- * @property integer $status
+ * @property int $user_id
+ * @property int $sum
+ * @property int $count
+ * @property int $status
  * @property string $params
- * @property integer $gs_id
- * @property string $updated_at
+ * @property int $gs_id
  * @property string $created_at
+ * @property string $updated_at
  *
- * The followings are the available model relations:
- * @property Users[] $users
- * @property Users $user
+ * @property User $user
  */
 class Transactions extends ActiveRecord
 {
-    // Status
-    const STATUS_SUCCESS    = 1;
-    const STATUS_FAILED     = 0;
+    const STATUS_SUCCESS = 1;
+    const STATUS_FAILED  = 0;
 
-
-    /**
-     * @return string the associated database table name
-     */
-    public function tableName()
+    public static function tableName()
     {
-        return '{{transactions}}';
+        return '{{%transactions}}';
     }
 
     public function rules()
     {
-        return array(
-            array('id, payment_system, sum, status, user_ip, course_payments', 'safe', 'on' => 'search'),
-        );
-    }
-
-    public function relations()
-    {
-        return array(
-            'users' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'user'  => array(self::HAS_ONE, 'Users', array('user_id' => 'user_id')),
-        );
+        return [
+            [['payment_system', 'user_id', 'sum', 'count', 'status', 'user_ip', 'created_at'], 'required'],
+            [['user_id', 'sum', 'count', 'status', 'gs_id'], 'integer'],
+            [['payment_system', 'user_ip'], 'string', 'max' => 255],
+            [['params'], 'string'],
+            [['created_at', 'updated_at'], 'safe'],
+        ];
     }
 
     public function attributeLabels()
     {
-        return array(
-            'id'                => 'ID',
-            'payment_system'    => Yii::t('backend', 'Платежная система'),
-            'user_id'           => Yii::t('backend', 'Юзер'),
-            'sum'               => Yii::t('backend', 'Кол-во'),
-            'count'             => Yii::t('backend', 'Кол-во игровой валюты'),
-            'status'            => Yii::t('backend', 'Статус'),
-            'user_ip'           => Yii::t('backend', 'IP'),
-            'created_at'        => Yii::t('backend', 'Дата создания'),
-            'updated_at'        => Yii::t('backend', 'Дата обновления'),
-        );
+        return [
+            'id'             => 'ID',
+            'payment_system' => 'Платежная система',
+            'user_id'        => 'Юзер',
+            'sum'            => 'Кол-во',
+            'count'          => 'Игровая валюта',
+            'status'         => 'Статус',
+            'user_ip'        => 'IP',
+            'created_at'     => 'Дата создания',
+            'updated_at'     => 'Дата обновления',
+        ];
     }
 
-    public function search()
+    public function getUser()
     {
-        $criteria = new CDbCriteria;
-
-        $criteria->compare('t.id', $this->id, true);
-        $criteria->compare('t.payment_system', $this->payment_system, true);
-        $criteria->compare('t.user_id', $this->user_id, true);
-        $criteria->compare('t.sum', $this->sum);
-        $criteria->compare('t.status', $this->status);
-        $criteria->compare('t.created_at', $this->created_at, true);
-
-        $criteria->with = array('user');
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 't.status DESC, t.created_at DESC'
-            ),
-            'pagination' => array(
-                'pageSize' => 20,
-                'pageVar' => 'page',
-            ),
-        ));
+        return $this->hasOne(\app\models\User::class, ['user_id' => 'user_id']);
     }
 
-    public function getStatusList()
+    public function getStatusLabel()
     {
-        return array(
-            self::STATUS_SUCCESS    => Yii::t('main', 'Оплачена'),
-            self::STATUS_FAILED     => Yii::t('main', 'Не оплачена'),
-        );
-    }
-
-    public function getStatus()
-    {
-        $data = $this->getStatusList();
-        return isset($data[$this->status]) ? $data[$this->status] : Yii::t('backend', '*Unknown*');
-    }
-
-    public function getType()
-    {
-        Yii::import('application.modules.deposit.extensions.Deposit.Deposit');
-
-        $data = Deposit::getAggregatorsList();
-        return isset($data[$this->payment_system]) ? $data[$this->payment_system] : '*Unknown*';
+        return [
+            self::STATUS_SUCCESS => 'Оплачена',
+            self::STATUS_FAILED  => 'Не оплачена',
+        ][$this->status] ?? 'Неизвестно';
     }
 
     public function getDate()
     {
-        return date('Y-m-d H:i', strtotime($this->created_at));
+        return \Yii::$app->formatter->asDatetime($this->created_at);
     }
 
-    /**
-     * Оплачена ли транзакция
-     *
-     * @return bool
-     */
     public function isPaid()
     {
         return $this->status == self::STATUS_SUCCESS;
     }
 
-    /**
-     * @return string
-     */
-    public function getUserId()
+    public function search()
     {
-        return $this->user_id;
-    }
+        $query = self::find()->with('user')
+            ->where(['user_id' => \Yii::$app->user->id])
+            ->orderBy(['status' => SORT_DESC, 'created_at' => SORT_DESC]);
 
-    /**
-     * @return int
-     */
-    public function getSum()
-    {
-        return $this->sum;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * @return int
-     */
-    public function getGsId()
-    {
-        return $this->gs_id;
-    }
-
-    /**
-     * @return Users[]
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
-     * @return Users
-     */
-    public function getUser()
-    {
-        return $this->user;
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => \Yii::$app->params['cabinet.transaction_history.limit'] ?? 20,
+                'pageVar' => 'page',
+            ],
+        ]);
     }
 }

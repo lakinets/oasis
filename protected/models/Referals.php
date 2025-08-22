@@ -1,61 +1,34 @@
 <?php
 
+namespace app\models;
+
+use yii\db\ActiveRecord;
+
 /**
- * This is the model class for table "{{referals}}".
+ * Модель рефералов (таблица `referals`)
  *
- * The followings are the available columns in table '{{referals}}':
- * @property string $referer
- * @property string $referal
+ * @property int $referer
+ * @property int $referal
  * @property string $created_at
- *
- * The followings are the available model relations:
- * @property Users $referalInfo
  */
 class Referals extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{referals}}';
-	}
+    public static function tableName()
+    {
+        return '{{%referals}}';
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('referer, referal, created_at', 'required'),
-			array('referer, referal', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('referer, referal, created_at', 'safe', 'on'=>'search'),
-		);
-	}
+    public function rules()
+    {
+        return [
+            [['referer', 'referal'], 'required'],
+            [['referer', 'referal'], 'integer'],
+            [['created_at'], 'safe'],
+        ];
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		return array(
-            'referalInfo' => array(self::HAS_ONE, 'Users', array('user_id' => 'referal')),
-		);
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'referer'       => 'ID кто пригласил',
-			'referal'       => 'ID кого пригласили',
-			'created_at'    => 'Created At',
-		);
-	}
+    public function getReferalInfo()
+    {
+        return $this->hasOne(\app\models\User::class, ['user_id' => 'referal']);
+    }
 }

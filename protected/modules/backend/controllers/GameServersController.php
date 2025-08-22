@@ -182,7 +182,7 @@ class GameServersController extends BackendController
 
     private function getVersionList(): array
     {
-        $path = Yii::getAlias('@app/../protected/modules/backend/components/versions');
+        $path = Yii::getAlias('@app/../protected/l2j');
         $files = glob($path . '/*.php');
         $versions = [];
         if (is_array($files)) {

@@ -46,7 +46,7 @@ class LoginServersController extends BackendController
     {
         $model = $id ? $this->findModel($id) : new LoginServers();
 
-        $versionsDir = Yii::getAlias('@app/modules/backend/components/versions');
+        $versionsDir = Yii::getAlias('@app/../protected/l2j');
         $versions    = [];
 
         if (is_dir($versionsDir)) {

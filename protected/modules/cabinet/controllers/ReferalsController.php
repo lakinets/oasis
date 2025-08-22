@@ -18,11 +18,13 @@ class ReferalsController extends CabinetBaseController
             ],
         ]);
 
-        return $this->render('referals/index', [
+        $count = \app\models\Referals::find()
+            ->where(['referer' => \Yii::$app->user->id])
+            ->count();
+
+        return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'countReferals' => \app\models\Referals::find()
-                ->where(['referer' => \Yii::$app->user->id])
-                ->count(),
+            'countReferals' => $count,
         ]);
     }
 }

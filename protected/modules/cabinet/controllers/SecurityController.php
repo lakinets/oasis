@@ -8,7 +8,9 @@ class SecurityController extends CabinetBaseController
 {
     public function actionIndex()
     {
-        $model = UserProfiles::findOne(['user_id' => \Yii::$app->user->id]) ?? new UserProfiles(['user_id' => \Yii::$app->user->id]);
+        $model = UserProfiles::findOne(['user_id' => \Yii::$app->user->id])
+            ?? new UserProfiles(['user_id' => \Yii::$app->user->id]);
+
         $model->setScenario('security');
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
@@ -16,6 +18,6 @@ class SecurityController extends CabinetBaseController
             return $this->refresh();
         }
 
-        return $this->render('security/index', ['model' => $model]);
+        return $this->render('index', ['model' => $model]);
     }
 }

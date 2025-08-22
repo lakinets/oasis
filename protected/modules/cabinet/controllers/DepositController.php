@@ -23,7 +23,7 @@ class DepositController extends CabinetBaseController
             return $this->redirect(['deposit/processed']);
         }
 
-        return $this->render('deposit/index', [
+        return $this->render('index', [
             'model' => $model,
         ]);
     }

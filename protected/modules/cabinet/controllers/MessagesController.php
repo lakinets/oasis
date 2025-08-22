@@ -4,6 +4,7 @@ namespace app\modules\cabinet\controllers;
 
 use app\modules\cabinet\models\UserMessages;
 use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
 
 class MessagesController extends CabinetBaseController
 {
@@ -18,7 +19,7 @@ class MessagesController extends CabinetBaseController
             ],
         ]);
 
-        return $this->render('messages/index', [
+        return $this->render('index', [ 
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -27,7 +28,7 @@ class MessagesController extends CabinetBaseController
     {
         $model = UserMessages::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id]);
         if (!$model) {
-            throw new \yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException('Сообщение не найдено.');
         }
 
         if ($model->read == 0) {
@@ -35,6 +36,6 @@ class MessagesController extends CabinetBaseController
             $model->save(false);
         }
 
-        return $this->render('messages/detail', ['model' => $model]);
+        return $this->render('detail', ['model' => $model]);   // ✅ убрал "messages/"
     }
 }

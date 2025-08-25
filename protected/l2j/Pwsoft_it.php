@@ -1,62 +1,67 @@
 <?php
-namespace app\modules\backend\components\versions;
+namespace app\l2j;
 
 use yii\db\Connection;
 use yii\db\Query;
 
-class PwsoftIt
+/**
+ * Pwsoft_it
+ * ---------------
+ * Универсальный драйвер для работы с БД сервера Pwsoft (Yii 2 / PHP 8.2)
+ * Всегда подключает кланы и возвращает все нужные поля.
+ */
+class Pwsoft_it
 {
     private Connection $db;
+    private string $dbName;
 
-    public function __construct(Connection $db)
+    /**
+     * Карта полей (для универсальности под ShopController)
+     */
+    protected array $fields = [
+        'characters' => [
+            'account_field' => 'account_name',
+            'name_field'    => 'char_name',
+            'id_field'      => 'obj_Id',
+        ],
+        'clans' => [
+            'id_field'      => 'clan_id',
+            'name_field'    => 'clan_name',
+        ],
+    ];
+
+    public function __construct(Connection $db, string $dbName = null)
     {
         $this->db = $db;
+        // если имя БД передано – добавляем префикс
+        $this->dbName = $dbName ? "{$dbName}." : '';
     }
 
-    // -----------------------------
-    // АККАУНТЫ
-    // -----------------------------
-
-    public function insertAccount(string $login, string $password, int $accessLevel = 0): bool
+    /* ===== ПОЛУЧЕНИЕ ПОЛЯ ПО КЛЮЧУ ===== */
+    public function getField(string $table, string $field): string
     {
-        return $this->db->createCommand()
-            ->insert('accounts', [
-                'login' => $login,
-                'password' => $password, // уже зашифровано
-                'access_level' => $accessLevel,
-            ])
-            ->execute() > 0;
+        return $this->fields[$table][$field] ?? $field;
     }
 
-    public function accounts(): Query
-    {
-        return (new Query())
-            ->select(['login', 'password', 'access_level', 'lastactive as last_active'])
-            ->from('accounts');
-    }
-
-    // -----------------------------
-    // ПЕРСОНАЖИ
-    // -----------------------------
-
-    public function characters(): Query
+    /* ===== ПЕРСОНАЖИ ===== */
+    public function charactersQuery(): Query
     {
         return (new Query())
             ->select([
                 'characters.account_name',
-                'characters.obj_Id as char_id',
+                'characters.obj_Id AS char_id',
                 'characters.char_name',
                 'characters.sex',
                 'characters.x', 'characters.y', 'characters.z',
                 'characters.karma',
                 'characters.pvpkills',
                 'characters.pkkills',
-                'characters.clanid as clan_id',
+                'characters.clanid AS clan_id',
                 'characters.title',
-                'characters.accesslevel as access_level',
+                'characters.accesslevel AS access_level',
                 'characters.online',
                 'characters.onlinetime',
-                'characters.race as base_class',
+                'characters.race AS base_class',
                 'characters.level',
                 'characters.exp',
                 'characters.sp',
@@ -66,126 +71,198 @@ class PwsoftIt
                 'clan_data.clan_name',
                 'clan_data.clan_level',
                 'clan_data.hasCastle',
-                'clan_data.crest_id as clan_crest',
+                'clan_data.crest_id AS clan_crest',
                 'clan_data.reputation_score',
             ])
-            ->from('characters')
-            ->leftJoin('clan_data', 'clan_data.clan_id = characters.clanid');
+            ->from($this->dbName . 'characters')
+            ->leftJoin(
+                $this->dbName . 'clan_data',
+                $this->dbName . 'clan_data.clan_id = ' . $this->dbName . 'characters.clanid'
+            );
     }
 
-    // -----------------------------
-    // КЛАНЫ
-    // -----------------------------
+    /* ===== КЛАНЫ ===== */
+    public function clansQuery(): Query
+    {
+        return (new Query())
+            ->select(['clan_data.*'])
+            ->from($this->dbName . 'clan_data')
+            ->leftJoin(
+                $this->dbName . 'characters',
+                $this->dbName . 'characters.obj_Id = ' . $this->dbName . 'clan_data.leader_id'
+            );
+    }
 
-    public function clans(): Query
+    /* ===== ПРЕДМЕТЫ ===== */
+    public function itemsQuery(): Query
     {
         return (new Query())
             ->select([
-                'clan_data.clan_id',
-                'clan_data.clan_name',
-                'clan_data.leader_id',
-                'clan_data.clan_level',
-                'clan_data.hasCastle',
-                'clan_data.crest_id as clan_crest',
-                'clan_data.reputation_score',
-                '(SELECT COUNT(*) FROM characters WHERE characters.clanid = clan_data.clan_id) as ccount',
-                'characters.account_name',
-                'characters.obj_Id as char_id',
-                'characters.char_name',
-                'characters.sex',
-                'characters.x', 'characters.y', 'characters.z',
-                'characters.karma', 'characters.pvpkills', 'characters.pkkills',
-                'characters.title', 'characters.accesslevel as access_level',
-                'characters.online', 'characters.onlinetime',
-                'characters.race as base_class', 'characters.level', 'characters.exp',
-                'characters.sp', 'characters.maxHp', 'characters.curHp',
-                'characters.maxCp', 'characters.curCp', 'characters.maxMp', 'characters.curMp',
-                'ally_name', 'ally_crest_id as ally_crest', 'ally_id',
+                'owner_id',
+                'object_id',
+                'item_id',
+                'count',
+                'enchant_level',
+                'loc',
+                'loc_data',
             ])
-            ->from('clan_data')
-            ->leftJoin('characters', 'characters.obj_Id = clan_data.leader_id');
+            ->from($this->dbName . 'items');
     }
 
-    // -----------------------------
-    // ПРЕДМЕТЫ
-    // -----------------------------
-
-    public function items(): Query
-    {
-        return (new Query())
-            ->select([
-                'owner_id', 'object_id', 'item_id',
-                'count', 'enchant_level', 'loc', 'loc_data',
-            ])
-            ->from('items');
-    }
-
-    public function insertItem(int $ownerId, int $itemId, int $count = 1, int $enchantLevel = 0): bool
-    {
-        $maxId = $this->db->createCommand('SELECT COALESCE(MAX(object_id), 0) + 1 FROM items')->queryScalar();
-
-        return $this->db->createCommand()
-            ->insert('items', [
-                'owner_id' => $ownerId,
-                'object_id' => $maxId,
-                'item_id' => $itemId,
-                'count' => $count,
-                'enchant_level' => $enchantLevel,
-                'loc' => 'INVENTORY',
-            ])
-            ->execute() > 0;
-    }
-
-    public function multiInsertItem(array $items): bool
-    {
-        if (empty($items)) return false;
-
-        $maxId = $this->db->createCommand('SELECT COALESCE(MAX(object_id), 0) + 1 FROM items')->queryScalar();
-        foreach ($items as &$item) {
-            $item['object_id'] = $maxId++;
-            $item['enchant_level'] = $item['enchant'] ?? 0;
-            $item['loc'] = 'INVENTORY';
-            unset($item['enchant']);
-        }
-
-        return $this->db->createCommand()
-            ->batchInsert('items', ['owner_id', 'object_id', 'item_id', 'count', 'enchant_level', 'loc'], $items)
-            ->execute() > 0;
-    }
-
-    // -----------------------------
-    // СТАТИСТИКА
-    // -----------------------------
-
+    /* ===== СТАТИСТИКА ===== */
     public function getCountAccounts(): int
     {
-        return (int)$this->db->createCommand('SELECT COUNT(*) FROM accounts')->queryScalar();
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'accounts'
+        )->queryScalar();
     }
 
     public function getCountCharacters(): int
     {
-        return (int)$this->db->createCommand('SELECT COUNT(*) FROM characters')->queryScalar();
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters'
+        )->queryScalar();
     }
 
     public function getCountOnlineCharacters(): int
     {
-        return (int)$this->db->createCommand('SELECT COUNT(*) FROM characters WHERE online = 1')->queryScalar();
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE online = 1'
+        )->queryScalar();
+    }
+
+    public function getCountClans(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'clan_data'
+        )->queryScalar();
+    }
+
+    public function getCountMen(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE sex = 0'
+        )->queryScalar();
+    }
+
+    public function getCountWomen(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE sex = 1'
+        )->queryScalar();
     }
 
     public function getTopPvp(int $limit = 20, int $offset = 0): array
     {
-        return $this->characters()
+        return (new Query())
+            ->from($this->dbName . 'characters')
             ->where(['>', 'pvpkills', 0])
             ->andWhere(['accesslevel' => 0])
             ->orderBy(['pvpkills' => SORT_DESC])
             ->limit($limit)
             ->offset($offset)
-            ->all();
+            ->all($this->db);
     }
 
     public function getTopPk(int $limit = 20, int $offset = 0): array
     {
-        return $this->characters()
+        return (new Query())
+            ->from($this->dbName . 'characters')
             ->where(['>', 'pkkills', 0])
             ->andWhere(['accesslevel' => 0])
-            ->orderBy(['pkkills' =>
+            ->orderBy(['pkkills' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTop(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['level' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTopRich(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->select([
+                'characters.obj_Id AS char_id',
+                'characters.char_name',
+                'COALESCE(SUM(items.count), 0) AS adena_count',
+            ])
+            ->from($this->dbName . 'characters')
+            ->leftJoin(
+                $this->dbName . 'items',
+                $this->dbName . 'items.owner_id = ' . $this->dbName . 'characters.obj_Id AND ' . $this->dbName . 'items.item_id = 57'
+            )
+            ->where([$this->dbName . 'characters.accesslevel' => 0])
+            ->groupBy($this->dbName . 'characters.obj_Id')
+            ->orderBy(['adena_count' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getOnline(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->where(['online' => 1])
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['level' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTopClans(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'clan_data')
+            ->orderBy(['reputation_score' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    /* ===== ЗАМКИ / ОСАДЫ ===== */
+    public function getCastles(): array
+    {
+        return (new Query())
+            ->select([
+                'castle.id',
+                'castle.name',
+                'castle.taxPercent AS taxPercent',
+                'castle.siegeDate AS siegeDate',
+                'clan_data.clan_id',
+                'clan_data.clan_name',
+                'clan_data.leader_id',
+                'clan_data.clan_level',
+                'clan_data.hasCastle',
+                'clan_data.crest_id AS clan_crest',
+                'clan_data.reputation_score',
+            ])
+            ->from($this->dbName . 'castle')
+            ->leftJoin(
+                $this->dbName . 'clan_data',
+                $this->dbName . 'clan_data.hasCastle = ' . $this->dbName . 'castle.id'
+            )
+            ->all($this->db);
+    }
+
+    /* ===== СЛУЖЕБНОЕ ===== */
+    public function getChronicle(): string
+    {
+        return 'it';
+    }
+
+    public function getServerName(): string
+    {
+        return static::class;
+    }
+}

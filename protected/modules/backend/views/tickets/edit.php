@@ -36,7 +36,7 @@ $this->params['breadcrumbs'] = [
         <td width="30%"><?= Yii::t('backend', 'Автор') ?></td>
         <td width="70%">
             <?= Html::a($ticket->user->login,
-                ['/backend/users/view', 'id' => $ticket->user->id],
+                ['/backend/users/view', 'user_id' => $ticket->user->user_id],
                 ['title' => Yii::t('backend', 'Перейти к просмотру пользователя'), 'target' => '_blank'])
             ?>
         </td>
@@ -80,7 +80,7 @@ $this->params['breadcrumbs'] = [
                 &nbsp;&nbsp;
                 <strong><?= Yii::t('backend', 'Автор') ?>:</strong>
                 <?= Html::a($answer->userInfo->login,
-                    ['/backend/users/view', 'id' => $answer->userInfo->id],
+                    ['/backend/users/view', 'user_id' => $answer->userInfo->user_id],
                     ['target' => '_blank'])
                 ?>
                 <span class="label label-info">(<?= $answer->userInfo->role ?>)</span>

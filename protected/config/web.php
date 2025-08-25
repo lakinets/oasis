@@ -2,9 +2,10 @@
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-// --- Тема из БД ---
+// --- Тема и конфиги серверов из БД ---
 $themeName = null;
 $dbConfig  = [];
+$servers   = [];
 
 if (file_exists(__DIR__ . '/db.php')) {
     $dbConfig = require __DIR__ . '/db.php';
@@ -12,12 +13,25 @@ if (file_exists(__DIR__ . '/db.php')) {
         $pdo = new \PDO($dbConfig['dsn'], $dbConfig['username'], $dbConfig['password']);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
+        // Загружаем тему
         $stmt = $pdo->prepare('SELECT value FROM config WHERE param = :param LIMIT 1');
         $stmt->execute([':param' => 'theme']);
         $themeName = $stmt->fetchColumn() ?: null;
+
+        // Загружаем конфиги серверов (если таблица есть)
+        try {
+            $serversStmt = $pdo->query('SELECT * FROM servers_config');
+            $servers = $serversStmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $inner) {
+            if (YII_DEBUG) {
+                error_log('Servers config table missing: ' . $inner->getMessage());
+            }
+            $servers = [];
+        }
+
     } catch (\Throwable $e) {
         if (YII_DEBUG) {
-            error_log('Theme load error: ' . $e->getMessage());
+            error_log('DB load error: ' . $e->getMessage());
         }
     }
 }
@@ -202,5 +216,10 @@ return [
         ],
     ],
 
-    'params' => require __DIR__ . '/params.php',
+    'params' => array_merge(
+        require __DIR__ . '/params.php',
+        [
+            'servers' => $servers,
+        ]
+    ),
 ];

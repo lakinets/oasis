@@ -17,8 +17,8 @@ class AuthHistoryController extends CabinetBaseController
                 'pageSize' => \Yii::$app->params['cabinet.auth_logs_limit'] ?? 20,
             ],
         ]);
-
-        return $this->render('auth-history/index', [
+        
+        return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
     }

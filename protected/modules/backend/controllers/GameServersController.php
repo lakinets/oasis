@@ -26,7 +26,8 @@ class GameServersController extends BackendController
                     'shop-category-form' => ['GET', 'POST'],
                     'shop-category-del'  => ['GET', 'POST'],
                     'shop-item-form'   => ['GET', 'POST'],
-                    'shop-item-del'    => ['GET', 'POST'],
+                    'shop-item-toggle' => ['GET'],
+                    'shop-item-del'    => ['GET'],
                 ],
             ],
             'access' => [
@@ -38,6 +39,8 @@ class GameServersController extends BackendController
         ];
     }
 
+    /* ---------- Главная ---------- */
+
     public function actionIndex()
     {
         $searchModel  = new GsSearch();
@@ -47,6 +50,8 @@ class GameServersController extends BackendController
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    /* ---------- Сервер ---------- */
 
     public function actionForm($gs_id = null)
     {
@@ -98,7 +103,7 @@ class GameServersController extends BackendController
         $gs = $this->findModel($gs_id);
         $category = $this->findCategory($category_id, $gs_id);
         $pack = $this->findPack($pack_id, $category_id);
-        $items = ShopItems::find()->where(['pack_id' => $pack_id, 'status' => 1])->orderBy(['sort' => SORT_ASC])->all();
+        $items = ShopItems::find()->where(['pack_id' => $pack_id])->orderBy(['sort' => SORT_ASC])->all();
         return $this->render('shop/pack', ['gs' => $gs, 'category' => $category, 'pack' => $pack, 'items' => $items]);
     }
 
@@ -115,46 +120,66 @@ class GameServersController extends BackendController
     public function actionShopCategoryDel($category_id)
     {
         $category = ShopCategories::findOne($category_id);
-        if ($category) {
-            $gs_id = $category->gs_id;
-            $category->delete();
-            Yii::$app->session->setFlash('success', 'Категория удалена.');
-            return $this->redirect(['shop', 'gs_id' => $gs_id]);
+        if (!$category) {
+            throw new NotFoundHttpException('Категория не найдена');
         }
-        throw new NotFoundHttpException('Категория не найдена');
+        $gs_id = $category->gs_id;
+        $category->delete();
+        Yii::$app->session->setFlash('success', 'Категория удалена.');
+        return $this->redirect(['shop', 'gs_id' => $gs_id]);
     }
 
-    public function actionShopItemForm($gs_id, $category_id, $pack_id)
+		public function actionShopItemForm($gs_id, $category_id, $pack_id, $item_id = null)
+	{
+		$model = $item_id ? ShopItems::findOne($item_id) : new ShopItems(['pack_id' => $pack_id, 'status' => 1]);
+		if (!$model) {
+			throw new NotFoundHttpException('Предмет не найден');
+		}
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->session->setFlash('success', $model->isNewRecord ? 'Предмет добавлен.' : 'Изменения сохранены.');
+			return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
+		}
+
+		return $this->render('shop/item-form', [
+			'model'    => $model,
+			'gs'       => $this->findModel($gs_id),
+			'category' => $this->findCategory($category_id, $gs_id),
+			'pack'     => $this->findPack($pack_id, $category_id),
+		]);
+	}
+
+    public function actionShopItemToggle($item_id)
     {
-        $model = new ShopItems(['pack_id' => $pack_id, 'status' => 1]);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Предмет добавлен.');
-            return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
+        $item = ShopItems::findOne($item_id);
+        if (!$item) {
+            throw new NotFoundHttpException('Предмет не найден');
         }
-        return $this->render('shop/item-form', [
-            'model'    => $model,
-            'gs'       => $this->findModel($gs_id),
-            'category' => $this->findCategory($category_id, $gs_id),
-            'pack'     => $this->findPack($pack_id, $category_id),
+        $item->updateAttributes(['status' => 1 - $item->status]);
+        Yii::$app->session->setFlash('success', 'Статус изменён.');
+        return $this->redirect(Yii::$app->request->referrer ?: [
+            'shop-pack',
+            'gs_id' => $item->pack->category->gs_id,
+            'category_id' => $item->pack->category_id,
+            'pack_id' => $item->pack_id,
         ]);
     }
 
     public function actionShopItemDel($item_id)
     {
         $item = ShopItems::findOne($item_id);
-        if ($item) {
-            $pack_id = $item->pack_id;
-            $pack = $this->findPack($pack_id, $pack->category_id);
-            $category_id = $pack->category_id;
-            $gs_id = $this->findCategory($category_id, $pack->category_id)->gs_id;
-            $item->delete();
-            Yii::$app->session->setFlash('success', 'Предмет удалён.');
-            return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
+        if (!$item) {
+            throw new NotFoundHttpException('Предмет не найден');
         }
-        throw new NotFoundHttpException('Предмет не найден');
+        $pack_id = $item->pack_id;
+        $category_id = $item->pack->category_id;
+        $gs_id = $item->pack->category->gs_id;
+        $item->delete();
+        Yii::$app->session->setFlash('success', 'Предмет удалён.');
+        return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
     }
 
-    /* ---------- helpers ---------- */
+    /* ---------- вспомогательные ---------- */
 
     protected function findModel($gs_id): Gs
     {
@@ -187,8 +212,7 @@ class GameServersController extends BackendController
         $versions = [];
         if (is_array($files)) {
             foreach ($files as $file) {
-                $v = basename($file, '.php');
-                $versions[$v] = $v;
+                $versions[basename($file, '.php')] = basename($file, '.php');
             }
             ksort($versions);
         }

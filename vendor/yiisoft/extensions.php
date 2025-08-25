@@ -49,4 +49,22 @@ return array (
       '@yii/symfonymailer' => $vendorDir . '/yiisoft/yii2-symfonymailer/src',
     ),
   ),
+  'yiisoft/yii2-httpclient' => 
+  array (
+    'name' => 'yiisoft/yii2-httpclient',
+    'version' => '2.0.16.0',
+    'alias' => 
+    array (
+      '@yii/httpclient' => $vendorDir . '/yiisoft/yii2-httpclient/src',
+    ),
+  ),
+  'yii-cms/yii2-robokassa' => 
+  array (
+    'name' => 'yii-cms/yii2-robokassa',
+    'version' => 'dev-master',
+    'alias' => 
+    array (
+      '@robokassa' => $vendorDir . '/yii-cms/yii2-robokassa/src',
+    ),
+  ),
 );

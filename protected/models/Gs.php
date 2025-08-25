@@ -20,7 +20,7 @@ use yii\db\Expression;
  * @property string $db_pass
  * @property string $db_name
  * @property int    $login_id
- * @property string $version        // имя файла без .php в /protected/l2j/
+ * @property string $version
  * @property int    $fake_online
  * @property int    $stats_allow
  * @property int    $stats_cache_time
@@ -39,19 +39,23 @@ use yii\db\Expression;
  * @property int    $status
  * @property string $created_at
  * @property string $updated_at
- *
- * @property Login  $login
  */
 class Gs extends ActiveRecord
 {
     const STATUS_ON  = 1;
     const STATUS_OFF = 0;
 
+    /**
+     * {@inheritdoc}
+     */
     public static function tableName()
     {
         return '{{%gs}}';
     }
 
+    /**
+     * Поведения: created_at / updated_at
+     */
     public function behaviors()
     {
         return [
@@ -64,48 +68,60 @@ class Gs extends ActiveRecord
         ];
     }
 
+    /**
+     * Список доступных версий (имена файлов без .php) в папке protected/l2j
+     * Используется в правиле валидации.
+     *
+     * @return string[]
+     */
+    public static function availableVersions(): array
+    {
+        $files = @glob(Yii::getAlias('@app/l2j/*.php')) ?: [];
+        $names = [];
+        foreach ($files as $f) {
+            $names[] = pathinfo($f, PATHINFO_FILENAME);
+        }
+        return $names;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
-        // список доступных версий из /protected/l2j/*.php
-        $versions = array_map('basename', glob(Yii::getAlias('@app/l2j/*.php')));
-
+        // допускаем, что некоторые опции могут быть строкой или числом
         return [
-            [
-                [
-                    'name', 'ip', 'port',
-                    'db_host', 'db_port', 'db_user', 'db_name',
-                    'login_id', 'version', 'status'
-                ],
-                'required',
-            ],
+            [['name', 'ip', 'port', 'db_host', 'db_port', 'db_user', 'db_name', 'login_id', 'version', 'status'], 'required'],
 
-            [['port', 'login_id', 'status'], 'integer'],
-            [['version'], 'in', 'range' => $versions],
+            [['port', 'login_id', 'status', 'fake_online', 'stats_cache_time', 'stats_count_results', 'stats_items'], 'integer'],
 
-            [['stats_cache_time', 'stats_count_results', 'fake_online'], 'string', 'max' => 20],
+            [['name', 'ip', 'db_host', 'db_user', 'db_pass', 'db_name', 'version', 'stats_items_list'], 'string', 'max' => 255],
 
+            // version — одно из файлов в protected/l2j (без .php)
+            ['version', 'in', 'range' => self::availableVersions()],
+
+            // булевы флаги
             [
                 [
                     'stats_total', 'stats_pvp', 'stats_pk',
                     'stats_clans', 'stats_castles', 'stats_online',
                     'stats_clan_info', 'stats_top', 'stats_rich',
-                    'stats_items', 'online_txt_allow'
+                    'stats_items'
                 ],
-                'boolean', 'trueValue' => 1, 'falseValue' => 0,
+                'boolean',
+                'trueValue' => 1,
+                'falseValue' => 0,
             ],
 
-            [['stats_items_list'], 'string', 'max' => 255],
-            [['login_id'], 'exist', 'targetClass' => Login::class, 'targetAttribute' => 'id'],
+            // служебные поля (если есть) — безопасно принимать
+            [['created_at', 'updated_at'], 'safe'],
         ];
     }
 
-    public function getLogin()
-    {
-        return $this->hasOne(Login::class, ['id' => 'login_id']);
-    }
-
     /**
-     * Активные серверы
+     * Активные серверы (ActiveQuery)
+     *
+     * @return \yii\db\ActiveQuery
      */
     public static function findOpened()
     {
@@ -113,24 +129,32 @@ class Gs extends ActiveRecord
     }
 
     /**
-     * Кэшированный список активных серверов
+     * Кэшированный список активных серверов.
+     * Возвращает массив моделей Gs, отсортированных по id ASC.
+     *
+     * @return static[]
      */
     public static function getOpenServers()
     {
         return Yii::$app->cache->getOrSet('open_servers', function () {
-            return self::findOpened()->with('login')->all();
+            return self::findOpened()->orderBy(['id' => SORT_ASC])->all();
         }, 3600 * 24);
     }
 
-    /* ---------- Сериализация / десериализация ---------- */
+    /**
+     * Десериализация полей после получения из БД
+     */
     public function afterFind()
     {
         parent::afterFind();
-        if ($this->services_premium_cost) {
-            $this->services_premium_cost = @unserialize($this->services_premium_cost) ?: [];
+        if (!empty($this->services_premium_cost) && is_string($this->services_premium_cost)) {
+            $this->services_premium_cost = @unserialize($this->services_premium_cost) ?: $this->services_premium_cost;
         }
     }
 
+    /**
+     * Сериализация перед сохранением (если нужно)
+     */
     public function beforeSave($insert)
     {
         if (is_array($this->services_premium_cost)) {
@@ -140,7 +164,7 @@ class Gs extends ActiveRecord
     }
 
     /**
-     * Человеко-читаемые подписи
+     * Человеко-читаемые подписи полей
      */
     public function attributeLabels()
     {
@@ -172,11 +196,24 @@ class Gs extends ActiveRecord
             'stats_items'        => 'Предметы',
             'stats_items_list'   => 'Список предметов',
             'online_txt_allow'   => 'Онлайн из файла',
+            'created_at'         => 'Создано',
+            'updated_at'         => 'Обновлено',
         ];
     }
 
+    /**
+     * Переопределяем find(): если есть кастомный GsQuery — используем его, иначе fallback на parent::find()
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public static function find()
     {
-        return new GsQuery(get_called_class());
+        // если класс GsQuery определён в том же пространстве имён — используем
+        $queryClass = __NAMESPACE__ . '\\GsQuery';
+        if (class_exists($queryClass)) {
+            return new $queryClass(get_called_class());
+        }
+
+        return parent::find();
     }
 }

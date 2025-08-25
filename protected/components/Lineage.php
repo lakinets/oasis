@@ -96,4 +96,13 @@ class Lineage
         $minutes = floor(($time % 3600) / 60);
         return "{$hours}ч {$minutes}м";
     }
+
+    /**
+     * Возвращает объект подключения к БД сервера.
+     * @return Connection
+     */
+    public function getDb(): Connection
+    {
+        return $this->_db;
+    }
 }

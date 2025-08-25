@@ -1,5 +1,4 @@
 <?php
-
 namespace app\modules\cabinet\models;
 
 use yii\db\ActiveRecord;
@@ -8,21 +7,20 @@ class TicketsAnswers extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%tickets_answers}}';
+        return '{{%tickets_answers}}'; // общая таблица
     }
 
     public function rules()
     {
         return [
-            [['ticket_id', 'text', 'user_id'], 'required'],
+            [['ticket_id', 'user_id', 'text'], 'required'],
             [['ticket_id', 'user_id'], 'integer'],
             [['text'], 'string'],
-            [['created_at'], 'safe'],
         ];
     }
 
-    public function getUser()
+    public function getTicket()
     {
-        return $this->hasOne(\app\models\User::class, ['id' => 'user_id']);
+        return $this->hasOne(Tickets::class, ['id' => 'ticket_id']);
     }
 }

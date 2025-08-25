@@ -28,12 +28,17 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         'y' => 
         array (
             'yii\\symfonymailer\\' => 18,
+            'yii\\httpclient\\' => 15,
             'yii\\gii\\' => 8,
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
             'yii\\composer\\' => 13,
             'yii\\bootstrap5\\' => 15,
             'yii\\' => 4,
+        ),
+        'r' => 
+        array (
+            'robokassa\\' => 10,
         ),
         'c' => 
         array (
@@ -110,6 +115,10 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-symfonymailer/src',
         ),
+        'yii\\httpclient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-httpclient/src',
+        ),
         'yii\\gii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-gii/src',
@@ -133,6 +142,10 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         'yii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
+        ),
+        'robokassa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yii-cms/yii2-robokassa/src',
         ),
         'cebe\\markdown\\' => 
         array (

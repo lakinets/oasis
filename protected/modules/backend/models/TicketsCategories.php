@@ -2,50 +2,21 @@
 namespace app\modules\backend\models;
 
 use yii\db\ActiveRecord;
-use Yii;
 
-/**
- * @property int    $id
- * @property string $title
- * @property int    $status
- * @property int    $sort
- */
 class TicketsCategories extends ActiveRecord
 {
-    /* --- статусы --- */
-    const STATUS_ON  = 1;
-    const STATUS_OFF = 0;
-
     public static function tableName()
     {
-        return 'tickets_categories';
+        return '{{%tickets_categories}}';
     }
 
-    public function rules()
+    public static function list()
     {
-        return [
-            [['title', 'sort'], 'required'],
-            [['status', 'sort'], 'integer'],
-            [['title'], 'string', 'max' => 255],
-        ];
+        return static::find()->select(['name', 'id'])->indexBy('id')->column();
     }
 
-    /* --- список статусов --- */
-    public static function getStatusList()
+    public function getTickets()
     {
-        return [
-            self::STATUS_ON  => Yii::t('backend', 'Включена'),
-            self::STATUS_OFF => Yii::t('backend', 'Выключена'),
-        ];
-    }
-
-    public function getStatus()
-    {
-        return self::getStatusList()[$this->status] ?? '-';
-    }
-
-    public function isStatusOn()
-    {
-        return $this->status == self::STATUS_ON;
+        return $this->hasMany(Tickets::class, ['category_id' => 'id']);
     }
 }

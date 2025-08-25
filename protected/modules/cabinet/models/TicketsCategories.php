@@ -1,5 +1,4 @@
 <?php
-
 namespace app\modules\cabinet\models;
 
 use yii\db\ActiveRecord;
@@ -8,14 +7,14 @@ class TicketsCategories extends ActiveRecord
 {
     public static function tableName()
     {
+        // таблица категорий тикетов
         return '{{%tickets_categories}}';
     }
 
     public function rules()
     {
         return [
-            [['title', 'sort', 'status'], 'required'],
-            [['sort', 'status'], 'integer'],
+            [['title'], 'required'],
             [['title'], 'string', 'max' => 255],
         ];
     }

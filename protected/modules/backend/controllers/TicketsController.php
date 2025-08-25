@@ -59,11 +59,15 @@ class TicketsController extends BackendController
             $model->created_at = date('Y-m-d H:i:s');
             $model->updated_at = date('Y-m-d H:i:s');
 
-            $answerModel->user_id = Yii::$app->user->id;
+            if ($model->save(false)) {
+                $answerModel->ticket_id  = $model->id; // 🔑 связь с тикетом
+                $answerModel->user_id    = Yii::$app->user->id;
+                $answerModel->created_at = date('Y-m-d H:i:s');
 
-            if ($model->save(false) && $answerModel->save(false)) {
-                Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет создан'));
-                return $this->redirect(['edit', 'id' => $model->id]);
+                if ($answerModel->save(false)) {
+                    Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет создан'));
+                    return $this->redirect(['edit', 'id' => $model->id]);
+                }
             }
         }
 
@@ -93,12 +97,16 @@ class TicketsController extends BackendController
         $answerModel = new TicketsAnswers(['ticket_id' => $id]);
         if (
             Yii::$app->request->isPost &&
-            $answerModel->load(Yii::$app->request->post()) &&
-            $answerModel->save()
+            $answerModel->load(Yii::$app->request->post())
         ) {
-            $ticket->updateAttributes(['new_message_for_user' => Tickets::STATUS_NEW_MESSAGE_ON]);
-            Yii::$app->session->setFlash('success', Yii::t('backend', 'Ответ добавлен'));
-            return $this->redirect(['edit', 'id' => $id]);
+            $answerModel->user_id    = Yii::$app->user->id;
+            $answerModel->created_at = date('Y-m-d H:i:s');
+
+            if ($answerModel->save(false)) {
+                $ticket->updateAttributes(['new_message_for_user' => Tickets::STATUS_NEW_MESSAGE_ON]);
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Ответ добавлен'));
+                return $this->redirect(['edit', 'id' => $id]);
+            }
         }
 
         return $this->render('edit', [

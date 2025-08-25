@@ -1,63 +1,56 @@
 <?php
+namespace app\models;
+
+use yii\db\ActiveRecord;
+use Yii;
 
 /**
- * This is the model class for table "{{all_items}}".
+ * Таблица с описаниями игровых предметов, используемая магазином
  *
- * The followings are the available columns in table '{{all_items}}':
- * @property string $item_id
+ * @property int    $item_id
  * @property string $name
  * @property string $add_name
  * @property string $description
- * @property string $icon
- * @property integer $crystal_type
+ * @property string|null $icon   // относительный путь внутри /images/items
+ * @property int    $crystal_type
  */
 class AllItems extends ActiveRecord
 {
-    const ITEM_ICONS_PATH       = 'images/items';
-    const ITEM_GRADE_ICONS_PATH = 'images/grade';
-
-
-
-    public function primaryKey()
+    public static function tableName()
     {
-        return 'item_id';
+        // Если у тебя таблица называется ghtweb_all_items — просто замени имя
+        return '{{%all_items}}';
+        // return '{{%ghtweb_all_items}}';
     }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{all_items}}';
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'item_id'       => 'ID',
-			'name'          => Yii::t('main', 'Название'),
-			'add_name'      => Yii::t('main', 'Специальное умение'),
-			'description'   => Yii::t('main', 'Описание'),
-			'icon'          => Yii::t('main', 'Иконка'),
-			'crystal_type'  => Yii::t('main', 'Грейд'),
-		);
-	}
-
-    public function getIcon()
+    public static function primaryKey()
     {
-        return Lineage::getItemIcon($this->icon, $this->description);
+        return ['item_id'];
     }
 
-    public function getGrade()
+    public function rules()
     {
-        return Lineage::getItemGrade($this->crystal_type);
+        return [
+            [['item_id', 'name', 'crystal_type'], 'required'],
+            [['item_id', 'crystal_type'], 'integer'],
+            [['add_name', 'description'], 'string'],
+            [['name', 'icon'], 'string', 'max' => 255],
+        ];
     }
 
-    public function getFullName()
+    /** URL иконки (с фолбэком /images/items/no-image.jpg) */
+    public function getIconUrl(): string
     {
-        return $this->name . ($this->add_name ? ' (' . $this->add_name . ')' : '');
+        $base = '/images/items/';
+        $webroot = Yii::getAlias('@webroot') . $base;
+
+        if ($this->icon && is_file($webroot . $this->icon)) {
+            return $base . $this->icon;
+        }
+        // иногда в БД могут лежать полные пути/подпапки
+        if ($this->icon && is_file(Yii::getAlias('@webroot') . '/' . ltrim($this->icon, '/'))) {
+            return '/' . ltrim($this->icon, '/');
+        }
+        return '/images/items/no-image.jpg';
     }
 }

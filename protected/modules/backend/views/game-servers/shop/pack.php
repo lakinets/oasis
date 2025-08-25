@@ -18,68 +18,75 @@ use yii\helpers\Url;
     ) ?>
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th><?= Yii::t('backend', 'Предмет') ?></th>
             <th><?= Yii::t('backend', 'Описание') ?></th>
+            <th><?= Yii::t('backend', 'Кол-во') ?></th>
             <th><?= Yii::t('backend', 'Цена') ?></th>
-            <th></th>
+            <th><?= Yii::t('backend', 'Скидка') ?></th>
+            <th><?= Yii::t('backend', 'Статус') ?></th>
+            <th><?= Yii::t('backend', 'Действия') ?></th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($items as $item): ?>
-            <?php $info = $item->itemInfo; ?>
+            <?php
+                $info   = $item->itemInfo;
+                $descr  = $item->description ?: ($info ? $info->description : '');
+                $status = $item->status ? 'Активен' : 'Неактивен';
+            ?>
             <tr>
-                <td>
-                    <?php
-                    $baseName = $info ? $info->icon : '';
-                    $iconPath = '/images/items/' . ($baseName ? $baseName . '.jpg' : 'no-image.jpg');
-                    $iconFull = Yii::getAlias('@webroot') . $iconPath;
-                    $src = is_file($iconFull) ? $iconPath : '/images/items/no-image.jpg';
-                    ?>
-                    <?= Html::img($src, [
-                        'alt'   => $info ? $info->name : 'Предмет',
-                        'class' => 'img-rounded',
-                        'width' => 32,
-                        'height'=> 32,
-                    ]) ?>
+                    <td>
+				<?php
+				// Проверяем наличие иконки из all_items
+				$iconFile = $info && $info->icon
+					? Yii::getAlias('@webroot/images/items/' . $info->icon . '.jpg')
+					: null;
+
+				$src = is_file($iconFile)
+					? '/images/items/' . $info->icon . '.jpg'
+					: '/images/items/no-image.jpg';
+				?>
+				<?= Html::img($src, [
+					'alt'   => $info ? $info->name : 'Предмет',
+					'class' => 'img-rounded',
+					'width' => 32,
+					'height'=> 32,
+				]) ?>
+				
+    <span class="ml-2"><?= Html::encode($info ? $info->name : $item->item_id) ?></span>
+</td>
                     <span class="ml-2"><?= Html::encode($info ? $info->name : $item->item_id) ?></span>
                 </td>
-                <td><?= nl2br(Html::encode($info ? $info->description : $item->description)) ?></td>
+                <td><?= nl2br(Html::encode($descr)) ?></td>
+                <td><?= $item->count ?></td>
                 <td><?= $item->cost ?> Web Adena</td>
+                <td><?= $item->discount ?> %</td>
+                <td><?= $status ?></td>
                 <td>
-                    <?= Html::a(
-                        'Удалить',
-                        ['/backend/game-servers/shop-item-del', 'item_id' => $item->id],
-                        [
-                            'class' => 'btn btn-danger btn-sm',
-                            'data-confirm' => 'Точно удалить?',
-                        ]
-                    ) ?>
+                    <?= Html::a('Изменить',
+						['/backend/game-servers/shop-item-form',
+						'item_id' => $item->id,
+						'gs_id'   => $gs->id,
+						 'category_id' => $category->id,
+						 'pack_id' => $pack->id],
+						['class' => 'btn btn-xs btn-warning', 'style' => 'font-size:11px;padding:2px 6px;']
+					) ?>
+
+					<?= Html::a(
+						$item->status ? 'Откл.' : 'Вкл.',
+						['/backend/game-servers/shop-item-toggle', 'item_id' => $item->id],   // item_id вместо id
+						['class' => 'btn btn-xs ' . ($item->status ? 'btn-danger' : 'btn-success'), 'style' => 'font-size:11px;padding:2px 6px;']
+					) ?>
+
+					<?= Html::a('Удалить',
+						['/backend/game-servers/shop-item-del', 'item_id' => $item->id],     // item_id вместо id
+						['class' => 'btn btn-xs btn-danger', 'style' => 'font-size:11px;padding:2px 6px;', 'data-confirm' => 'Удалить?']
+					) ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-
-<?php
-$js = <<<JS
-$('.buy-btn').on('click', function () {
-    const btn = $(this);
-    $.post('/backend/game-servers/buy', {
-        _csrf: yii.getCsrfToken(),
-        item_id: btn.data('item-id'),
-        gs_id: btn.data('gs-id'),
-        player_id: btn.data('player-id')
-    }, function (res) {
-        if (res.success) {
-            alert('Предмет добавлен!');
-        } else {
-            alert(res.error || 'Ошибка');
-        }
-    });
-});
-JS;
-$this->registerJs($js);
-?>

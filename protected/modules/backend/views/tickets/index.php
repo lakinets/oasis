@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $title_;
                 'label'     => Yii::t('backend', 'Автор'),
                 'format'    => 'raw',
                 'value'     => fn($model) => $model->user
-                    ? Html::a(Html::encode($model->user->login), ['/backend/users/view', 'id' => $model->user->user_id])
+                    ? Html::a(Html::encode($model->user->login), ['/backend/users/view', 'user_id' => $model->user->user_id])
                     : '-',
             ],
             [
@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $title_;
                 'buttons'  => [
                     'update' => function ($url, $model) {
                         return Html::a(
-                            '<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('backend', 'Ред.'),
+                            '<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('backend', 'Просмотр'),
                             ['/backend/tickets/edit', 'id' => $model->id],
                             [
                                 'class' => 'btn btn-xs btn-warning',
@@ -112,7 +112,7 @@ $this->params['breadcrumbs'][] = $title_;
                     'toggle' => function ($url, $model) {
                         return Html::a(
                             '<i class="glyphicon ' . ($model->status === Tickets::STATUS_OPEN ? 'glyphicon-eye-close' : 'glyphicon-eye-open') . '"></i> ' .
-                            ($model->status === Tickets::STATUS_OPEN ? Yii::t('backend', 'Деакт.') : Yii::t('backend', 'Актив.')),
+                            ($model->status === Tickets::STATUS_OPEN ? Yii::t('backend', 'Закрыть') : Yii::t('backend', 'Открыть')),
                             ['/backend/tickets/toggle', 'id' => $model->id],
                             [
                                 'class' => 'btn btn-xs ' . ($model->status === Tickets::STATUS_OPEN ? 'btn-danger' : 'btn-success'),
@@ -126,7 +126,7 @@ $this->params['breadcrumbs'][] = $title_;
                     },
                     'delete' => function ($url, $model) {
                         return Html::a(
-                            '<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('backend', 'Удал.'),
+                            '<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('backend', 'Удалить'),
                             ['/backend/tickets/delete', 'id' => $model->id],
                             [
                                 'class' => 'btn btn-xs btn-danger',

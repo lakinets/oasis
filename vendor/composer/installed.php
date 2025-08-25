@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => null,
+        'reference' => '2a5c2fccb6be3ae48c6d355befdff012d991fa27',
         'name' => 'mycompany/l2-legacy',
         'dev' => true,
     ),
@@ -224,12 +224,12 @@
             'dev_requirement' => true,
         ),
         'mycompany/l2-legacy' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => null,
+            'reference' => '2a5c2fccb6be3ae48c6d355befdff012d991fa27',
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
@@ -240,6 +240,15 @@
             'aliases' => array(),
             'reference' => '221b0d0fdf1369c71047ad1d18bb5880017bbc56',
             'dev_requirement' => true,
+        ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+            'dev_requirement' => false,
         ),
         'phar-io/manifest' => array(
             'pretty_version' => '2.0.4',
@@ -739,6 +748,17 @@
             'reference' => '737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2',
             'dev_requirement' => true,
         ),
+        'yii-cms/yii2-robokassa' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'yii2-extension',
+            'install_path' => __DIR__ . '/../yii-cms/yii2-robokassa',
+            'aliases' => array(
+                0 => '1.2.x-dev',
+            ),
+            'reference' => 'e5672d2af327e84bd54297730f7256bbf99c29ee',
+            'dev_requirement' => false,
+        ),
         'yiisoft/yii2' => array(
             'pretty_version' => '2.0.53',
             'version' => '2.0.53.0',
@@ -792,6 +812,15 @@
             'aliases' => array(),
             'reference' => 'f17c7ef7ef3081213f612b37ad0ceaa8e8cd3d3b',
             'dev_requirement' => true,
+        ),
+        'yiisoft/yii2-httpclient' => array(
+            'pretty_version' => '2.0.16',
+            'version' => '2.0.16.0',
+            'type' => 'yii2-extension',
+            'install_path' => __DIR__ . '/../yiisoft/yii2-httpclient',
+            'aliases' => array(),
+            'reference' => '46c29475e19528f0c95f1c6ba0a89f172ebde8c1',
+            'dev_requirement' => false,
         ),
         'yiisoft/yii2-symfonymailer' => array(
             'pretty_version' => '2.0.4',

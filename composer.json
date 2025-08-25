@@ -19,7 +19,8 @@
     "yiisoft/yii2": "^2.0",
     "yiisoft/yii2-bootstrap5": "^2.0",
     "yiisoft/yii2-symfonymailer": "~2.0.3",
-    "bower-asset/jquery": "^3.7"
+    "bower-asset/jquery": "^3.7",
+    "yii-cms/yii2-robokassa": "dev-master"
   },
 
   "require-dev": {

@@ -12,12 +12,12 @@ return [
     'backend/transactions' => 'backend/transactions/index',
     'backend/game-servers' => 'backend/game-servers/index',
     'backend/login-servers' => 'backend/login-servers/index',
-	    // ... ваши прежние правила ...
+
+    // Callback-эндпоинты для всех платёжных систем
     'POST cabinet/deposit/robokassa-callback'   => '/cabinet/deposit/robokassa-callback',
     'POST cabinet/deposit/unitpay-callback'     => '/cabinet/deposit/unitpay-callback',
-
-    // новые IPN/Result маршруты:
     'POST cabinet/deposit/nowpayments-callback' => '/cabinet/deposit/nowpayments-callback',
     'POST cabinet/deposit/payop-callback'       => '/cabinet/deposit/payop-callback',
     'POST cabinet/deposit/cryptomus-callback'   => '/cabinet/deposit/cryptomus-callback',
+    'POST cabinet/deposit/volet-callback'       => '/cabinet/deposit/volet-callback',
 ];

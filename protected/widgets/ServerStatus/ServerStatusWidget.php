@@ -1,5 +1,4 @@
 <?php
-
 namespace app\widgets\ServerStatus;
 
 use yii\base\Widget;
@@ -8,9 +7,7 @@ use app\models\Gs;
 
 class ServerStatusWidget extends Widget
 {
-    /**
-     * @var int TTL кэша в минутах, если параметр не задан
-     */
+    /** @var int TTL кэша в минутах */
     public $defaultTtl = 5;
 
     public function run()
@@ -25,11 +22,12 @@ class ServerStatusWidget extends Widget
                 'totalOnline' => 0,
             ];
 
-            $gsList = Gs::find()->opened()->with('ls')->all();
+            // используем scope findOpened вместо отсутствующего opened()
+            $gsList = Gs::findOpened()->with('ls')->all();
 
             foreach ($gsList as $gs) {
                 try {
-                    $online = rand(100, 500); // Заглушка
+                    $online = rand(100, 500); // заглушка
 
                     $data['content'][$gs->id] = [
                         'gs_status' => $this->ping($gs->ip, $gs->port),
@@ -43,8 +41,7 @@ class ServerStatusWidget extends Widget
                 }
             }
 
-            // Безопасное получение TTL из параметров
-            $ttl = (int) (\Yii::$app->params['server_status.cache'] ?? $this->defaultTtl);
+            $ttl = (int)(\Yii::$app->params['server_status.cache'] ?? $this->defaultTtl);
             if ($ttl > 0) {
                 $cache->set($key, $data, $ttl * 60);
             }
@@ -54,7 +51,7 @@ class ServerStatusWidget extends Widget
     }
 
     /**
-     * Простая TCP-проверка порта
+     * Быстрая TCP-проверка порта
      */
     private function ping($ip, $port): string
     {

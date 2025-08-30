@@ -22,7 +22,6 @@ function formatDate($ts): string {
     return date('d.m.Y H:i', $ts);
 }
 
-// Человеческие названия для ключей
 $labels = [
     'castle_id'   => 'ID замка',
     'taxPercent'  => 'Налог',
@@ -34,10 +33,10 @@ $labels = [
 <table border="1" cellspacing="0" cellpadding="6">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Название</th>
-            <th>Владелец</th>
-            <th>Прочее</th>
+            <th class="orion-table-header">#</th>
+            <th class="orion-table-header">Название</th>
+            <th class="orion-table-header">Владелец</th>
+            <th class="orion-table-header">Прочее</th>
         </tr>
     </thead>
     <tbody>
@@ -46,7 +45,6 @@ $labels = [
             $name    = $row['name'] ?? $row['castle_name'] ?? ('Castle #' . ($row['id'] ?? $row['castle_id'] ?? ($i+1)));
             $ownerId = $row['owner_id'] ?? $row['id_own'] ?? $row['clan_id'] ?? null;
 
-            // Собираем "прочее"
             $extra = [];
             foreach ($labels as $k => $label) {
                 if (isset($row[$k])) {

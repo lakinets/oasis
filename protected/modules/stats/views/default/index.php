@@ -16,7 +16,7 @@ use yii\helpers\Url;
 <h1>Статистика</h1>
 
 <!-- Кнопки серверов -->
-<div style="margin-bottom:16px;">
+<div class="stats-server-buttons" style="margin-bottom:16px;">
     <?php if (!empty($gs_list)): ?>
         <?php foreach ($gs_list as $gs): ?>
             <?php
@@ -38,8 +38,6 @@ use yii\helpers\Url;
     <p><strong>Нет данных от сервера.</strong></p>
     <?php return; ?>
 <?php endif; ?>
-
-
 
 <hr>
 

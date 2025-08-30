@@ -25,7 +25,7 @@ class DefaultController extends Controller
         /* ---- Информация о проекте ---- */
         $info = [
             'Название'      => 'GHTWEB X - НЕ ДЛЯ ПРОДАЖИ',
-            'Версия'        => '1.03.4 -  Open-Source fan Remaster',
+            'Версия'        => '1.03.5 -  Open-Source fan Remaster',
             'Yii'           => Yii::getVersion(),
             'PHP'           => PHP_VERSION,
             'ОС'            => PHP_OS,

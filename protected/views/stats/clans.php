@@ -11,17 +11,16 @@ if (!$clans) {
 <table border="1" cellspacing="0" cellpadding="6">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Клан</th>
-            <th>Репутация</th>
-            <th>Уровень</th>
-            <th>ID</th>
+            <th class="orion-table-header">#</th>
+            <th class="orion-table-header">Клан</th>
+            <th class="orion-table-header">Репутация</th>
+            <th class="orion-table-header">Уровень</th>
+            <th class="orion-table-header">ID</th>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($clans as $i => $row): ?>
         <?php
-            // Пробуем покрыть разные схемы
             $name  = $row['clan_name'] ?? $row['name'] ?? ('Clan #' . ($row['clan_id'] ?? $row['id'] ?? ($i+1)));
             $rep   = $row['reputation_score'] ?? $row['reputation'] ?? null;
             $level = $row['level'] ?? $row['lvl'] ?? null;

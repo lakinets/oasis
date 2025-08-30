@@ -10,13 +10,13 @@ use yii\helpers\Url;
 $this->title = 'Мои персонажи';
 ?>
 
-<h1><?= Html::encode($this->title) ?></h1>
+<h1 class="orion-table-header"><?= Html::encode($this->title) ?></h1>
 
 <!-- Кнопки серверов -->
 <div style="margin: 10px 0;">
     <?php if ($servers): ?>
         <?php foreach ($servers as $s): ?>
-            <a class="btn btn-sm <?= ($gs_id == $s->id ? 'btn-primary' : 'btn-default') ?>"
+            <a class="btn btn-sm <?= ($gs_id == $s->id ? 'btn-primary btn-orion' : 'btn-default btn-orion') ?>"
                href="<?= Url::to(['index', 'gs_id' => $s->id]) ?>">
                 <?= Html::encode($s->name) ?>
             </a>
@@ -42,12 +42,12 @@ $this->title = 'Мои персонажи';
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>Имя</th>
-                <th>Уровень</th>
-                <th>Клан</th>
-                <th>Статус</th>
-                <th>Время онлайн</th>
-                <th width="120">Действия</th>
+                <th class="orion-table-header">Имя</th>
+                <th class="orion-table-header">Уровень</th>
+                <th class="orion-table-header">Клан</th>
+                <th class="orion-table-header">Статус</th>
+                <th class="orion-table-header">Время онлайн</th>
+                <th width="120" class="orion-table-header">Действия</th>
             </tr>
             </thead>
             <tbody>
@@ -65,7 +65,7 @@ $this->title = 'Мои персонажи';
                     </td>
                     <td><?= \app\components\Lineage::getOnlineTime((int)($c['onlinetime'] ?? 0)) ?></td>
                     <td>
-                        <a class="btn btn-xs btn-primary"
+                        <a class="btn btn-xs btn-primary btn-orion"
                            href="<?= Url::to(['view', 'gs_id' => $gs_id, 'char_id' => $c['char_id']]) ?>">
                             Просмотр
                         </a>

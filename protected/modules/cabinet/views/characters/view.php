@@ -10,24 +10,24 @@ use yii\helpers\Url;
 $this->title = 'Персонаж: ' . ($character['char_name'] ?? '—');
 ?>
 
-<h1><?= Html::encode($this->title) ?></h1>
+<h1 class="orion-table-header"><?= Html::encode($this->title) ?></h1>
 
 <!-- Кнопки серверов -->
 <div style="margin: 10px 0;">
     <?php foreach ($servers as $s): ?>
-        <a class="btn btn-sm <?= ($gs_id == $s->id ? 'btn-primary' : 'btn-default') ?>"
+        <a class="btn btn-sm <?= ($gs_id == $s->id ? 'btn-primary btn-orion' : 'btn-default btn-orion') ?>"
            href="<?= Url::to(['/cabinet/characters/index', 'gs_id' => $s->id]) ?>">
             <?= Html::encode($s->name) ?>
         </a>
     <?php endforeach; ?>
-    <a class="btn btn-sm btn-default" href="<?= Url::to(['/cabinet/characters/index', 'gs_id' => $gs_id]) ?>">
+    <a class="btn btn-sm btn-default btn-orion" href="<?= Url::to(['/cabinet/characters/index', 'gs_id' => $gs_id]) ?>">
         ← Назад к списку
     </a>
 </div>
 
 <!-- Основная информация -->
 <div class="panel panel-default">
-    <div class="panel-heading">Общая информация</div>
+    <div class="panel-heading orion-table-header">Общая информация</div>
     <div class="panel-body">
         <div><b>Имя:</b> <?= Html::encode($character['char_name'] ?? '-') ?></div>
         <div><b>Уровень:</b> <?= Html::encode($character['level'] ?? '-') ?></div>
@@ -52,7 +52,7 @@ $this->title = 'Персонаж: ' . ($character['char_name'] ?? '—');
 
 <!-- Инвентарь -->
 <div class="panel panel-default">
-    <div class="panel-heading">Инвентарь</div>
+    <div class="panel-heading orion-table-header">Инвентарь</div>
     <div class="panel-body">
         <?php if (empty($items)): ?>
             <div class="alert alert-info">Инвентарь пуст.</div>
@@ -61,11 +61,11 @@ $this->title = 'Персонаж: ' . ($character['char_name'] ?? '—');
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <th width="100">Item ID</th>
-                        <th>Название</th>
-                        <th width="120">Кол-во</th>
-                        <th width="120">Локация</th>
-                        <th width="120">Слот</th>
+                        <th width="100" class="orion-table-header">Item ID</th>
+                        <th class="orion-table-header">Название</th>
+                        <th width="120" class="orion-table-header">Кол-во</th>
+                        <th width="120" class="orion-table-header">Локация</th>
+                        <th width="120" class="orion-table-header">Слот</th>
                     </tr>
                     </thead>
                     <tbody>

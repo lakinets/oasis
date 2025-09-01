@@ -1,3 +1,16 @@
+﻿<ul class="nav-mini">
+    <li><a href="/cabinet/tickets">Поддержка</a></li>
+    <li><a href="/cabinet/characters">Персонажи</a></li>
+    <li><a href="/cabinet/shop">Магазин</a></li>
+    <li><a href="/cabinet/bonuses">Бонусы</a></li>
+    <li><a href="/cabinet/security">Безопасность</a></li>
+    <li><a href="/cabinet/messages">Сообщения</a></li>
+    <li><a href="/cabinet/deposit">Пополнение</a></li>
+    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
+    <li><a href="/cabinet/auth-history">История входов</a></li>
+    <li><a href="/cabinet/referals">Рефералы</a></li>
+    <li><a href="/cabinet/services">Услуги</a></li>
+</ul>>
 <?php
 /** @var \app\models\Gs[] $servers */
 /** @var int $gs_id */
@@ -21,11 +34,11 @@ $this->title = 'Персонаж: ' . ($character['char_name'] ?? '—');
         </a>
     <?php endforeach; ?>
     <a class="btn btn-sm btn-default btn-orion" href="<?= Url::to(['/cabinet/characters/index', 'gs_id' => $gs_id]) ?>">
-        ← Назад к списку
+        < Назад к списку
     </a>
 </div>
 
-<!-- Основная информация -->
+<!-- Общая информация -->
 <div class="panel panel-default">
     <div class="panel-heading orion-table-header">Общая информация</div>
     <div class="panel-body">
@@ -41,7 +54,7 @@ $this->title = 'Персонаж: ' . ($character['char_name'] ?? '—');
                 <span class="label label-default">Оффлайн</span>
             <?php endif; ?>
         </div>
-        <div><b>Онлайн времени:</b> <?= \app\components\Lineage::getOnlineTime((int)($character['onlinetime'] ?? 0)) ?></div>
+        <div><b>Онлайн время:</b> <?= \app\components\Lineage::getOnlineTime((int)($character['onlinetime'] ?? 0)) ?></div>
         <div><b>Координаты:</b>
             X: <?= Html::encode($character['x'] ?? '-') ?>,
             Y: <?= Html::encode($character['y'] ?? '-') ?>,

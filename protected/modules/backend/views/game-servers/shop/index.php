@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
@@ -25,12 +25,25 @@ use yii\helpers\Html;
                     ['class' => 'font-weight-bold']
                 ) ?>
             </div>
-            <div>
+
+            <!-- Компактные кнопки -->
+            <div class="btn-group btn-group-sm" role="group">
+                <?= Html::a(
+                    'Редактировать',
+                    ['/backend/game-servers/shop-category-form', 'gs_id' => $gs->id, 'category_id' => $category->id],
+                    [
+                        'class' => 'btn btn-warning',
+                        'title' => 'Редактировать',
+                        'style' => 'font-size: 11px; padding: 2px 6px;'
+                    ]
+                ) ?>
                 <?= Html::a(
                     'Удалить',
                     ['/backend/game-servers/shop-category-del', 'category_id' => $category->id],
                     [
-                        'class' => 'btn btn-danger btn-sm',
+                        'class' => 'btn btn-danger',
+                        'title' => 'Удалить',
+                        'style' => 'font-size: 11px; padding: 2px 6px;',
                         'data-confirm' => 'Удалить категорию?',
                         'data-method' => 'post',
                     ]

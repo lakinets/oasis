@@ -1,8 +1,4 @@
-<?php
-$this->title = 'Личный кабинет';
-?>
-<h1>Добро пожаловать в личный кабинет</h1>
-<ul>
+<ul class="nav-mini">
     <li><a href="/cabinet/tickets">📞 Поддержка</a></li>
     <li><a href="/cabinet/characters">🧙 Персонажи</a></li>
     <li><a href="/cabinet/shop">🛒 Магазин</a></li>

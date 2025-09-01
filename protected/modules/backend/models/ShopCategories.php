@@ -1,8 +1,8 @@
 <?php
-
 namespace app\modules\backend\models;
 
 use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 
 class ShopCategories extends ActiveRecord
 {
@@ -11,23 +11,27 @@ class ShopCategories extends ActiveRecord
         return 'shop_categories';
     }
 
-    public function rules()
+    public function behaviors()
     {
         return [
-            [['name', 'link', 'category_id'], 'required'],
-            [['sort', 'status', 'gs_id'], 'integer'],
-            [['name', 'link'], 'string', 'max' => 255],
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+                'value' => fn() => date('Y-m-d H:i:s'), // или `time()` если поле INT
+            ],
         ];
     }
 
-    public function isStatusOn()
+    public function rules()
     {
-        return $this->status == 1;
-    }
-
-    public function getStatusLabel()
-    {
-        return $this->isStatusOn() ? Yii::t('backend', 'Включён') : Yii::t('backend', 'Выключен');
+        return [
+            [['name', 'link', 'sort', 'status', 'gs_id'], 'required'],
+            [['sort', 'status', 'gs_id'], 'integer'],
+            [['name', 'link'], 'string', 'max' => 255],
+            [['created_at'], 'safe'], // если поле DATETIME
+        ];
     }
 
     public function getPacks()

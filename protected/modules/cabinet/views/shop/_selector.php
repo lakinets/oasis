@@ -2,7 +2,7 @@
 /**
  * @var \app\models\Gs[] $servers
  * @var int|null $gs_id
- * @var array $characters  // [['char_id'=>..., 'char_name'=>...], ...]
+ * @var array $characters
  * @var int|null $char_id
  * @var string $category_link
  * @var float|int $balance
@@ -42,11 +42,9 @@ $actionUrl = Url::to(['/cabinet/shop/category', 'category_link' => $category_lin
             </div>
 
             <div class="col-md-3">
-				<div class="small text-muted">Баланс</div>
-				<div class="fs-5 fw-semibold">
-					<?= (int)$balance ?> Web Aden
-				</div>
-			</div>
+                <div class="small text-muted">Баланс</div>
+                <div class="fs-5 fw-semibold"><?= (int)$balance ?> Web Aden</div>
+            </div>
 
             <div class="col-md-3 text-end">
                 <?php if (!$gs_id): ?>
@@ -60,3 +58,22 @@ $actionUrl = Url::to(['/cabinet/shop/category', 'category_link' => $category_lin
         </form>
     </div>
 </div>
+
+<!-- Блокировка списка паков -->
+<?php
+$ready = $gs_id && $char_id;
+?>
+<style>
+    .pack-list {
+        pointer-events: <?= $ready ? 'auto' : 'none' ?>;
+        opacity: <?= $ready ? '1' : '0.45' ?>;
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const packs = document.querySelector('.pack-list');
+    if (packs) {
+        packs.classList.toggle('pack-list', true);
+    }
+});
+</script>

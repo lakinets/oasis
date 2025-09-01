@@ -3,6 +3,7 @@
 namespace app\modules\cabinet\models;
 
 use yii\db\ActiveRecord;
+use app\modules\cabinet\models\ShopCategories;   // ← новый use
 
 class ShopItemsPacks extends ActiveRecord
 {
@@ -24,5 +25,13 @@ class ShopItemsPacks extends ActiveRecord
     public function getItems()
     {
         return $this->hasMany(ShopItems::class, ['pack_id' => 'id']);
+    }
+
+    /**
+     * Связь с категорией
+     */
+    public function getCategory()
+    {
+        return $this->hasOne(ShopCategories::class, ['id' => 'category_id']);
     }
 }

@@ -1,17 +1,48 @@
-<?php 
+﻿<ul class="nav-mini">
+    <li><a href="/cabinet/tickets">Поддержка</a></li>
+    <li><a href="/cabinet/characters">Персонажи</a></li>
+    <li><a href="/cabinet/shop">Магазин</a></li>
+    <li><a href="/cabinet/bonuses">Бонусы</a></li>
+    <li><a href="/cabinet/security">Безопасность</a></li>
+    <li><a href="/cabinet/messages">Сообщения</a></li>
+    <li><a href="/cabinet/deposit">Пополнение</a></li>
+    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
+    <li><a href="/cabinet/auth-history">История входов</a></li>
+    <li><a href="/cabinet/referals">Рефералы</a></li>
+    <li><a href="/cabinet/services">Услуги</a></li>
+</ul>
+<?php
 /** @var \yii\web\View $this */
 /** @var array $providers */
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = 'Пополнение баланса';
-?>
-<h1>Пополнение баланса</h1>
 
+/* ---------- Текущий баланс ---------- */
+$balance = (float)(new \yii\db\Query())
+    ->from('user_profiles')
+    ->where(['user_id' => Yii::$app->user->id])
+    ->select('balance')
+    ->scalar();
+?>
+
+<!-- Заголовок с балансом справа -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Пополнение баланса</h1>
+
+    <div class="text-end">
+        <div class="small text-muted">Баланс</div>
+        <div class="fs-5 fw-semibold"><?= (int)$balance ?> Web Aden</div>
+    </div>
+</div>
+
+<!-- Флеши -->
 <?php foreach (Yii::$app->session->getAllFlashes() as $type => $msg): ?>
     <div class="alert alert-<?= Html::encode($type) ?>"><?= Html::encode($msg) ?></div>
 <?php endforeach; ?>
 
+<!-- Форма -->
 <form method="post" action="<?= Url::to(['/cabinet/deposit/create']) ?>">
     <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
 
@@ -29,10 +60,10 @@ $this->title = 'Пополнение баланса';
                 <?php endforeach; ?>
             </select>
             <?php if (empty($providers)): ?>
-				<div class="alert alert-warning text-center" style="margin-top:10px">
-					Прием платежей был отключен админстрором.
-				</div>
-			<?php endif; ?>
+                <div class="alert alert-warning text-center" style="margin-top:10px">
+                    Приём платежей был отключён администратором.
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 

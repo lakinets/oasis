@@ -8,16 +8,12 @@ use yii\db\Query;
  * Pwsoft_it
  * ---------------
  * Универсальный драйвер для работы с БД сервера Pwsoft (Yii 2 / PHP 8.2)
- * Всегда подключает кланы и возвращает все нужные поля.
  */
 class Pwsoft_it
 {
     private Connection $db;
     private string $dbName;
 
-    /**
-     * Карта полей (для универсальности под ShopController)
-     */
     protected array $fields = [
         'characters' => [
             'account_field' => 'account_name',
@@ -25,25 +21,23 @@ class Pwsoft_it
             'id_field'      => 'obj_Id',
         ],
         'clans' => [
-            'id_field'      => 'clan_id',
-            'name_field'    => 'clan_name',
+            'id_field'   => 'clan_id',
+            'name_field' => 'clan_name',
         ],
     ];
 
     public function __construct(Connection $db, string $dbName = null)
     {
         $this->db = $db;
-        // если имя БД передано – добавляем префикс
         $this->dbName = $dbName ? "{$dbName}." : '';
     }
 
-    /* ===== ПОЛУЧЕНИЕ ПОЛЯ ПО КЛЮЧУ ===== */
     public function getField(string $table, string $field): string
     {
         return $this->fields[$table][$field] ?? $field;
     }
 
-    /* ===== ПЕРСОНАЖИ ===== */
+    /* ---------- ПЕРСОНАЖИ ---------- */
     public function charactersQuery(): Query
     {
         return (new Query())
@@ -81,7 +75,7 @@ class Pwsoft_it
             );
     }
 
-    /* ===== КЛАНЫ ===== */
+    /* ---------- КЛАНЫ ---------- */
     public function clansQuery(): Query
     {
         return (new Query())
@@ -93,7 +87,7 @@ class Pwsoft_it
             );
     }
 
-    /* ===== ПРЕДМЕТЫ ===== */
+    /* ---------- ПРЕДМЕТЫ ---------- */
     public function itemsQuery(): Query
     {
         return (new Query())
@@ -109,7 +103,32 @@ class Pwsoft_it
             ->from($this->dbName . 'items');
     }
 
-    /* ===== СТАТИСТИКА ===== */
+    /**
+     * Добавляет предмет в инвентарь персонажа.
+     * Генерирует уникальный object_id самостоятельно.
+     */
+    public function insertItem(int $charId, int $itemId, int $count, int $enchant): void
+    {
+        $maxId = (int)$this->db->createCommand(
+            'SELECT MAX(object_id) FROM ' . $this->dbName . 'items'
+        )->queryScalar();
+        $newId = $maxId + 1;
+
+        $this->db->createCommand()
+            ->insert($this->dbName . 'items', [
+                'object_id'     => $newId,
+                'owner_id'      => $charId,
+                'item_id'       => $itemId,
+                'count'         => $count,
+                'enchant_level' => $enchant,
+                'loc'           => 'INVENTORY',
+                'loc_data'      => 0,
+                'time_of_use'   => 0,
+            ])
+            ->execute();
+    }
+
+    /* ---------- СТАТИСТИКА ---------- */
     public function getCountAccounts(): int
     {
         return (int)$this->db->createCommand(
@@ -152,6 +171,7 @@ class Pwsoft_it
         )->queryScalar();
     }
 
+    /* ---------- ТОПЫ ---------- */
     public function getTopPvp(int $limit = 20, int $offset = 0): array
     {
         return (new Query())
@@ -198,7 +218,8 @@ class Pwsoft_it
             ->from($this->dbName . 'characters')
             ->leftJoin(
                 $this->dbName . 'items',
-                $this->dbName . 'items.owner_id = ' . $this->dbName . 'characters.obj_Id AND ' . $this->dbName . 'items.item_id = 57'
+                $this->dbName . 'items.owner_id = ' . $this->dbName . 'characters.obj_Id AND ' .
+                $this->dbName . 'items.item_id = 57'
             )
             ->where([$this->dbName . 'characters.accesslevel' => 0])
             ->groupBy($this->dbName . 'characters.obj_Id')
@@ -230,7 +251,7 @@ class Pwsoft_it
             ->all($this->db);
     }
 
-    /* ===== ЗАМКИ / ОСАДЫ ===== */
+    /* ---------- ЗАМКИ / ОСАДЫ ---------- */
     public function getCastles(): array
     {
         return (new Query())
@@ -255,7 +276,7 @@ class Pwsoft_it
             ->all($this->db);
     }
 
-    /* ===== СЛУЖЕБНОЕ ===== */
+    /* ---------- СЛУЖЕБНОЕ ---------- */
     public function getChronicle(): string
     {
         return 'it';

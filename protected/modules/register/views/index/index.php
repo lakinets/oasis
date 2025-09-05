@@ -51,7 +51,7 @@ $this->title = 'Регистрация';
 
     <?php if ($captchaEnabled): ?>
         <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::class, [
-            'captchaAction' => 'register/default/captcha',
+            'captchaAction' => 'default/captcha',
             'options'       => ['class' => 'form-control btn-orion'],
             'template'      => '<div class="row"><div class="col-sm-4">{image}</div><div class="col-sm-8">{input}</div></div>',
         ]) ?>

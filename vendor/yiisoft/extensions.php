@@ -67,4 +67,13 @@ return array (
       '@robokassa' => $vendorDir . '/yii-cms/yii2-robokassa/src',
     ),
   ),
+  'yiisoft/yii2-swiftmailer' => 
+  array (
+    'name' => 'yiisoft/yii2-swiftmailer',
+    'version' => '2.1.0.0',
+    'alias' => 
+    array (
+      '@yii/swiftmailer' => $vendorDir . '/yiisoft/yii2-swiftmailer',
+    ),
+  ),
 );

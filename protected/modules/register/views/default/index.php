@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use yii\captcha\Captcha;
 
 /** @var \app\modules\register\models\RegisterForm $model */
 /** @var bool $prefixesEnabled */
@@ -15,14 +17,15 @@ $this->title = 'Регистрация';
     <?php if (Yii::$app->session->hasFlash('success')): ?>
         <div class="alert alert-success"><?= Yii::$app->session->getFlash('success') ?></div>
     <?php endif; ?>
+
     <?php if (Yii::$app->session->hasFlash('error')): ?>
         <div class="alert alert-danger"><?= Yii::$app->session->getFlash('error') ?></div>
     <?php endif; ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'register-form']); ?>
 
     <?= $form->field($model, 'gs_id')->dropDownList(
-        \yii\helpers\ArrayHelper::map($model->gs_list, 'id', 'name'),
+        ArrayHelper::map($model->gs_list, 'id', 'name'),
         ['prompt' => 'Выберите сервер']
     ) ?>
 
@@ -51,9 +54,9 @@ $this->title = 'Регистрация';
     <?php endif; ?>
 
     <?php if ($captchaEnabled): ?>
-        <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::class, [
+        <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
             'captchaAction' => 'register/default/captcha',
-            'options' => ['class' => 'form-control'],
+            'options' => ['class' => 'form-control', 'placeholder' => 'Код с картинки'],
             'template' => '<div class="row"><div class="col-sm-4">{image}</div><div class="col-sm-8">{input}</div></div>',
         ]) ?>
     <?php endif; ?>

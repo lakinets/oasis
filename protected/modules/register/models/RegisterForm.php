@@ -15,16 +15,13 @@ class RegisterForm extends Model
     public string $password = '';
     public string $re_password = '';
     public string $email = '';
-    public string $prefix = '';       // автозаполнение / скрытое поле
+    public string $prefix = '';
     public string $referer = '';
-    public string $verifyCode = '';
+    public string $verifyCode = '';   // <-- капча
     public int    $gs_id = 0;
 
-    /** @var Gs[] */
     public array $gs_list = [];
     public ?User $refererInfo = null;
-
-    /** Кэш списка допустимых префиксов */
     private array $allowedPrefixes = [];
 
     public function init()
@@ -47,15 +44,12 @@ class RegisterForm extends Model
     {
         $list = AppConfig::prefixList();
         if (empty($list)) {
-            // если в БД/params нет, генерим сет случайных 3-буквенных
             $len = max(1, AppConfig::prefixLength());
             $letters = 'abcdefghijklmnopqrstuvwxyz';
             $pool = [];
             for ($i = 0; $i < 50; $i++) {
                 $s = '';
-                for ($j = 0; $j < $len; $j++) {
-                    $s .= $letters[random_int(0, strlen($letters) - 1)];
-                }
+                for ($j = 0; $j < $len; $j++) $s .= $letters[random_int(0, strlen($letters) - 1)];
                 $pool[] = $s;
             }
             $list = array_values(array_unique($pool));
@@ -68,7 +62,6 @@ class RegisterForm extends Model
         if (!AppConfig::prefixesEnabled()) {
             $this->prefix = '';
             return;
-            // префиксы выключены — не используем.
         }
         if ($this->prefix === '' && !empty($this->allowedPrefixes)) {
             $this->prefix = $this->allowedPrefixes[array_rand($this->allowedPrefixes)];
@@ -97,7 +90,6 @@ class RegisterForm extends Model
             $rules[] = [['prefix'], 'required'];
             $rules[] = [['prefix'], 'validatePrefixAllowed'];
         } else {
-            // если префиксы выключены — очищаем его
             $this->prefix = '';
         }
 
@@ -126,9 +118,7 @@ class RegisterForm extends Model
     public function validateEmailUnique($attribute): void
     {
         if (!$this->gs_id || !isset($this->gs_list[$this->gs_id])) return;
-        $lsId = $this->gs_list[$this->gs_id]->login_id;
-
-        if (User::find()->where(['email' => $this->$attribute, 'ls_id' => $lsId])->exists()) {
+        if (User::find()->where(['email' => $this->$attribute, 'ls_id' => $this->gs_list[$this->gs_id]->login_id])->exists()) {
             $this->addError($attribute, 'Email уже существует.');
         }
     }
@@ -142,13 +132,11 @@ class RegisterForm extends Model
         $login = $this->getLogin();
         $lsId  = $this->gs_list[$this->gs_id]->login_id;
 
-        // сайт
         if (User::find()->where(['login' => $login, 'ls_id' => $lsId])->exists()) {
             $this->addError($attribute, 'Логин уже существует.');
             return;
         }
 
-        // LS
         try {
             $svc = new RegistrationService();
             if ($svc->lsLoginExists($lsId, $login)) {
@@ -196,9 +184,6 @@ class RegisterForm extends Model
         return strtolower(($this->prefix ?: '') . $this->login);
     }
 
-    /**
-     * Основной сценарий регистрации (с/без email).
-     */
     public function registerAccount(): void
     {
         $login = $this->getLogin();
@@ -209,12 +194,11 @@ class RegisterForm extends Model
             $svc->registerWithEmailConfirm($lsId, $login, $this->password, $this->email);
             Yii::$app->session->setFlash('success', 'На почту отправлены инструкции по активации.');
         } else {
-            $svc->registerImmediate($lsId, $login, $this->password, $this->email);
+            $svc->registerImmediate($lsId, $login, $this->password, $this->email, $this->refererInfo->id ?? null);
             Yii::$app->session->setFlash('success', 'Регистрация прошла успешно!');
         }
     }
 
-    /** Для вьюхи: список доступных префиксов (например, показать пользователю «ваш префикс: pou») */
     public function getAllowedPrefixes(): array
     {
         return $this->allowedPrefixes;

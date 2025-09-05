@@ -8,30 +8,35 @@ return [
 
     // --- Модуль регистрации ---
     'register' => [
-        'allow'             => true,    // включить/отключить регистрацию
-        'confirm_email'     => true,    // подтверждение email
-        'confirm_email.time'=> 60,      // минуты жизни ссылки
+        'allow'             => true,
+        'confirm_email'     => true,
+        'confirm_email.time'=> 60,
         'captcha' => [
-            'allow' => true,            // показывать капчу
+            'allow' => true,
         ],
     ],
 
     // --- Поле префикса логина ---
     'prefixes' => [
-        'allow'          => false,      // показывать поле «Префикс»
-        'length'         => 3,          // длина префикса
-        'count_for_list' => 5,          // сколько случайных префиксов выводить
+        'allow'          => false,
+        'length'         => 3,
+        'count_for_list' => 5,
     ],
 
     // --- Реферальная программа ---
     'referral_program' => [
-        'allow' => true,                // включить рефералов
+        'allow' => true,
     ],
-    'cookie_referer_name' => '_ref',    // имя куки реферала
+    'cookie_referer_name' => '_ref',
 
     // --- Админка ---
-    'backend_enabled' => true,          // доступ к /backend
+    'backend_enabled' => true,
 
     // --- Виджет статуса серверов ---
-    'server_status.allow' => ['*'],     // '*' = показывать всем
+    'server_status.allow' => ['*'],
+
+    // --- Восстановление пароля ---
+    'mail.sender'           => 'noreply@site.ru',
+    'mail.senderName'       => 'Сайт',
+    'auth.resetTokenExpire' => 3600, // секунды
 ];

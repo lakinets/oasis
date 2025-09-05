@@ -67,23 +67,29 @@ return [
             ],
         ],
 
-        /* ---------- URL-правила ---------- */
+        'captcha' => [
+            'class' => \yii\captcha\CaptchaAction::class,
+            'minLength' => 4,
+            'maxLength' => 5,
+            'width'  => 100,
+            'height' => 40,
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName'  => false,
             'rules' => [
-
-                /* BACKEND */
                 'backend' => 'backend/default/index',
                 'backend/<controller:\w+>' => 'backend/<controller>/index',
                 'backend/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
 
-                /* АВТОРИЗАЦИЯ / РЕГИСТРАЦИЯ */
-                'login'    => 'login/index',
-                'logout'   => 'login/logout',
+                'login'    => 'auth/default/login',
+                'logout'   => 'auth/default/logout',
                 'register' => 'register/index',
 
-                /* ОСТАЛЬНЫЕ МОДУЛИ */
+                'request-password-reset' => 'auth/default/request-password-reset',
+                'reset-password'         => 'auth/default/reset-password',
+
                 'cabinet'  => 'cabinet/default/index',
                 'cabinet/<controller:\w+>/<action:\w+>' => 'cabinet/<controller>/<action>',
                 'cabinet/<controller:\w+>/<action:\w+>/<id:\d+>' => 'cabinet/<controller>/<action>/<id>',
@@ -92,31 +98,35 @@ return [
                 'news'     => 'news/index',
                 'gallery'  => 'gallery/index',
 
-                /* СТАТИЧНЫЕ СТРАНИЦЫ */
                 'page/<page:\w+>' => 'site/view',
 
-                /* СТАНДАРТНОЕ */
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-
-                /* Универсальное – В САМЫЙ КОНЕЦ */
-                '<slug:[\w\-]+>' => 'page/view',
+                '<slug:[\w\-]+>' => 'site/page',
             ],
         ],
 
         'cache'       => ['class' => \yii\caching\FileCache::class],
-        'user'        => [
-            'identityClass'   => \app\models\User::class,
-            'enableAutoLogin' => true,
-            'loginUrl'        => ['/login/index'],
-        ],
+				'user' => [
+					'identityClass'   => 'app\models\Users', // ← было backend\models\Users
+					'enableAutoLogin' => true,
+					'loginUrl'        => ['/login'],
+				],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
         'db' => $dbConfig,
 
         'mailer' => [
-            'class' => \yii\swiftmailer\Mailer::class,
-            'useFileTransport' => YII_DEBUG,
+            'class'            => \yii\swiftmailer\Mailer::class,
+            'useFileTransport' => YII_DEBUG, // true = письма в файл
+            'transport'        => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'ssl://smtp.yandex.ru', // замените на свой
+                'username'   => 'noreply@site.ru',
+                'password'   => '********',
+                'port'       => 465,
+                'encryption' => 'ssl',
+            ],
         ],
 
         'log' => [
@@ -156,11 +166,8 @@ return [
     ],
 
     'modules' => [
-        'backend' => [
-            'class'  => \app\modules\backend\Module::class,
-            'layout' => '@app/modules/backend/views/layouts/main',
-        ],
-        'cabinet' => ['class' => \app\modules\cabinet\Module::class],
+        'backend'  => ['class' => \app\modules\backend\Module::class],
+        'cabinet'  => ['class' => \app\modules\cabinet\Module::class],
         'register' => ['class' => \app\modules\register\RegisterModule::class],
         'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class],
         'stats'    => ['class' => \app\modules\stats\StatsModule::class],
@@ -168,7 +175,7 @@ return [
         'install'  => ['class' => \app\modules\install\InstallModule::class],
         'forgottenPassword' => ['class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class],
         'deposit'  => ['class' => \app\modules\deposit\DepositModule::class],
-        'page'     => ['class' => \app\modules\page\PageModule::class],
+        'auth'     => ['class' => \app\modules\auth\Module::class],
     ],
 
     'params' => array_merge(

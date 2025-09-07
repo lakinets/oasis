@@ -22,7 +22,7 @@ $this->beginPage();
 <!-- Навбар со всеми пунктами -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="<?= Url::to(['/backend']) ?>">GHTWEB X</a>
+        <a class="navbar-brand" href="<?= Url::to(['/backend']) ?>">Oasis</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
             <span class="navbar-toggler-icon"></span>
         </button>

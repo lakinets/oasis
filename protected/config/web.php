@@ -3,7 +3,7 @@ defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV')   or define('YII_ENV', 'dev');
 
 // ---------- Тема и конфиги серверов ----------
-$themeName = null;
+$themeName = 'oasis';   // дефолт
 $dbConfig  = [];
 $servers   = [];
 
@@ -13,14 +13,14 @@ if (is_file(__DIR__ . '/db.php')) {
         $pdo = new \PDO($dbConfig['dsn'], $dbConfig['username'], $dbConfig['password']);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: null;
+        $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: 'oasis';
         $servers   = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {
-        error_log('DB load error: ' . $e->getMessage());
+        // БД ещё не установлена – оставляем дефолты
+        $themeName = 'oasis';
+        $servers   = [];
     }
 }
-
-$themeName = $themeName ?: 'ghtweb';
 
 // ---------- Алиасы ----------
 \Yii::setAlias('@themesRoot', dirname(__DIR__, 2) . '/themes');
@@ -29,7 +29,7 @@ $themeName = $themeName ?: 'ghtweb';
 \Yii::setAlias('@backend',   dirname(__DIR__) . '/modules/backend');
 
 if (!is_dir(\Yii::getAlias('@themes'))) {
-    $themeName = 'ghtweb';
+    $themeName = 'oasis';
     \Yii::setAlias('@themes', "@themesRoot/{$themeName}");
 }
 
@@ -79,10 +79,17 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName'  => false,
             'rules' => [
+                /* ===== INSTALL (в самый верх) ===== */
+                'install' => 'install/setup/index',
+                'install/<action:\w+>' => 'install/setup/<action>',
+				'install/<action:\w+>/' => 'install/setup/<action>',
+
+                /* -------- BACKEND -------- */
                 'backend' => 'backend/default/index',
                 'backend/<controller:\w+>' => 'backend/<controller>/index',
                 'backend/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
 
+                /* -------- AUTH / LOGIN -------- */
                 'login'    => 'auth/default/login',
                 'logout'   => 'auth/default/logout',
                 'register' => 'register/index',
@@ -90,27 +97,31 @@ return [
                 'request-password-reset' => 'auth/default/request-password-reset',
                 'reset-password'         => 'auth/default/reset-password',
 
+                /* -------- CABINET -------- */
                 'cabinet'  => 'cabinet/default/index',
                 'cabinet/<controller:\w+>/<action:\w+>' => 'cabinet/<controller>/<action>',
                 'cabinet/<controller:\w+>/<action:\w+>/<id:\d+>' => 'cabinet/<controller>/<action>/<id>',
 
+                /* -------- OTHER MODULES -------- */
                 'stats'    => 'stats/default/index',
                 'news'     => 'news/index',
                 'gallery'  => 'gallery/index',
 
+                /* -------- STATIC PAGE -------- */
                 'page/<page:\w+>' => 'site/view',
 
+                /* -------- DEFAULT RULES -------- */
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<slug:[\w\-]+>' => 'site/page',
             ],
         ],
 
         'cache'       => ['class' => \yii\caching\FileCache::class],
-				'user' => [
-					'identityClass'   => 'app\models\Users', // ← было backend\models\Users
-					'enableAutoLogin' => true,
-					'loginUrl'        => ['/login'],
-				],
+        'user' => [
+            'identityClass'   => 'app\models\Users',
+            'enableAutoLogin' => true,
+            'loginUrl'        => ['/login'],
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -118,10 +129,10 @@ return [
 
         'mailer' => [
             'class'            => \yii\swiftmailer\Mailer::class,
-            'useFileTransport' => YII_DEBUG, // true = письма в файл
+            'useFileTransport' => YII_DEBUG,
             'transport'        => [
                 'class'      => 'Swift_SmtpTransport',
-                'host'       => 'ssl://smtp.yandex.ru', // замените на свой
+                'host'       => 'ssl://smtp.yandex.ru',
                 'username'   => 'noreply@site.ru',
                 'password'   => '********',
                 'port'       => 465,
@@ -172,10 +183,12 @@ return [
         'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class],
         'stats'    => ['class' => \app\modules\stats\StatsModule::class],
         'news'     => ['class' => \app\modules\news\NewsModule::class],
-        'install'  => ['class' => \app\modules\install\InstallModule::class],
         'forgottenPassword' => ['class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class],
         'deposit'  => ['class' => \app\modules\deposit\DepositModule::class],
         'auth'     => ['class' => \app\modules\auth\Module::class],
+
+        /* ===== УСТАНОВЩИК (временный) ===== */
+        'install'  => ['class' => 'app\modules\install\InstallModule'],
     ],
 
     'params' => array_merge(

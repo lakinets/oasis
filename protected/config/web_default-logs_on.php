@@ -47,7 +47,7 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
 
-    'bootstrap' => [],   // логи полностью отключены
+    'bootstrap' => ['log'],
 
     'components' => [
         'request' => [
@@ -82,7 +82,7 @@ return [
                 /* ===== INSTALL (в самый верх) ===== */
                 'install' => 'install/setup/index',
                 'install/<action:\w+>' => 'install/setup/<action>',
-                'install/<action:\w+>/' => 'install/setup/<action>',
+				'install/<action:\w+>/' => 'install/setup/<action>',
 
                 /* -------- BACKEND -------- */
                 'backend' => 'backend/default/index',
@@ -140,10 +140,11 @@ return [
             ],
         ],
 
-        /* логи полностью убраны */
         'log' => [
-            'traceLevel' => 0,
-            'targets' => [],
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                ['class' => \yii\log\FileTarget::class, 'levels' => ['error', 'warning', 'info']],
+            ],
         ],
 
         'i18n' => [

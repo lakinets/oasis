@@ -8,10 +8,21 @@ use app\modules\install\models\{PhpCheckForm, DbForm, AdminForm};
 
 class SetupController extends Controller
 {
-    /* ---------- шаг 1 : проверка окружения ---------- */
+    /* ---------- шаг 1 : проверка окружения + лицензия ---------- */
     public function actionIndex()
     {
-        return $this->render('step1', ['model' => new PhpCheckForm()]);
+        $model = new PhpCheckForm();
+
+        if (Yii::$app->request->isPost) {
+            $accept = Yii::$app->request->post('accept_license');
+            if ($accept) {
+                return $this->redirect(['step2']);
+            } else {
+                Yii::$app->session->setFlash('error', 'Вы должны принять условия лицензии, чтобы продолжить установку.');
+            }
+        }
+
+        return $this->render('step1', ['model' => $model]);
     }
 
     /* ---------- шаг 2 : подключение к БД ---------- */

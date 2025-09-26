@@ -42,9 +42,6 @@ class m000000_000001_run_all_sql_files extends Migration
         'all_items.sql',
     ];
 
-    /**
-     * Не выполняем весь up() в одной транзакции — некоторые DDL/долгие операции лучше выполнять вне транзакции
-     */
     public function supportsTransaction(): bool
     {
         return false;
@@ -52,7 +49,9 @@ class m000000_000001_run_all_sql_files extends Migration
 
     public function safeUp(): void
     {
-        // снимаем лимиты для длительной операции
+        /* ➜ гарантируем кодировку перед любыми запросами */
+        $this->execute("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+
         @set_time_limit(0);
         @ini_set('memory_limit', '-1');
 
@@ -76,7 +75,6 @@ class m000000_000001_run_all_sql_files extends Migration
             $executed = false;
             $mysqliErr = null;
 
-            // 1) Попытка выполнить через mysqli::multi_query
             if (extension_loaded('mysqli')) {
                 try {
                     $db = $this->db;
@@ -99,6 +97,8 @@ class m000000_000001_run_all_sql_files extends Migration
                     if ($mysqli && $mysqli->connect_errno) {
                         $mysqliErr = $mysqli->connect_error;
                     } elseif ($mysqli) {
+                        /* ➜ гарантируем кодировку и для mysqli */
+                        $mysqli->set_charset('utf8mb4');
                         if ($mysqli->multi_query($sql)) {
                             do {
                                 if ($result = $mysqli->store_result()) {
@@ -129,7 +129,6 @@ class m000000_000001_run_all_sql_files extends Migration
                 echo "Ошибка! mysqli::multi_query не удался для {$file}: {$mysqliErr}\n";
             }
 
-            // 2) Фоллбэк: разбиваем SQL на операторы
             $stmts = $this->splitSqlStatements($sql);
             $count = 0;
             foreach ($stmts as $stmt) {

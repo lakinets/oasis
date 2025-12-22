@@ -1,0 +1,279 @@
+Oasis CMS License Agreement
+The Oasis Project is freely distributed and provided "as is" for use in personal and commercial projects.
+By using Oasis, you agree to the terms of this license agreement.
+1. It is allowed
+1.1 Use the Oasis source code in any projects (personal, commercial, gaming, web projects and services).
+1.2. Make changes and adapt the code to your own needs.
+1.3. Create templates, add-ons and modified versions for your projects.
+1.3.1. Authors of modifications have the right to establish their own licenses for their works, provided that such licenses:
+  a) do not apply to the original Oasis code;
+  b) do not limit the rights of other users to use the original Oasis;
+  c) are compatible with the terms of this license with respect to the original code.
+1.3.2. The license for modifications is considered valid from the moment of its publication by the official author or authorized person.
+1.3.3. The author of the modification has the right to distribute his product under his own terms, but is obliged to provide the user with the text of this Oasis License and indicate that the original code is distributed exclusively under the terms of the Oasis License.
+1.3.4. If the author of a modification intentionally or negligently violates the terms of paragraphs 1.3.1–1.3.3, their own license is considered invalid from the moment of the violation, and the modification may be distributed exclusively under the terms of paragraph 5.8.1 (without warranties "as is"). In this case, the user does not lose the rights provided for in paragraph 5.8, in particular the right to protection under consumer protection laws with respect to paid add-ons.
+1.4. Distribute modified versions of Oasis, provided that the open source code is preserved and the original author is indicated.
+1.5. Receive income from projects that use Oasis.
+1.6. Publish add-ons (modules, plugins, themes, etc.) on any resources and under any conditions, provided this does not violate the rights of third parties.
+1.7. Use and distribute materials provided by the copyright holder Oasis or its authorized representatives, if they are published in the public domain or acquired legally.
+1.8. Develop your own derivative works (e.g. designs, styles, themes), provided they do not violate the rights of third parties.
+1.9. Request removal of any modifications that infringe copyright, upon providing proof of authorship or ownership.
+1.10. Sell your own add-ons and modifications integrated into Oasis, provided that it is clearly indicated that it is the modification that is being sold, and not Oasis itself.
+1.11. Create similar modifications, inspired by other projects, under the following conditions:
+1.11.1 This is not a full or partial copy of the design or code without the consent of the copyright holder.
+1.11.2. The intellectual property of third parties is not used without their consent.
+1.11.3. A modification for Oasis is not considered a copy if the proportion of borrowed code (by number of lines, excluding spaces and comments) does not exceed 10% of the total volume of the corresponding file.
+1.11.4. Violation of these terms and conditions deprives the author of the right to position their work as an addition to Oasis, and the copyright holder has the right to demand its removal.
+1.12. The author of a modification is the user who first posted it on an official platform (e.g., GitHub), provided that there are no violations of this agreement.
+1.12.1. All copyright disputes on such resources are resolved through the platform's arbitration system.
+1.13. Users of other resources are also recognized as authors of modifications if they can prove their authorship.
+1.13.1. Disputes regarding copyright in add-ons are resolved by users independently within the framework of the current legislation of their regions.
+1.14. The User has the right to use any templates, design solutions, logos and other materials included in the official Oasis release, but is not obligated to do so.
+1.15. The user has the right to create their own templates and designs from scratch and use them in Oasis-based projects without restrictions.
+1.16. The User is not obligated to inherit Oasis's design, logos, or visual elements.
+1.17. Any user has the right to appeal the decision of the platform (hosting, forum, marketplace) on issues related to this license by submitting a request:
+  a) to any email address specified in the “Contacts” section of the official Oasis website;
+  b) via the feedback form on the official website;
+  c) via the official repository (GitHub Issues / Discussion, etc.).
+1.17.1. A request sent from any official channel specified in paragraph 1.17 is considered equivalent to a request from the copyright holder and is subject to review within 30 calendar days or more by agreement of the parties.
+1.17.2. The decision on the appeal is made by the author (or authorized moderator) and is final under this license.
+1.17.3. The right to appeal does not require registration and is free of charge; the author does not charge a fee for reviewing the request.
+
+2. It is prohibited
+2.1. Revoke previously granted free licenses for modifications, except in the following cases:
+2.1.1. Violations of license terms by the user.
+2.1.2. Expiry date (if it was set in advance).
+2.1.3. Using the modification for illegal purposes.
+2.1.4. Providing false information when obtaining a license.
+2.2. Distribute modified versions of Oasis without providing a complete list of changes.
+2.3. Copy other people's projects in whole or in part without the consent of the owners.
+2.4. Distribute other people's modifications of Oasis without the consent of their authors.
+2.5. Use third-party add-ons without the consent of their authors or authorized persons.
+2.6. Use Oasis for fraud, phishing, illegal data collection, or other illegal activity.
+2.7. You may not sell the Oasis source code, in whole or in part, as a standalone product, except:
+2.7.1. Sales of own modifications, additions, designs and themes;
+2.7.2. Sales of services for installation, configuration and modification of Oasis.
+2.8. Distribute modified versions of Oasis under a different name as a separate engine, CMS, or platform.
+2.8.1. Exception: A modified version hosted only on a personal hosting account and not available for download by others may use any name, logo, or design without attribution to Oasis. However, such a copy is not exempt from the license and loses the right to use it as a basis for copyright protection until publicly attributed to Oasis. Rights are restored automatically within 180 days of the cessation of misleading users and the placement of an active link to the author's official resource on the project's main page.
+2.8.2. Any direct or indirect indication in the description, domain, marketing materials, etc. that the Oasis product is its own development without mentioning Oasis automatically deprives the user of the right to rely on this license as a basis for protection until the misconception is publicly corrected.
+2.8.3. Changing the logo, site name, design, or other visual elements of a non-downloadable copy is not considered a violation, provided the user does not claim ownership of the original code and does not distribute the copy as a standalone product. Such a local copy may enjoy all license rights as long as it does not violate any other provisions of this agreement.
+2.9. Assign authorship of Oasis to yourself and publish it in your own name without indicating the original author.
+2.10. Distribute Oasis or any part thereof in password-protected archives or in a format that restricts free access.
+2.11. Place Oasis on paid platforms, file-sharing sites, or services that require payment for downloading.
+2.12. Remove or modify this license without the consent of the copyright holder.
+2.13. Use Oasis in jurisdictions where it violates applicable law.
+2.13.1. Failure to comply with this clause entitles the host to remove Oasis from its resources.
+2.14. Use Oasis or its parts, including third-party modifications, in violation of the laws of the country or region of use.
+2.14.1. In the event of a violation, the hoster has the right to transfer data, including confidential data, to law enforcement agencies upon the first official request.
+2.15. Transfer confidential user data (correspondence, purchase history, accounts) to third parties, except in cases provided by law.
+2.15.1. This data includes personal correspondence, purchase history, and account names.
+2.15.2. The transfer of information that could cause material or moral damage to users is also prohibited.
+2.16. It is prohibited to distribute Oasis without the base template /theme/oasis or with any modified part of it without the written consent of the author.
+2.16.1. The author has the right to update the basic template at any time.
+2.16.2. The user has the right to distribute only the version of the basic template that was obtained by downloading the product from the author's official resource.
+2.16.3. Any person who is not the copyright holder has the right to file a complaint regarding a violation of Section 2.16 with the administration of the platform that posted such a copy, citing this agreement. The complaint must be submitted through the platform's standard channel (abuse, DMCA, support, etc.) and must include:
+  a) a link to the infringing copy;
+  b) a brief description of the violation (absence or change of the basic template);
+  c) a link to the official version of the template for comparison.
+2.16.4. The platform will review the complaint unilaterally, guided by its rules and this license agreement, and reserves the right to block or delete a copy without the copyright holder's involvement. The platform's decision is binding on the parties under this license.
+2.17. Any part of the Oasis product, as well as official add-ons created for Oasis, are copyrighted and protected by intellectual property laws.
+2.17.1. Integration (implementation, embedding, merging) of any part of Oasis or the specified add-ons into other platforms, engines, CMS, or applications without the written consent of the relevant copyright holder (the author of Oasis or the authors of the add-ons) is prohibited.
+2.17.2. Authors of official additions have the right to demand the removal of copies of their works integrated without their consent by sending a request:
+    a) to the official communication channel of the author Oasis;
+  b) directly to the site that hosted the integrated copy.
+2.17.3. When distributing a product or add-on as part of a third-party package, it is mandatory to include a License.txt text file with the following content (unchanged and with the link preserved):
+  This product is built for Oasis CMS and is copyrighted and licensed under the Oasis license https://github.com/lakinets/oasis/LICENSE.txt
+2.17.4. A request submitted in accordance with 2.17.2 and containing an indication of a violation of 2.17.1 is considered a demand of the copyright holder and is subject to review by the platform within the timeframes established by its rules.
+2.17.5. Only a finished product that:
+  a) is able to work on the Oasis platform “as is” without modifications;
+  b) is correctly integrated into the copy of the product and does not interfere with its functionality.
+2.17.6. In all other cases, the authors of such products may not refer to this license as a basis for protecting their rights.
+2.18. Users under 18 years of age are not permitted to use or distribute Oasis, invoke this Agreement to protect their rights, or distribute or use any add-ons created for this product.
+2.18.1. This provision does not limit the rights or impose additional obligations on other parties to the Agreement and does not entail an obligation on the author or third parties to verify the age of users.
+2.18.2. All responsibility for the actions of a minor user, including violation of the terms of this Agreement, claims from third parties, and possible damages, rests entirely with the user and/or their legal representatives (guardians, parents).
+2.18.3. Ignorance of or failure to understand the terms of this Agreement does not relieve a minor user or their legal representatives of liability for its violation, either under this Agreement or under applicable law, but does not require them to read the legal text. Sufficient grounds for liability include the fact that the product is used by a minor and the representative has not taken measures to restrict access.
+2.18.4. Any commercial transactions concluded by a minor user in connection with the use of Oasis or its add-ons are deemed invalid from the moment they are concluded. Other parties to the Agreement, who do not violate its terms, have the right to demand from the minor and/or their legal representatives:
+  a) return of all funds received under such transaction;
+  b) full compensation for direct and indirect losses caused as a result of the conclusion and execution of an invalid transaction, including lost profits and expenses for the protection of one’s rights.
+2.18.5. Claims shall be made in accordance with the procedure established by this Agreement and current legislation, with reference to this provision, copyrights, and consumer protection regulations.
+2.19. It is prohibited to distribute other people's additions and modifications under the guise of your own and on an "as is" basis without the consent of their owners.  
+2.19.1. Violation of this clause shall be deemed to constitute an attempt to misappropriate copyright. Upon first detection of such a violation:  
+  a) the user loses the right to rely on this license as a basis for protection;  
+  b) all its public copies are subject to removal at the request of the copyright holder;  
+  c) end users are required to cease public distribution and use of such copies.  
+2.19.2. Users who have downloaded such copies are obligated to cease public distribution upon the first request of the copyright holder, the arbitrator, or notification from the platform. In the event of refusal or disregard, the arbitrator will be governed by the remaining provisions of this agreement.
+ 
+3. Mandatory conditions
+ 
+3.1 When using Oasis, you must maintain a visible link to the official project.
+3.1.1. The user has the right, but is not obligated, to integrate a link into their own styles mentioning Oasis that leads to https://oasis.gamer.gd
+3.1.2. The absence of a link on the main page of the site deprives the user of the right to refer to this license as a basis for protecting their rights in disputed matters, but does not deprive them of other rights, including the right to continue to use the Oasis product.
+3.1.3. The presence of a link to the official Oasis project constitutes public confirmation that the product is used under the terms of this license. In the absence of such a link, users and third parties have the right to rely solely on the provisions of current legislation, and the author of Oasis and other parties to this Agreement provide no additional warranties and bear no liability for the consequences of such use.
+3.1.4. A licensed product is a project in which the total volume of the original Oasis author's code is at least 50% of the total number of lines of all project files, with the exception of:
+  a) the /vendor directory and any of its subfolders (including Yii2 and other third-party dependencies);
+  b) spaces, comments and empty lines.
+3.1.4.1. Projects that do not reach the specified threshold are not entitled to refer to this license as a basis for protecting their rights and are obliged to be guided exclusively by the norms of current legislation.
+3.2. The mention of Oasis should not be misleading: the project is not a continuation of GHTWEB 5.
+3.3. A link to the official Oasis website must be present on the main page or in the footer of the project.
+3.3.1. The User loses the right to defend themselves under this license if:
+  a) the link is missing later than 24 hours after the product was first published;
+  b) the link was intentionally removed or hidden after these 24 hours. Rights are restored automatically within 90 days of the link being re-posted on the homepage or footer.
+3.3.2. Use of Oasis without a link is permitted, but the arbitrator has the right to disregard the user's license rights when resolving a dispute.
+3.3.3. Established misrepresentation of the arbitrator (including regarding the presence/absence of a link) shall constitute grounds for denial of protection under the license, without revocation of the license itself and without recovery of damages from the author.
+3.4. Before publishing their own modifications, the user is obligated to review the current version of the license on official Oasis resources.
+3.5. Oasis is built on the Yii2 framework, which is licensed under the BSD-3-Clause license. Users are responsible for adhering to the Yii2 license when using Oasis. The Yii2 license is available at: https://github.com/yiisoft/yii2/blob/master/LICENSE.md
+
+4. Copyright
+
+4.1. All exclusive rights to the Oasis source code belong to the author (copyright holder).
+4.2. The copyright holder reserves the right to revoke the license from those who violate the terms.
+4.2.1. The license is granted irrevocably and without the right of revocation by the copyright holder with respect to a specific user, so long as the user fully complies with the terms of this Agreement. Failure to comply with any material term automatically terminates the user's "irrevocable license" status without further notice, does not revoke the rights of third parties who received a copy prior to the breach, and does not affect bona fide subsequent purchasers.
+4.2.2. The license may be terminated with respect to a specific user upon entry into force of a court or arbitration decision confirming:
+  4.2.2.1. gross violation of the terms of the license (clauses 2.3, 2.4, 2.9, 2.15);
+  4.2.2.2. use of Oasis for illegal activities (clause 2.6).
+4.2.3. Upon termination of the license, the user is obliged to:
+  4.2.3.1. stop using and distributing Oasis;
+  4.2.3.2. remove all copies from public access;
+  4.2.3.3. compensate the copyright holder for damages in accordance with the established procedure.
+4.2.4. The termination of the license does not apply to third parties who received a copy before the effective date of the decision.
+4.2.5. The following may act as an arbitrator (out-of-court settler):
+  4.2.5.1. the copyright holder (author) himself;
+  4.2.5.2. the administration of the resource (platform) on which a copy of Oasis or its modification is hosted, provided that the resource has publicly published rules for handling complaints and does not contradict this license;
+  4.2.5.3. other independent arbitration agreed upon by the parties in writing.
+4.2.6. The arbitrator's decision made under this license shall be binding on the parties to the dispute and may be submitted to the court for enforcement in accordance with the procedure established by the legislation of the defendant's country of registration.
+4.2.7. Arbitration procedure:
+  4.2.7.1. The complaint is submitted through the resource's official channel (GitHub Support, GitLab Abuse, forum moderation, etc.) or to the copyright holder's e-mail.
+  4.2.7.2. The parties shall provide evidence within 10 calendar days.
+  4.2.7.3. The arbitrator shall issue a reasoned decision within 10 calendar days from the end of the receipt of evidence.
+  4.2.7.4. The decision is published on the same platform and/or sent to the parties by e-mail.
+4.2.8. The arbitrator has the right to:
+  4.2.8.1. confirm the user’s right to use Oasis;
+  4.2.8.2. demand the removal of the infringing copy;
+  4.2.8.3. cancel the license of a specific user;
+  4.2.8.4. transfer materials to the competent law enforcement agencies if there are signs of a criminal violation.
+4.2.9. The author's (copyright holder's) participation in arbitration is not mandatory—the resource may make a decision independently based on this license and its rules.
+4.3. Users retain the right to use previously received licenses, except in the following cases:
+4.3.1. Oasis Attributions.
+4.3.2. Violations of this agreement.
+4.3.3. Violation of rights of third parties.
+4.3.4. Intentional misrepresentation.
+4.3.5. Using the product to promote hatred or discrimination.
+4.4. The Author reserves the right to modify this Agreement. The updated version will take effect 30 calendar days after its publication at: https://github.com/lakinets/oasis/LICENSE.txt
+4.4.1. During the specified 30-day period, the user is obliged to:
+  a) familiarize yourself with the new text of the license;
+  b) accept its terms and continue using the product;
+  c) either immediately cease all use of Oasis and delete all copies of it.
+4.4.2. After 30 days, continued use of the product automatically confirms the user's acceptance of the new terms. All liability for failure to read the updated Agreement or the inability to receive it for any reason lies solely with the user.
+4.4.3. If the author makes additional changes within the 30-day period, a new 30-day grace period begins from the moment the latest revision is published at the same link; previous revisions are considered retracted and no longer take effect.
+4.4.4. By agreeing to this Agreement, you acknowledge that the Informing.txt file located at the root of the Oasis repository https://github.com/lakinets/oasis or any additions thereto is a public page of the author for informing users; it is filled out by the author in free form and does not bind the parties to this Agreement in any way.
+4.4.4.1. The absence of Informing.txt does not obligate anyone to anything and cannot lead to any negative consequences; in such cases, the author or owner determines the method of communicating information to other users.
+ 
+5. Limitation of Liability
+ 
+5.1 Oasis is provided "as is" without warranty.
+5.2. The author is not responsible for any damages caused by using Oasis.
+5.3. The author is not responsible for third-party modifications.
+5.4. The user bears full responsibility for changes and distribution of the code.
+5.5. The author is not responsible for the interaction of Oasis with third-party services and software.
+5.6. The author, as well as any arbitrators specified in this agreement, has the right, but not the obligation, to consider complaints and appeals. Neither the author nor any other parties to the arbitration process are responsible for the outcome of the review, delays, or refusal to consider the complaint. If the user disagrees with the decision, they have the right to assert their rights in accordance with the established procedure, citing this license and using other available legal means.
+5.6.1. Requests submitted through the author's official communication channels (listed in the "Contacts" section on the oasis.gamer.gd website, as well as through the feedback form and official repository) are recognized as copyright holder requests in accordance with copyright law. Hosting providers and other platforms are obligated to review such requests within the timeframes established by their rules and take the measures stipulated by law and this license.
+5.7. Users independently determine the method, place, and conditions of sale of their add-ons and bear full responsibility for:
+  a) preservation, accuracy and timely updating of all documents confirming their rights to supplement;
+  b) the existence and accuracy of any permits, licenses, certificates or other legal basis required for distribution of the supplement;
+  c) the absence of the specified documents, their inaccuracy, obsolescence or non-compliance with current legislation.
+5.7.1. The Oasis Author and other parties to this Agreement are not responsible for the documents provided by users when selling their add-ons, and do not participate in verifying their content, authenticity, or legal force.
+5.8. The provisions of paragraph 5.7 do not relieve authors of paid add-ons from the obligations and responsibilities established by consumer protection legislation, including requirements for product quality, information accuracy, refunds, and compensation for damages.
+5.8.1. The authors of free or open-source add-ons provide them "as is" without any guarantee of proper operation. By installing such add-ons, the user agrees that the author is not liable for any direct, indirect, or consequential damages related to the use or inability to use said add-ons.
+5.9. The Oasis author is not responsible for any changes made by other users to the original code, including their accuracy, security, and compliance with legislation.
+
+6. Final Provisions
+
+6.1. Users retain the right to use previously obtained third-party modifications within the framework of their licenses.
+6.2. By submitting their modifications for inclusion in the official Oasis release, the author represents and warrants that they have all necessary rights to transfer such modifications and to freely distribute them.
+6.2.1. Such author agrees to bear full liability, including compensation for all material and moral damages, if he misleads the author of Oasis regarding the existence, scope or legality of the said rights.
+6.3. If the license terms are violated, the user loses the right to use Oasis and is obligated to delete all copies.
+6.4. The copyright holder has the right to demand the removal of Oasis from any platform if the terms of this license are violated.
+6.4.1. Authors of official add-ons have the right to demand the removal of their add-ons from such platforms for violating the terms and conditions established for the add-ons. If the same or similar violation of an add-on's rights is recorded more than once, the arbitrator has the right to remove the entire copy of Oasis, including the add-on, without prior notice.
+6.5 This license is not an OSI or SPDX license, but is intended to protect and govern the use of Oasis.
+6.6. Ignorance of the terms of this license does not relieve the user from liability.
+6.7. The user's intentional or accidental waiver of their rights granted by this license, including unknowingly, cannot limit the rights of other participants under this agreement and does not release them from obligations, including those established by current legislation.
+6.8. By accepting this License Agreement (hereinafter referred to as the “Agreement”), the user confirms that:
+6.8.1. have read the entire Agreement in full before using the Oasis product for the first time;
+6.8.2. understands and accepts all its terms and conditions in full;
+6.8.3. has a sufficient level of proficiency in the language of the Agreement to understand its content;
+6.8.4. In case of non-compliance with the specified requirements, the user is obliged to immediately stop using the product and delete all copies of it.
+6.8.5. Failure to understand the contents of the Agreement for any reason (including poor eyesight, lack of knowledge of the language, technical limitations and other circumstances) does not relieve the party to this Agreement from the obligation to comply with all its terms and applicable laws when using the product.
+6.8.6. The text of the Agreement is posted on the official project repository free of charge and 24/7 at: https://github.com/lakinets/oasis/LICENSE.txt
+6.9. The text of this Agreement included with the Oasis product is provided for informational purposes only. Any modification, addition, deletion, or other distortion of the text of the copy of the Agreement distributed with the product renders such copy invalid and creates no obligations for the copyright holder. The User is obligated to:
+6.9.1. Read the current version of the Agreement on the official repository at: https://github.com/lakinets/oasis/
+6.9.2. immediately stop using the product if he/she is not familiar with the Agreement or does not agree with its terms in full.
+6.10. The invalidity of a modified copy of the Agreement does not relieve the user from the obligations established by the current version of the Agreement and applicable law.
+6.11. Failure to review the current version of this Agreement on the official repository for any reason does not relieve the user from the obligation to comply with its terms.
+6.11.1. If a copy of an Oasis product was obtained from a third party and it is established that the user was misled (including by providing a modified Agreement, false information about the terms of use, or other actions), all moral and material liability, including compensation for damages, shall be borne by the person who carried out such distribution, in accordance with applicable administrative and criminal legislation.
+6.12. By posting copies of the Oasis product, including modifications, additions, and any integrations of the Oasis product into other platforms, you agree that the platform hosting such copies, including its authorized representatives, has the right to arbitrate disputes and the right to unilaterally enforce compliance by other users with the terms of this agreement. By posting such copies, you acknowledge that you trust such platform and its decisions, acknowledge that the decisions of such arbitrator are legal, and undertake to comply with their decision within the timeframe specified by them. You also have the right to appeal their decision in accordance with the established legal procedure.
+6.12.1. By agreeing to the terms of this Agreement, you acknowledge that the term "law" means the laws governing the platform on which a copy of this product is hosted, including all modifications and integrations thereof (including its local rules, user agreement, and applicable national legislation).
+7. General rules for transactions between participants
+7.1 When entering into any transaction with the addendum, both parties confirm that they are 18 years of age or older.
+7.2. The seller is obliged to place a License.txt file in the root of the add-on with the following contents:
+  a) the exact name of the supplement;
+  b) the cost in the transaction currency;
+  c) other terms of sale (return, support, restrictions, etc.).
+7.2.1. Once published, the License.txt file cannot be changed if at least one successful sale has been made; price changes are permitted, but will not affect existing transactions without the buyer's written consent.
+7.2.2. If you violate this clause, you agree that any previously sold copies of this modification or addition do not relieve you of your previous obligations, but users who receive such a product are relieved of any previously stated obligations and are not obligated to comply with any new ones without written consent. A receipt or other documentation confirming the date and time of purchase and dated earlier than the last date and time of such license modification relieves all such users of the obligations of the new version of License.txt and is not considered a violation of the terms of use of such licenses.
+7.3. Both parties guarantee the accuracy of the data provided and the absence of violations of the rights of third parties.
+7.4. If the seller misleads the parties to the transaction or the platform, the latter has the right to:
+  a) remove the product from your resources;
+  b) transfer data (including confidential data) to law enforcement agencies if there are signs of an offense;
+  c) return to the buyer the amount paid within the limits permitted by its rules and without prejudice to its own interests;
+  d) be guided by its rules and this Agreement.
+7.5. After identifying a violation of clause 7.4, the buyer retains a copy of the product and has the right to use it only on an "as is" basis, without the right to public distribution or downloading, provided that this does not violate the rights of third parties.
+7.5.1. If the owner discovers a violation of his rights, in particular illegal or unauthorized sales, which the buyer can confirm, the buyer is obliged within 15 calendar days:
+  a) provide the owner with a complete list of all copies of this addition or modification;
+  b) accept the new terms of use proposed by the owner, or completely stop using all specified copies.
+  All costs, including material and moral damages, shall be borne by the seller who has violated the terms of this clause.
+7.5.2. If the offer is rejected or ignored within 15 days from the date of the owner's request, further use of the goods is deemed illegal, and the arbitrator will be guided by the remaining clauses of this Agreement.
+7.5.3. Proof of purchase (receipt, payment order, email confirmation) is provided by the buyer only once and only for the purpose of amicably settling all copies. Copies not reported to the owner within 15 days are considered to have been obtained by other means and cannot be used as a basis for this provision.
+  The owner is obliged to offer one of two options:
+  - delete all copies;
+  - purchase them at the current price and on terms that do not violate this Agreement.
+  If the owner has not offered any options within 15 days of receiving the list of copies, the claim is considered withdrawn, and the buyer continues to use the add-on under the previous conditions.
+  A repeated claim by the owner is not allowed earlier than 365 days.
+7.5.4. If the owner intentionally or negligently misleads the buyer (including by offering "free" with a hidden fee, a false price, etc.), the transaction is considered invalid.
+The buyer has the right to:
+  - use the add-on on an “as is” basis without the right to public distribution;
+  - demand full compensation for all damages (including costs, legal expenses and moral compensation).
+7.5.5. The withdrawal of a claim by the buyer is a final waiver of any further compensation in any form related to the further use of the addition or modification.
+7.5.6. If it is impossible to notify the buyer, the add-on that infringes third-party rights will be immediately removed or public access blocked until the dispute is fully resolved. If, for any reason, the buyer has not received notification within 15 days of the copyright holder's request, their license for the add-on will be revoked and the add-on will be removed without any other negative consequences. The buyer reserves the right to seek clarification from the arbitrator through the official channels of the platform or hosting provider.
+7.5.7. The timeframe and procedure for reviewing appeals are determined solely by the rules of the platform/hoster; the arbitrator will be guided by these rules and may additionally be guided by this Agreement at their sole discretion.
+7.6. If the terms of paragraph 7.5 are violated, the buyer loses the right to the supplement, expenses are not refunded, and the license is restored only through a new transaction with the consent of the seller.
+7.7. Claims regarding the transaction may be submitted within 14 calendar days from the date of its completion. If neither party files any claims within this period, the transaction is considered successfully completed.
+7.8. All liability for direct and indirect damages, including legal costs, travel expenses and other expenses, shall be borne by the party that violates the terms of this clause.
+7.9. In all other cases, disputes are governed by this Agreement and current legislation.
+7.10. By agreeing to the terms of this Agreement, you acknowledge the right of the arbitrator to be guided by this Agreement, the provisions of the law, and the rules of the platform on which the product is hosted, including all its modifications and integrations into other platforms.
+
+   8. "As is" terms for add-ons without their own license
+
+8.1. Any author's addition, first published without the License.txt file, is considered free from the author's exclusive rights and is distributed on an "as is" basis without warranties.
+8.2. Users who have downloaded such an add-on have the right to:  
+  a) use it on an "as is" basis without any obligations under future licenses;  
+  b) distribute it "as is", including any modifications, in any form and under any conditions;  
+  c) do not violate the copyright of the author of Oasis and do not violate the other provisions of this Agreement.
+8.3. Removal of the License.txt file from at least one official repository while preserving the remaining files is considered a public waiver of exclusive rights by the author and permits free distribution "as is".
+8.3.1. The only exception is the consequence of unauthorized access, provided that the owner, as soon as possible (but no later than 14 calendar days from the date of the incident), publicly announced the illegal actions of third parties and restored the original License.txt file.
+ 
+8.3.2. Restoring License.txt after confirmed unauthorized access is not considered a violation of clause 7.2.1 if:
+  a) the original text of License.txt that existed before the incident is accurately restored;
+  b) the owner placed a text file Informing.txt in the root of the repository with a description of the incident that occurred, the date and time of its discovery, and the fact of restoration of License.txt;
+  c) the content and storage period of Informing.txt are determined by the owner of the add-on, but cannot be less than 30 calendar days from the date of posting;
+  d) all responsibility for the contents of Informing.txt lies with the owner of the add-on in full;
+  d) if a)-d) are observed, the action is considered completed and is not considered a violation of clause 8.3.1.
+
+8.4 Any inaccuracies, ambiguities or discrepancies in License.txt may not be construed in favor of the author of such addition or modification under any circumstances.
+8.5. Rejection under clause 8.3 does not release the author from obligations to participants who received the add-on before the License.txt was deleted.
+8.6. Violation of the rules for creating such additions (including paragraphs 2.16, 2.17, 2.19) deprives the author of the right to refer to this Agreement as a basis for protection, but does not exempt from liability under this Agreement and current legislation.
+
+9. Language and interpretation
+
+Language Clause.
+The authoritative text of this Agreement is the Russian version.
+The English translation is provided for reference only; in case of discrepancy, the Russian text shall prevail.

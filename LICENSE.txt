@@ -1,14 +1,4 @@
-<?php
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-/** @var $model app\modules\install\models\PhpCheckForm */
-?>
-<h1>Шаг 1: Проверка хоста и лицензия</h1>
-
-<!-- Лицензия -->
-<div class="card mb-4">
-    <div class="card-header bg-dark text-white">Лицензионное соглашение Oasis CMS</div>
-    <div class="card-body" style="max-height: 250px; overflow-y: auto; background:#f8f9fa; white-space: pre-line; font-size:14px;">
+Лицензионное соглашение Oasis CMS
 Проект Oasis распространяется бесплатно и предоставляется «как есть» (as-is) для использования в личных и коммерческих проектах.
 Используя Oasis, вы соглашаетесь с условиями настоящего лицензионного соглашения.
 1. Разрешается
@@ -175,7 +165,7 @@ use yii\widgets\ActiveForm;
   в) либо немедленно прекратить любое использование Oasis и удалить все его копии.
  4.4.2. По истечении 30 дней продолжение использования продукта автоматически подтверждает согласие пользователя с новыми условиями. Вся ответственность за неознакомление с обновлённым Соглашением или невозможность его получения по любой причине лежит исключительно на пользователе.
  4.4.3. Если в течение 30-дневного срока автор вносит дополнительные изменения, новая 30-дневная отсрочка начинается с момента публикации последней редакции по той же ссылке; предыдущие редакции считаются отозванными и не вступают в силу.
-4.4.4. Соглашаясь с настоящим Соглашением, вы подтверждаете, что файл Informing.txt, размещённый в корне репозитория Oasis или любых к нему дополнений, является публичной страницей автора для информирования пользователей; он заполняется автором в свободной форме и не может ни к чему обязать участников соглашения.
+4.4.4. Соглашаясь с настоящим Соглашением, вы подтверждаете, что файл Informing.txt, размещённый в корне репозитория Oasis https://github.com/lakinets/oasis или любых к нему дополнений, является публичной страницей автора для информирования пользователей; он заполняется автором в свободной форме и не может ни к чему обязать участников соглашения.
  4.4.4.1. Отсутствие Informing.txt, никого ни к чему не обязывает и не может повлечь каких-либо негативных последствий; автор или владелец в таких случаях сам определяет способ доведения информации до других пользователей.
  
  5. Ограничение ответственности
@@ -186,7 +176,7 @@ use yii\widgets\ActiveForm;
 5.4. Пользователь несёт полную ответственность за изменения и распространение кода.
 5.5. Автор не несёт ответственности за взаимодействие Oasis со сторонними сервисами и ПО.
 5.6. Рассмотрение жалоб и апелляций автором, а также любыми арбитрами, указанными в настоящем соглашении, является правом, но не обязательством. Ни автор, ни иные лица, участвующие в процедуре арбитража, не несут ответственности за результаты рассмотрения, задержки или отказ в рассмотрении. Если пользователь не согласен с принятым решением, он вправе отстаивать свои права в установленном законом порядке, ссылаясь на настоящую лицензию и используя иные доступные правовые средства.
- 5.6.1. Запросы, направленные через официальные каналы связи автора (перечисленные в разделе «Контакты» на сайте oasis-cms.ru, а также через форму обратной связи и официальный репозиторий), признаются требованиями правообладателя в соответствии с законом об авторском праве. Хостинг-провайдеры и иные площадки обязаны рассмотреть такие запросы в установленные их правилами сроки и принять меры, предусмотренные законодательством и настоящей лицензией.
+ 5.6.1. Запросы, направленные через официальные каналы связи автора (перечисленные в разделе «Контакты» на сайте oasis.gamer.gd, а также через форму обратной связи и официальный репозиторий), признаются требованиями правообладателя в соответствии с законом об авторском праве. Хостинг-провайдеры и иные площадки обязаны рассмотреть такие запросы в установленные их правилами сроки и принять меры, предусмотренные законодательством и настоящей лицензией.
 5.7. Пользователи самостоятельно определяют способ, место и условия продажи своих дополнений и несут полную ответственность за:
   а) сохранение, достоверность и своевременное обновление всех документов, подтверждающих их права на дополнение;
   б) наличие и точность любых разрешений, лицензий, сертификатов или иных правовых оснований, необходимых для распространения дополнения;
@@ -287,103 +277,3 @@ use yii\widgets\ActiveForm;
 Language Clause.
 The authoritative text of this Agreement is the Russian version.
 The English translation is provided for reference only; in case of discrepancy, the Russian text shall prevail.
-</div>
-
-<!-- Чек-бокс согласия -->
-<?php $form = ActiveForm::begin(); ?>
-    <div class="form-check mb-3">
-        <input type="checkbox" class="form-check-input" id="acceptLicense" required>
-        <label class="form-check-label" for="acceptLicense">
-            Я принимаю условия соглашения
-        </label>
-    </div>
-<?php ActiveForm::end(); ?>
-
-
-<h2>Проверка окружения</h2>
-<ul>
-    <li>PHP ≥ 8.2:
-        <b class="text-<?= $model->checkPhp() ? 'success' : 'danger' ?>">
-            <?= $model->checkPhp() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>PDO MySQL:
-        <b class="text-<?= $model->checkPdo() ? 'success' : 'danger' ?>">
-            <?= $model->checkPdo() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>GD extension:
-        <b class="text-<?= $model->checkGd() ? 'success' : 'danger' ?>">
-            <?= $model->checkGd() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>mod_rewrite:
-        <b class="text-<?= $model->checkModRewrite() ? 'success' : 'danger' ?>">
-            <?= $model->checkModRewrite() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>Запись в <code>protected/runtime/logs/app.log</code>:
-        <b class="text-<?= $model->checkLogWritable() ? 'success' : 'danger' ?>">
-            <?= $model->checkLogWritable() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>Запись в <code>online.txt</code>:
-        <b class="text-<?= $model->checkOnlineTxtWritable() ? 'success' : 'danger' ?>">
-            <?= $model->checkOnlineTxtWritable() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-    <li>Запись в <code>robots.txt</code>:
-        <b class="text-<?= $model->checkRobotsTxtWritable() ? 'success' : 'danger' ?>">
-            <?= $model->checkRobotsTxtWritable() ? 'Да' : 'Нет' ?>
-        </b>
-    </li>
-
-    <?php if ($model->checkInstallDirWritable() !== null): ?>
-        <li>Права на папку <code>protected/modules/install</code> (777):
-            <b class="text-<?= $model->checkInstallDirWritable() ? 'success' : 'danger' ?>">
-                <?= $model->checkInstallDirWritable() ? 'Да' : 'Нет' ?>
-            </b>
-        </li>
-    <?php endif; ?>
-</ul>
-
-<?php
-// считаем, сколько тестов «красное»
-$failed  = 0;
-$failed += $model->checkPhp()            ? 0 : 1;
-$failed += $model->checkPdo()           ? 0 : 1;
-$failed += $model->checkGd()            ? 0 : 1;
-$failed += $model->checkModRewrite()    ? 0 : 1;
-$failed += $model->checkLogWritable()   ? 0 : 1;
-$failed += $model->checkOnlineTxtWritable() ? 0 : 1;
-$failed += $model->checkRobotsTxtWritable() ? 0 : 1;
-if ($model->checkInstallDirWritable() !== null) {
-    $failed += $model->checkInstallDirWritable() ? 0 : 1;
-}
-?>
-
-<button id="nextBtn" class="btn btn-primary" disabled>Дальше</button>
-
-<?php if ($failed): ?>
-    <p class="alert alert-warning mt-2">
-        Некоторые требования не выполнены (<?= $failed ?>). Установка может работать нестабильно.
-    </p>
-<?php endif; ?>
-
-<script>
-    const checkbox = document.getElementById('acceptLicense');
-    const nextBtn  = document.getElementById('nextBtn');
-
-    function toggleNext() {
-        nextBtn.disabled = !checkbox.checked;
-    }
-    checkbox.addEventListener('change', toggleNext);
-    toggleNext(); // первый запуск
-
-    nextBtn.addEventListener('click', () => {
-        if (<?= $failed ?> && !confirm('Продолжить несмотря на предупреждения?')) {
-            return;
-        }
-        window.location.href = '<?= \yii\helpers\Url::to(['step2']) ?>';
-    });
-</script>

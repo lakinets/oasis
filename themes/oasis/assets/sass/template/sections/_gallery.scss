@@ -1,0 +1,33 @@
+.gallery_grid {
+  position: relative;
+
+  &_icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+
+  &_img {
+    overflow: hidden;
+    position: relative;
+
+    >img {
+      width: 100%;
+      transition: all ease-in-out 0.4s;
+      transform: scale(1);
+    }
+  }
+
+  &:hover {
+    .gallery_grid {
+      &_img {
+        >img {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+}

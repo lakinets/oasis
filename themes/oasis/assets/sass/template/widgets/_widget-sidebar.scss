@@ -1,0 +1,404 @@
+.sidebar-area {
+  background-color: #212121;
+  padding: 50px 50px 10px 50px;
+  .widget {
+    margin-bottom: 40px;
+  }
+}
+
+.widget {  
+  select,
+  input {
+    color: $body-color;
+    padding-left: 30px;
+    font-size: 16px;
+    background-color: var(--input-bg, #212121);
+    border: 1px solid rgba(#707070, 0.40);
+    height: 60px;
+    border-radius: 9999px;
+    font-weight: 500;
+    width: 100%;
+
+    @include inputPlaceholder {
+      color: $body-color;
+    }
+  }
+}
+
+.widget-big-title h2,
+.widget_title {
+  font-size: 24px;  
+  line-height: 1;
+  margin-bottom: 30px;
+  margin-top: -0.17em;
+  padding-bottom: 17px;
+  position: relative;
+  color: $white-color;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 2px;
+    background-color: $theme-color2;
+  }
+}
+
+.widget {
+  .search-form {
+    position: relative;
+
+    input {
+      padding-right: 50px;
+    }
+
+    button {
+      text-align: center;
+      padding: 0;
+      color: #707070;
+      background-color: transparent;
+      border: none;
+      position: absolute;
+      right: 30px;
+      line-height: 1;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 26px;
+
+      &:hover {
+        border-color: $theme-color;
+        background-color: $white-color;
+        color: $theme-color;
+      }
+    }
+  }
+}
+
+.wp-block-tag-cloud,
+.widget .tagcloud {
+
+  a {
+    display: inline-block;
+    border: none;
+    text-transform: capitalize;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    padding: 10.5px 23px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    color: $body-color;
+    background-color: var(--tag-bg, #f6f6f6);
+    border-radius: 9999px;
+
+    &:hover {
+      background-color: $theme-color;
+      color: $white-color !important;
+    }
+  }
+}
+
+.widget .tagcloud {
+  margin-right: -5px;
+  margin-bottom: -10px;
+}
+
+.widget {
+  .tagcloud {
+    a:not(:hover) {
+      background-color: #fff;
+    }
+  }
+}
+
+.recent-post {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .post-title {
+    font-weight: 500;
+    font-size: 20px;
+    color: $white-color;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .media-img {
+    margin-right: 25px;
+    width: 80px;
+    border-radius: 5px;
+    border: 1px solid #707070;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .recent-post-meta {
+    line-height: 1.2;
+    
+    a {
+      position: relative;
+      font-size: 16px;
+      font-family: $title-font;
+      padding-right: 13px;
+      margin-right: 8px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 1px;
+        height: 10px;
+        background-color: $theme-color2;
+        margin-top: -5px;
+      }
+
+      i {
+        margin-right: 8px;
+        font-size: 0.75em;
+      }
+
+      &:last-child {
+        margin-right: 0;
+        padding-right: 0;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.style2 {
+    .post-title {
+      font-weight: 600;
+      color: $title-color;
+    }
+
+    .recent-post-meta {
+      a {
+        color: $body-color;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+
+.recent-post-tab {
+  position: relative;
+  margin-bottom: 20px;
+  
+  .nav-link {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: $title-font;
+    text-transform: capitalize;
+    padding: 0 19px 10px 19px;
+    color: $white-color;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+
+    &:last-of-type {
+      padding-right: 0;
+    }
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &.active,
+    &:hover {
+      color: $theme-color2;
+    }
+  }
+
+  .indicator {
+    position: absolute;
+    left: var(--pos-x);
+    bottom: var(--pos-y);
+    height: 2px;
+    width: var(--width-set);
+    background-color: $theme-color2;
+    transition: all ease 0.4s;
+  }
+
+  &.style2 {
+    border-bottom: 1px solid $title-color;
+    
+    button {
+      color: $title-color;
+      font-weight: 600;
+    }
+
+    .indicator {
+      height: 1px;
+      margin-bottom: -1px;
+    }
+  }
+}
+
+
+.widget-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding-top: 10px;
+
+  .gallery-thumb {
+    position: relative;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: all ease 0.4s;
+      transform: scale(1);
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.4);
+      }
+    }
+  }
+
+}
+
+
+.widget-author-about {
+  display: flex;
+  align-items: center;
+
+  .avater {
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 25px;
+  }
+
+  .text {
+    color: $white-color;
+    margin-bottom: 10px;
+    line-height: 26px;
+  }
+
+  .name {
+    color: $theme-color2;
+    margin-bottom: 0;
+  }
+
+  .degi {
+    color: #B8B8B8;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+}
+
+
+@include xl {
+  .widget-author-about {
+    display: block;
+
+    .avater {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 20px;
+      margin-right: 0;
+    }
+  }
+}
+
+@include ml {
+  .sidebar-area {
+    padding: 30px 30px 10px 30px;
+  }
+
+  .recent-post {
+    .post-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .recent-post-meta a {
+      font-size: 14px;
+      padding-right: 11px;
+      margin-right: 6px;
+    }
+
+    .media-img {
+      margin-right: 15px;
+    }
+  }
+
+  
+
+}
+
+
+@include lg {
+  .widget-big-title h2,
+  .widget_title {
+    font-size: 20px;
+  }
+
+  .widget_title,
+  .widget-big-title h2 {
+    &:before {
+      width: 45px;
+    }
+  }
+
+  .widget {
+    .search-form {
+      button {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .recent-post-tab {
+    .nav-link {
+      font-size: 14px;
+      padding: 0 10px 10px 10px;
+    }
+  }
+
+  .recent-post:not(.style2) {
+    .recent-post-meta {
+      a {
+        font-size: 14px;
+        padding-right: 0;
+        margin-right: 0;
+        display: block;
+        width: max-content;
+        margin-bottom: 5px;
+
+        &::before {
+          display: none;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+
+@include md {
+  .wp-block-tag-cloud a,
+  .widget .tagcloud a {
+    padding: 10.5px 18px;
+  }
+}

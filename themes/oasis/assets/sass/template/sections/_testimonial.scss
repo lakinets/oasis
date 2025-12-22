@@ -1,0 +1,66 @@
+.testimonial-box {
+  margin-bottom: 30px;
+
+  &_avater {
+    width: var(--avater-size, 90px);
+    height: var(--avater-size, 90px);
+    margin: 0 0 calc(var(--avater-size, 90px) / -2) var(--gap-x, 50px);
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  &_icon {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+  }
+
+  &_rating {
+    color: $yellow-color;
+    margin-top: calc(var(--avater-size, 90px) / 2);
+  }
+
+  &_text {
+    color: $white-color;
+  }
+
+  &_name {
+    border-top: 1px solid #393939;
+    color: $white-color;
+    margin-top: 18px;
+    padding-top: 15px;
+    margin-bottom: 0;
+  }
+
+  &_degi {
+    color: rgba(#fff, 0.7);
+  }
+  
+  &_content {
+    position: relative;
+    padding: 15px var(--gap-x, 50px) 22px var(--gap-x, 50px);
+    border-radius: 10px;
+    background-color: $title-color;
+  }
+}
+
+
+@include xl {
+  .testimonial-box {
+    --gap-x: 40px;
+
+    &_icon {
+      right: 15px;
+      top: 15px;
+      max-width: 45px;
+    }
+  }
+}
+
+@include sm {
+  .testimonial-box {
+    --gap-x: 30px;
+  }
+}

@@ -1,0 +1,86 @@
+.widget_nav_menu,
+.widget_meta,
+.widget_pages,
+.widget_archive,
+.widget_categories {
+
+  ul {
+    list-style: none;
+    margin: 0px 0 -5px 0;
+    padding: 0;
+  }
+
+  a {
+    display: block;
+    position: relative;
+    color: $white-color;
+    border-bottom: 1px solid rgba(#A5A5A5, 0.30);
+    line-height: 1;
+    padding-bottom: 17px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 400;
+    transition: all ease 0.4s;
+    font-family: $title-font;
+
+    &:hover {
+      color: $theme-color2;
+    }
+  }
+
+  li {
+    display: block;
+    position: relative;
+
+    >span {
+      font-size: 18px;
+      color: $white-color;
+      position: absolute;
+      right: 0;
+      top: -1px;
+      line-height: 1;
+      transition: all ease 0.4s;
+      font-family: $title-font;
+    }
+
+    &:hover {
+      > span {
+        color: $theme-color2;
+      }
+    }    
+  }
+
+  .children {
+    margin-left: 10px;
+  }
+}
+
+.widget_nav_menu,
+.widget_meta,
+.widget_pages {
+  a {
+    padding-right: 20px;
+  }
+}
+
+
+.widget_nav_menu {
+  .sub-menu {
+    margin-left: 10px;
+  }
+}
+
+.wp-block-archives {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px;
+
+  a:not(:hover) {
+    color: inherit;
+  }
+}
+
+.vs-blog ul.wp-block-archives li {
+  margin: 5px 0;
+}

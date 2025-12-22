@@ -1,0 +1,88 @@
+.sec-title {
+  margin-top: -0.25em;
+  margin-bottom: 18px;
+
+  +.sec-title-style2 {
+    margin-top: -0.45em;
+  }
+  
+  &-style2 {
+    font-weight: 300;
+    margin-top: -0.25em;
+    margin-bottom: 18px;
+    color: $theme-color2;
+  }
+}
+
+.sub-title {
+  font-size: 16px;
+  letter-spacing: 0.5em;
+  color: $theme-color2;
+  font-weight: 400;
+  display: block;
+  font-family: $title-font;
+  margin-top: -0.45em;
+  margin-bottom: 18px;
+  color: $theme-color2;
+
+  &.style2 {
+    color: $theme-color;
+    font-weight: 500;
+  }
+}
+
+.sec-shape {
+  line-height: 1;
+  
+  &_bar {
+    display: inline-block;
+    background-color: $theme-color2;
+    height: 10px;
+    width: 35px;
+    margin-right: 13px;
+    transform: skewX(-45deg);
+
+    &:first-child {
+      margin-left: 5px;
+    }
+
+    &:last-child {
+      margin-right: 0;
+      background-color: $theme-color;
+    }
+  }
+}
+
+
+.sec-text {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+
+.title-area {
+  margin-bottom: var(--section-title-space);
+}
+
+
+
+
+
+@include lg {
+  .sub-title {
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+  }
+
+  .title-area {
+    margin-bottom: calc(var(--section-title-space) - 20px);
+  }
+}
+
+@include sm {
+  .sec-text {
+    font-size: 16px;
+    line-height: 26px;
+  }
+}

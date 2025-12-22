@@ -1,0 +1,79 @@
+.vs-slider-tab {
+  position: relative;
+  background-color: $dark-color;
+  margin-bottom: 35px;
+  width: max-content;
+  max-width: 100%;
+  
+  .tab-btn {
+    border: none;
+    background-color: transparent;
+    display: inline-block;
+    color: $white-color;
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: capitalize;
+    background-color: transparent;
+    font-family: $title-font;
+    line-height: 1;
+    padding: 25px 49px;
+    z-index: 1;
+
+    &:hover {
+      background-color: transparent;
+      color: $white-color;
+    }
+
+    &.active {
+      background-color: transparent;
+      color: $white-color;
+    }
+  }
+
+  .indicator {
+    position: absolute;
+    left: var(--pos-x);
+    top: var(--pos-y);
+    background: linear-gradient(to right, $theme-color 0%, $theme-color2 100%);
+    transition: all ease 0.4s;
+    --indicator-size: 15px;
+    clip-path: polygon(0% 0%, 100% 0%, 100%  calc(100% - var(--indicator-size)), 54%  calc(100% - var(--indicator-size)), 50% 100%, 46%  calc(100% - var(--indicator-size)), 0  calc(100% - var(--indicator-size)));
+    height: calc(var(--height-set) + var(--indicator-size));
+    width: var(--width-set);
+
+    &.start {
+      clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - var(--indicator-size)), 100% calc(100% - var(--indicator-size)), 100% 100%, 95% calc(100% - var(--indicator-size)), 0 calc(100% - var(--indicator-size)));
+    }
+    
+    &.end {
+      clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - var(--indicator-size)), 0% calc(100% - var(--indicator-size)), 0% 100%, 5% calc(100% - var(--indicator-size)), 0 calc(100% - var(--indicator-size)));
+    }
+
+  }
+}
+
+
+
+@include md {
+  .vs-slider-tab {
+    .tab-btn {
+      font-size: 16px;
+      padding: 18px 30px;
+    }
+  }
+}
+
+@include sm {
+  .vs-slider-tab {
+    .tab-btn {
+      font-size: 14px;
+      padding: 11px 16px;
+    }
+
+    .indicator {
+      --indicator-size: 7px;
+      clip-path: none !important;
+      height: var(--height-set);
+    }
+  }
+}

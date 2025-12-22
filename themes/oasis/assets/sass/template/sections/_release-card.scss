@@ -1,0 +1,64 @@
+.release-card {
+  --border-color: #707070;
+
+  &_img {
+    border-radius: 10px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: all ease 0.4s;
+      transform: scale(1);
+    }
+  }
+  
+  &_logo {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    background-color: $white-color;
+    transition: all ease 0.4s;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    margin-top: -60px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 7px;
+  }
+
+
+  &_label {
+    font-size: 14px;
+    letter-spacing: 0.5em;
+    font-weight: 300;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  &_title {
+    margin-bottom: 11px;
+  }
+
+  &_content {
+    padding: 0 25px;
+
+    @include lg {
+      padding: 0 15px;
+    }
+  }
+
+  &:hover {
+    .release-card {
+      &_img {
+        img {
+          transform: scale(1.15);
+        }
+      }
+
+      &_logo {
+        background-color: $theme-color2;
+      }
+    }
+  }
+}

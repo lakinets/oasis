@@ -1,0 +1,148 @@
+.vs-product-card {
+  margin-bottom: 20px;
+
+  .product-img {
+    text-align: center;
+    background-color: $white-color;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    height: 250px;
+
+    img {
+      max-height: 100%;
+      transform: scale(1);
+      transition: all ease 0.4s;
+    }
+  }
+
+  .product-title {
+    color: $white-color;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .price {
+    color: $white-color;
+    font-weight: 500;
+    opacity: 1;
+    margin-bottom: 0;
+
+    del {
+      font-weight: 400;
+      opacity: 0.7;
+    }
+  }
+
+  &:hover {
+    .product-img {
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+
+  &.style2 {
+    .product-img {
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: auto;
+        height: auto;
+        max-height: 100%;
+      }
+    }
+  }
+}
+
+
+.vs-product-grid {
+  background-color: $white-color;
+  padding: 35px 40px 40px 40px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(#192C4B, 0.08);
+  
+  .product-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 18px 0;
+  }
+
+  .product-title {
+    margin: -0.01em 0 0 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .star-rating {
+    font-size: 12px;
+    width: 80px;
+  }
+
+  .product-img {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: all ease 0.4s;
+      transform: scale(1.0001);
+    }
+    
+    .wishlist-total {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: $white-color;
+      color: $title-color;
+      line-height: 1;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 8px 15px;
+      border-radius: 50px;
+
+      i {
+        margin-right: 8px;
+        color: #FF0000;
+      }
+    }
+  }
+
+
+  &:hover {
+    .product-img {
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+}
+
+
+
+@include xl {
+  .vs-product-grid {
+    padding: 25px 25px 30px 25px;
+
+    .product-title {
+      font-size: 18px;
+    }
+  }
+} 
+
+@include sm {
+  .vs-product-grid {
+    .product-title {
+      font-size: 16px;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+@each $bgcolorMap, $value in $bgcolorMap {
+  .bg-#{$bgcolorMap} {
+    background-color: #{$value} !important;
+  }
+}
+
+.background-image,
+[data-bg-src] {
+  @include background-content(no-repeat, cover, center center);
+}
+
+.bg-fluid {
+  @include background-content(no-repeat, 100% 100%, center center);
+}
+
+.bg-auto {
+  background-size: auto auto;
+}
+
+.bg-fixed {
+  background-attachment: fixed;
+}
+
+
+.bg-light-gray {
+  background-color: #F9F9F9;
+}
+
+.bg-light-blue {
+  background-color: #D9E6FF;
+}
+
+.bg-mock-dark {
+  background-color: #262228;
+}

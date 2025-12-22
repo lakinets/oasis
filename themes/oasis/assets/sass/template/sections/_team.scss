@@ -1,0 +1,207 @@
+.team-card {
+  text-align: center;
+  background-color: $dark-color;
+  border-radius: 10px;
+  position: relative;
+  padding: 70px 0;
+  margin-bottom: 35px;
+
+  &_icon {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+  }
+
+  &_shape {
+    background-color: $theme-color2;
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    border-radius: inherit;
+  }
+
+  &_logo {
+    margin-bottom: 25px;
+    max-height: 160px;
+
+    img {
+      width: auto;
+      max-height: 100%;
+    }
+  }
+
+  &_label {
+    font-size: 20px;
+    line-height: 1;
+    color: $theme-color;
+    letter-spacing: 0.5em;
+    font-family: $title-font;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+
+  &_title {
+    color: $white-color;
+    margin-bottom: 20px;
+  }
+
+  &_time,
+  &_date {
+    font-family: $title-font;
+    line-height: 1;
+    color: $white-color;
+    font-weight: 700;
+  }
+
+  &_time {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+
+  &_date {
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
+
+  &_links {
+    margin-bottom: 17px;
+
+    a {
+      color: $white-color;
+      font-size: 30px;
+      display: inline-block;
+      line-height: 1;
+      margin-right: 15px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &:hover {
+        color: $title-color;
+      }
+    }
+  }
+
+
+  &_slider {
+    --pos-x: -20px;
+  }
+
+}
+
+.team-map {
+  iframe {
+    height: 280px;
+  }
+}
+
+.verses-text {
+  font-size: 250px;
+  line-height: 1;
+  display: inline-block;
+}
+
+.team-pill {
+  background-color: $white-color;
+  border: 1px solid #E2EEF1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px 15px 20px;
+
+  &__img {
+    width: var(--img-size, 102px);
+    height: var(--img-size, 102px);
+    line-height: var(--img-size, 102px);
+    margin-right: 35px;
+    text-align: center;
+    background-color: #E4E4E4;
+    border-radius: 50%;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  &__time {
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-block;
+    font-family: $title-font;
+    color: $title-color;
+    margin: 0 5px 0 0;
+  }
+
+  &__date {
+    font-size: 14px;
+    font-family: $title-font;
+    color: $title-color;
+    font-weight: 500;
+    display: inline-block;
+    margin: 0 0 0 0;
+  }
+
+  &__links {
+    a {
+      font-size: 18px;
+      display: inline-block;
+      margin: 0 8px 0 0;
+    }
+  }
+
+}
+
+@include ml {
+  .verses-text {
+    font-size: 110px;
+  }
+}
+
+@include lg {
+  .team-card {
+    padding: 40px 15px;
+
+    &_icon {
+      right: 20px;
+      top: 20px;
+      bottom: auto;
+      max-width: 50px;
+    }
+  }
+
+  .verses-text {
+    font-size: 90px;
+  }
+}
+
+@include ml {
+  .verses-text {
+    font-size: 60px;
+  }
+}
+
+
+@include sm {
+  .team-pill {
+    --img-size: 80px;
+
+    .team-pill__img {
+      margin-right: 20px;
+
+      img {
+        max-width: 60%;
+      }
+    }
+  }
+
+}

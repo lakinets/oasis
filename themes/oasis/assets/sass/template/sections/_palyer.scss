@@ -1,0 +1,83 @@
+.palyer-card {
+  position: relative;
+  margin-bottom: 30px;
+  
+  &_img {
+    overflow: hidden;
+    border-radius: 30px;
+    
+    img {
+      width: 100%;
+      transform: scale(1);
+      transition: all ease 0.4s;
+    }
+  }
+
+  &_degi {
+    font-size: 16px;
+    font-family: $title-font;
+    display: block;
+    line-height: 1;
+    color: $theme-color2;
+    margin-bottom: 8px;
+  }
+
+  &_content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    z-index: 1;
+    text-align: center;
+    background-color: $title-color;
+    padding: 25px 20px;
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 10px;
+    transition: all ease 0.4s;
+  }
+
+  &_name {
+    color: $white-color;
+    padding-bottom: 13px;
+    position: relative;
+    margin-bottom: 0;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      height: 2px;
+      width: 40px;
+      margin-left: -20px;
+      background-color: $theme-color2;
+      transition: all ease .4s;
+    }
+  }
+
+  &:hover {
+    .palyer-card {
+      &_img {
+        img {
+          transform: scale(1.15);
+        }
+      }
+
+      &_content {
+        bottom: 0;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+
+.palyer-card-slider {
+  margin-bottom: -50px;
+  
+  .palyer-card {
+    padding-bottom: 50px;
+  }
+}

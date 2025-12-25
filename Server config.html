@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Редактор базы данных (1:1 + глобальная замена)</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:40px;background:#f7f7f7}
+.box{max-width:1000px;margin:auto;background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+h2{margin-top:0;font-size:22px}
+h3{margin-top:25px;font-size:18px;border-bottom:1px solid #ddd;padding-bottom:6px}
+label{display:block;margin-top:7px;font-size:14px}
+input[type=text]{width:100%;padding:6px;box-sizing:border-box}
+button{margin-top:25px;width:100%;padding:12px;font-size:16px;background:#28a745;color:#fff;border:0;border-radius:4px;cursor:pointer}
+button:hover{background:#218838}
+.hint{font-size:12px;color:#666;margin:4px 0 12px}
+hr{border:none;border-top:1px solid #ddd;margin:25px 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Файл конфигурации базы данных для работы Oasis</h2>
+<p style="font-size:14px;color:#555;margin-top:8px">
+Для автоматического создания файла конфигурации для работы с вашим сервером вам необходимо заполнить все поля, если они отличаются от стандартных.<br>
+Если вы не знаете, какое точно нужно название – ищите в вашей базе данных максимально похожие имена. Если таковых нет или вы не уверены – ищите в поисковиках, форумах или обратитесь к разработчику вашего проекта.<br>
+Полученный файл нужно поместить в папку <strong>\protected\l2j</strong> и активировать его в настройках админки вашего сайта <strong>your-site/backend/</strong>.
+</p>
+
+<h3>Заполните ваши поля так, как у вашей базы данных</h3>
+<div class="two-col" id="uniqEditor"></div>
+
+<hr>
+<label>Имя выходного файла (без .php)
+<input type="text" id="fileName" placeholder="Pwsoft_it">
+</label>
+
+<button onclick="downloadPhp()">Скачать PHP</button>
+</div>
+
+<script>
+// === 1. НАБОР УНИКАЛЬНЫХ ИМЁН (таблицы + поля) ===
+// русская подпись : внутреннее имя (по умолчанию)
+const labels = {
+/* таблицы */
+'Таблица персонажей (по умолчанию characters)':'characters',
+'Таблица кланов (по умолчанию clan_data)':'clan_data',
+'Таблица предметов (по умолчанию items)':'items',
+'Таблица замков (по умолчанию castle)':'castle',
+'Таблица аккаунтов (по умолчанию accounts)':'accounts',
+
+/* поля персонажей */
+'Логин аккаунта':'account_name',
+'ID персонажа':'obj_Id',
+'Имя персонажа':'char_name',
+'Пол':'sex',
+'Ось координат X':'x',
+'Ось координат Y':'y',
+'Ось координат Z':'z',
+'Карма':'karma',
+'PvP-убийства':'pvpkills',
+'Pk-убийства':'pkkills',
+'ID клана':'clanid',
+'Титул':'title',
+'Уровень доступа':'accesslevel',
+'Онлайн':'online',
+'Время в игре':'onlinetime',
+'Расса / класс':'race',
+'Уровень':'level',
+'Опыт':'exp',
+'SP-очки':'sp',
+'Максимальное здоровье':'maxHp',
+'Текущее здоровье':'curHp',
+'Максимальная выносливость':'maxCp',
+'Текущая выносливость':'curCp',
+'Максимальная манна':'maxMp',
+'Текущая манна':'curMp',
+
+/* поля кланов */
+'ID клана':'clan_id',
+'Название клана':'clan_name',
+'Уровень клана':'clan_level',
+'Владение замком':'hasCastle',
+'ID герба':'crest_id',
+'Репутация':'reputation_score',
+
+/* поля предметов */
+'Владелец (ID персонажа)':'owner_id',
+'ID предмета в мире':'object_id',
+'ID предмета в таблице':'item_id',
+'Количество':'count',
+'Уровень заточки':'enchant_level',
+'Локация (INVENTORY / WAREHOUSE и т.д.)':'loc',
+'Доп. локация':'loc_data',
+
+/* поля замков */
+'Процент налога':'taxPercent',
+'Дата осады':'siegeDate'
+};
+
+// === 2. СТРОИМ ФОРМУ ===
+const ed = document.getElementById('uniqEditor');
+Object.entries(labels).forEach(([labelText, fieldName]) => {
+  ed.insertAdjacentHTML('beforeend',
+    `<label>${labelText}
+       <input type="text" id="u_${fieldName}" value="${fieldName}" />
+     </label>`
+  );
+});
+
+// === 3. СБОР ВВЕДЁННЫХ ЗНАЧЕНИЙ ===
+function getUniqValues(){
+  const map = {};
+  Object.values(labels).forEach(fieldName => {
+    map[fieldName] = document.getElementById('u_' + fieldName).value.trim() || fieldName;
+  });
+  return map;
+}
+
+// === 4. «ЧИСТЫЙ» ШАБЛОН (1:1 с вашим исходным кодом) ===
+function getBaseTemplate(){
+  return `<?php
+namespace app\\l2j;
+
+use yii\\db\\Connection;
+use yii\\db\\Query;
+
+/**
+ * class Pwsoft_it
+ * ---------------
+ * Универсальный драйвер для работы с БД сервера Pwsoft (Yii 2 / PHP 8.2)
+ */
+class Pwsoft_it
+{
+    private Connection $db;
+    private string $dbName;
+
+    protected array $fields = [
+        'characters' => [
+            'account_field' => 'account_name',
+            'name_field'    => 'char_name',
+            'id_field'      => 'obj_Id',
+        ],
+        'clans' => [
+            'id_field'   => 'clan_id',
+            'name_field' => 'clan_name',
+        ],
+    ];
+
+    public function __construct(Connection $db, string $dbName = null)
+    {
+        $this->db = $db;
+        $this->dbName = $dbName ? "{$dbName}." : '';
+    }
+
+    public function getField(string $table, string $field): string
+    {
+        return $this->fields[$table][$field] ?? $field;
+    }
+
+    /* ---------- ПЕРСОНАЖИ ---------- */
+    public function charactersQuery(): Query
+    {
+        return (new Query())
+            ->select([
+                'characters.account_name',
+                'characters.obj_Id AS char_id',
+                'characters.char_name',
+                'characters.sex',
+                'characters.x', 'characters.y', 'characters.z',
+                'characters.karma',
+                'characters.pvpkills',
+                'characters.pkkills',
+                'characters.clanid AS clan_id',
+                'characters.title',
+                'characters.accesslevel AS access_level',
+                'characters.online',
+                'characters.onlinetime',
+                'characters.race AS base_class',
+                'characters.level',
+                'characters.exp',
+                'characters.sp',
+                'characters.maxHp', 'characters.curHp',
+                'characters.maxCp', 'characters.curCp',
+                'characters.maxMp', 'characters.curMp',
+                'clan_data.clan_name',
+                'clan_data.clan_level',
+                'clan_data.hasCastle',
+                'clan_data.crest_id AS clan_crest',
+                'clan_data.reputation_score',
+            ])
+            ->from($this->dbName . 'characters')
+            ->leftJoin(
+                $this->dbName . 'clan_data',
+                $this->dbName . 'clan_data.clan_id = ' . $this->dbName . 'characters.clanid'
+            );
+    }
+
+    /* ---------- КЛАНЫ ---------- */
+    public function clansQuery(): Query
+    {
+        return (new Query())
+            ->select(['clan_data.*'])
+            ->from($this->dbName . 'clan_data')
+            ->leftJoin(
+                $this->dbName . 'characters',
+                $this->dbName . 'characters.obj_Id = ' . $this->dbName . 'clan_data.leader_id'
+            );
+    }
+
+    /* ---------- ПРЕДМЕТЫ ---------- */
+    public function itemsQuery(): Query
+    {
+        return (new Query())
+            ->select([
+                'owner_id',
+                'object_id',
+                'item_id',
+                'count',
+                'enchant_level',
+                'loc',
+                'loc_data',
+            ])
+            ->from($this->dbName . 'items');
+    }
+
+    /**
+     * Добавляет предмет в инвентарь персонажа.
+     * Генерирует уникальный object_id самостоятельно.
+     */
+    public function insertItem(int $charId, int $itemId, int $count, int $enchant): void
+    {
+        $maxId = (int)$this->db->createCommand(
+            'SELECT MAX(object_id) FROM ' . $this->dbName . 'items'
+        )->queryScalar();
+        $newId = $maxId + 1;
+
+        $this->db->createCommand()
+            ->insert($this->dbName . 'items', [
+                'object_id'     => $newId,
+                'owner_id'      => $charId,
+                'item_id'       => $itemId,
+                'count'         => $count,
+                'enchant_level' => $enchant,
+                'loc'           => 'INVENTORY',
+                'loc_data'      => 0,
+                'time_of_use'   => 0,
+            ])
+            ->execute();
+    }
+
+    /* ---------- СТАТИСТИКА ---------- */
+    public function getCountAccounts(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'accounts'
+        )->queryScalar();
+    }
+
+    public function getCountCharacters(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters'
+        )->queryScalar();
+    }
+
+    public function getCountOnlineCharacters(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE online = 1'
+        )->queryScalar();
+    }
+
+    public function getCountClans(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'clan_data'
+        )->queryScalar();
+    }
+
+    public function getCountMen(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE sex = 0'
+        )->queryScalar();
+    }
+
+    public function getCountWomen(): int
+    {
+        return (int)$this->db->createCommand(
+            'SELECT COUNT(*) FROM ' . $this->dbName . 'characters WHERE sex = 1'
+        )->queryScalar();
+    }
+
+    /* ---------- ТОПЫ ---------- */
+    public function getTopPvp(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->where(['>', 'pvpkills', 0])
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['pvpkills' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTopPk(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->where(['>', 'pkkills', 0])
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['pkkills' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTop(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['level' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTopRich(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->select([
+                'characters.obj_Id AS char_id',
+                'characters.char_name',
+                'COALESCE(SUM(items.count), 0) AS adena_count',
+            ])
+            ->from($this->dbName . 'characters')
+            ->leftJoin(
+                $this->dbName . 'items',
+                $this->dbName . 'items.owner_id = ' . $this->dbName . 'characters.obj_Id AND ' .
+                $this->dbName . 'items.item_id = 57'
+            )
+            ->where([$this->dbName . 'characters.accesslevel' => 0])
+            ->groupBy($this->dbName . 'characters.obj_Id')
+            ->orderBy(['adena_count' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getOnline(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'characters')
+            ->where(['online' => 1])
+            ->andWhere(['accesslevel' => 0])
+            ->orderBy(['level' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    public function getTopClans(int $limit = 20, int $offset = 0): array
+    {
+        return (new Query())
+            ->from($this->dbName . 'clan_data')
+            ->orderBy(['reputation_score' => SORT_DESC])
+            ->limit($limit)
+            ->offset($offset)
+            ->all($this->db);
+    }
+
+    /* ---------- ЗАМКИ / ОСАДЫ ---------- */
+    public function getCastles(): array
+    {
+        return (new Query())
+            ->select([
+                'castle.id',
+                'castle.name',
+                'castle.taxPercent AS taxPercent',
+                'castle.siegeDate AS siegeDate',
+                'clan_data.clan_id',
+                'clan_data.clan_name',
+                'clan_data.leader_id',
+                'clan_data.clan_level',
+                'clan_data.hasCastle',
+                'clan_data.crest_id AS clan_crest',
+                'clan_data.reputation_score',
+            ])
+            ->from($this->dbName . 'castle')
+            ->leftJoin(
+                $this->dbName . 'clan_data',
+                $this->dbName . 'clan_data.hasCastle = ' . $this->dbName . 'castle.id'
+            )
+            ->all($this->db);
+    }
+
+    /* ---------- СЛУЖЕБНОЕ ---------- */
+    public function getChronicle(): string
+    {
+        return 'it';
+    }
+
+    public function getServerName(): string
+    {
+        return static::class;
+    }
+}
+`;
+}
+
+// === 6. ПОДМЕНА ВСЕХ ИМЁН и СКАЧИВАНИЕ ===
+function downloadPhp(){
+  const v = getUniqValues();           // новые имена
+  const fn = document.getElementById('fileName').value.trim() || 'Pwsoft_it';
+
+  // 6.1. берём «чистый» шаблон
+  let php = getBaseTemplate();
+
+  // 6.2. заменяем ВСЕ вхождения слов
+  for (const [oldName, newName] of Object.entries(v)) {
+    const regex = new RegExp(`\\b${oldName}\\b`, 'g');
+    php = php.replace(regex, newName);
+  }
+
+  // 6.3. сохраняем
+  const blob = new Blob([php], {type: 'application/octet-stream'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fn + '.php';
+  a.click();
+  URL.revokeObjectURL(a.href);
+
+  alert('Сохраните полученный файл в папку \\protected\\l2j и активируйте в админке вашего сайта.');
+}
+</script>
+
+</body>
+</html>

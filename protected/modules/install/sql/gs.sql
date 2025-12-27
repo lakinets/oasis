@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : l2
+Source Server         : Test
 Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : l2
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2025-09-07 10:16:31
+Date: 2025-12-27 20:58:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -64,7 +64,7 @@ CREATE TABLE `gs` (
   `services_remove_hwid_allow` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT 'Удаление привязки по HWID',
   `services_change_char_name_allow` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT 'Смена имени персонажу',
   `services_change_char_name_cost` float unsigned NOT NULL DEFAULT 300 COMMENT 'Стоймость смены ника персонажу',
-  `services_change_char_name_chars` varchar(255) NOT NULL COMMENT 'Символы которые можно ввести для нового ника',
+  `services_change_char_name_chars` varchar(255) NOT NULL DEFAULT '' COMMENT 'Символы которые можно ввести для нового ника',
   `services_change_gender_allow` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT 'Смена пола персонажу',
   `services_change_gender_cost` float unsigned NOT NULL DEFAULT 300 COMMENT 'Стоймость смены пола',
   `currency_name` varchar(128) DEFAULT NULL COMMENT 'Название валюты сервера',
@@ -74,7 +74,7 @@ CREATE TABLE `gs` (
   `deposit_course_payments` decimal(10,0) unsigned NOT NULL DEFAULT 1 COMMENT 'Курс валюты к игровой валюте',
   `currency_symbol` varchar(54) NOT NULL DEFAULT 'RUR' COMMENT 'Валюта, RUR, EUR, USD и т.д',
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `stats_items` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `stats_items_list` text DEFAULT NULL,

@@ -29,9 +29,9 @@ class GameServersController extends BackendController
                     'class'   => VerbFilter::class,
                     'actions' => [
                         'del'               => ['POST'],
-                        'shop-category-del' => ['POST'],
-                        'shop-pack-del'     => ['POST'],
-                        'shop-item-del'     => ['POST'],
+                        'shop-category-del' => ['GET', 'POST'], // ← вернули GET
+                        'shop-pack-del'     => ['GET', 'POST'], // ← вернули GET
+                        'shop-item-del'     => ['GET', 'POST'], // ← вернули GET
                     ],
                 ],
             ]

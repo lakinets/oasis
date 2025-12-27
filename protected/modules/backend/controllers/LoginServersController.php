@@ -1,5 +1,4 @@
 <?php
-
 namespace app\modules\backend\controllers;
 
 use Yii;
@@ -8,21 +7,28 @@ use yii\filters\VerbFilter;
 use app\modules\backend\models\LoginServers;
 use app\modules\backend\models\LoginServersSearch;
 
+/**
+ * Управление логин-серверами.
+ * Наследует BackendController => доступ только для admin.
+ */
 class LoginServersController extends BackendController
 {
     /**
-     * Разрешаем GET и POST для удаления внутри админки
+     * Дополняем родительские поведения ограничением HTTP-методов
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class'   => VerbFilter::class,
-                'actions' => [
-                    'del' => ['GET', 'POST'],
+        return array_merge(
+            parent::behaviors(), // <-- подключаем защиту admin из BackendController
+            [
+                'verbs' => [
+                    'class'   => VerbFilter::class,
+                    'actions' => [
+                        'del' => ['POST'],
+                    ],
                 ],
-            ],
-        ];
+            ]
+        );
     }
 
     /**
@@ -96,7 +102,7 @@ class LoginServersController extends BackendController
     }
 
     /**
-     * Удаление сервера (GET и POST)
+     * Удаление сервера
      */
     public function actionDel($id)
     {

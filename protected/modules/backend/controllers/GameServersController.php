@@ -1,11 +1,9 @@
 <?php
-
 namespace app\modules\backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use yii\web\Response;
 use app\modules\backend\models\Gs;
 use app\modules\backend\models\GsSearch;
@@ -13,33 +11,31 @@ use app\modules\backend\models\ShopCategories;
 use app\modules\backend\models\ShopItemsPacks;
 use app\modules\backend\models\ShopItems;
 
+/**
+ * Управление игровыми серверами и магазином.
+ * Наследует BackendController => доступ только для admin.
+ */
 class GameServersController extends BackendController
 {
+    /**
+     * Дополняем родительские поведения ограничением HTTP-методов
+     */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class'   => VerbFilter::class,
-								'actions' => [
-					'shop'                => ['GET'],
-					'shop-category'       => ['GET'],
-					'shop-category-form'  => ['GET', 'POST'], // <-- добавить POST
-					'shop-category-del'   => ['GET'],
-					'shop-pack'           => ['GET'],
-					'shop-pack-form'      => ['GET', 'POST'], // <-- добавить POST
-					'shop-pack-del'       => ['GET'],
-					'shop-item-form'      => ['GET', 'POST'], // <-- добавить POST
-					'shop-item-toggle'    => ['GET'],
-					'shop-item-del'       => ['GET'],
-				],
-            ],
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    ['allow' => true, 'roles' => ['@']],
+        return array_merge(
+            parent::behaviors(), // <-- подключаем защиту admin из BackendController
+            [
+                'verbs' => [
+                    'class'   => VerbFilter::class,
+                    'actions' => [
+                        'del'               => ['POST'],
+                        'shop-category-del' => ['POST'],
+                        'shop-pack-del'     => ['POST'],
+                        'shop-item-del'     => ['POST'],
+                    ],
                 ],
-            ],
-        ];
+            ]
+        );
     }
 
     /* ---------- Главная ---------- */
@@ -58,7 +54,7 @@ class GameServersController extends BackendController
     {
         $model = $gs_id ? $this->findModel($gs_id) : new Gs();
         $versions = $this->getVersionList();
-        if ($model->load(Yii::$app->request->get()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', $gs_id ? 'Изменения сохранены.' : 'Сервер добавлен.');
             return $this->redirect(['index']);
         }
@@ -99,19 +95,19 @@ class GameServersController extends BackendController
         return $this->render('shop/category', ['gs' => $gs, 'category' => $category, 'packs' => $packs]);
     }
 
-	 public function actionShopCategoryForm($gs_id, $category_id = null)
-		{
-			$model = $category_id
-				? ShopCategories::findOne(['id' => $category_id, 'gs_id' => $gs_id])
-				: new ShopCategories(['gs_id' => $gs_id]);
+    public function actionShopCategoryForm($gs_id, $category_id = null)
+    {
+        $model = $category_id
+            ? ShopCategories::findOne(['id' => $category_id, 'gs_id' => $gs_id])
+            : new ShopCategories(['gs_id' => $gs_id]);
 
-			if ($model->load(Yii::$app->request->post()) && $model->save()) {
-				Yii::$app->session->setFlash(
-					'success',
-					$category_id ? 'Категория обновлена.' : 'Категория добавлена.'
-				);
-				return $this->redirect(['shop', 'gs_id' => $gs_id]);
-			}
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash(
+                'success',
+                $category_id ? 'Категория обновлена.' : 'Категория добавлена.'
+            );
+            return $this->redirect(['shop', 'gs_id' => $gs_id]);
+        }
 
         return $this->render('shop/category-form', [
             'model' => $model,
@@ -142,7 +138,7 @@ class GameServersController extends BackendController
     public function actionShopPackForm($gs_id, $category_id, $pack_id = null)
     {
         $model = $pack_id ? ShopItemsPacks::findOne($pack_id) : new ShopItemsPacks(['category_id' => $category_id]);
-        if ($model->load(Yii::$app->request->get()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', $pack_id ? 'Пак обновлён.' : 'Пак добавлен.');
             return $this->redirect(['shop-category', 'gs_id' => $gs_id, 'category_id' => $category_id]);
         }
@@ -168,7 +164,7 @@ class GameServersController extends BackendController
     public function actionShopItemForm($gs_id, $category_id, $pack_id, $item_id = null)
     {
         $model = $item_id ? ShopItems::findOne($item_id) : new ShopItems(['pack_id' => $pack_id, 'status' => 1]);
-        if ($model->load(Yii::$app->request->get()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', $item_id ? 'Изменения сохранены.' : 'Предмет добавлен.');
             return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
         }

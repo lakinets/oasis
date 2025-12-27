@@ -3,24 +3,17 @@ namespace app\modules\backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 
 use app\modules\backend\models\News;
 use app\modules\backend\models\NewsSearch;
 
+/**
+ * Контроллер управления новостями.
+ * Наследует BackendController, поэтому вход только для admin.
+ */
 class NewsController extends BackendController
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [['allow' => true, 'roles' => ['@']]],
-            ],
-        ];
-    }
-
     /* ---------- 1. Список новостей ---------- */
     public function actionIndex()
     {
@@ -74,7 +67,10 @@ class NewsController extends BackendController
     /* ---------- 5. Поиск модели ---------- */
     protected function findModel($id)
     {
-        if (($model = News::find()->andWhere(['!=', 'status', News::STATUS_DELETED])->andWhere(['id' => $id])->one()) === null) {
+        if (($model = News::find()
+                ->andWhere(['!=', 'status', News::STATUS_DELETED])
+                ->andWhere(['id' => $id])
+                ->one()) === null) {
             throw new NotFoundHttpException('Новость не найдена.');
         }
         return $model;

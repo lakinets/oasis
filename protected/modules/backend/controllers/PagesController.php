@@ -3,24 +3,17 @@ namespace app\modules\backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 
 use app\modules\backend\models\Pages;
 use app\modules\backend\models\PagesSearch;
 
+/**
+ * Управление статическими страницами.
+ * Наследует BackendController => вход только для admin.
+ */
 class PagesController extends BackendController
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [['allow' => true, 'roles' => ['@']]],
-            ],
-        ];
-    }
-
     /* ---------- 1. Список страниц ---------- */
     public function actionIndex()
     {
@@ -47,18 +40,18 @@ class PagesController extends BackendController
                     $model->updated_at = $now;
                 }
 
-                if ($model->save(false)) { // мы уже провалидировали вручную
+                if ($model->save(false)) {
                     Yii::$app->session->setFlash('success', $id
                         ? Yii::t('backend', 'Страница сохранена.')
                         : Yii::t('backend', 'Страница добавлена.')
                     );
                     return $this->redirect(['index']);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Не удалось сохранить страницу.');
                 }
+                Yii::$app->session->setFlash('error', 'Не удалось сохранить страницу.');
             } else {
-                // видимо валидация упала — покажем ошибки
-                Yii::$app->session->setFlash('error', implode('<br>', array_map(function($v){ return implode(', ', $v); }, $model->getErrors())));
+                Yii::$app->session->setFlash('error', implode('<br>', array_map(function ($v) {
+                    return implode(', ', $v);
+                }, $model->getErrors())));
             }
         }
 
@@ -79,7 +72,6 @@ class PagesController extends BackendController
     /* ---------- 4. Удаление (soft delete) ---------- */
     public function actionDel($id)
     {
-        // Для удаления не используем findModel(), т.к. он исключает уже помеченные как deleted записи.
         $model = Pages::findOne($id);
         if (!$model) {
             Yii::$app->session->setFlash('error', 'Страница не найдена.');
@@ -95,10 +87,13 @@ class PagesController extends BackendController
         return $this->redirect(['index']);
     }
 
-    /* ---------- 5. Поиск модели (только статус 0/1) ---------- */
+    /* ---------- 5. Поиск модели ---------- */
     protected function findModel($id)
     {
-        if (($model = Pages::find()->andWhere(['status' => [Pages::STATUS_ON, Pages::STATUS_OFF]])->andWhere(['id' => $id])->one()) === null) {
+        if (($model = Pages::find()
+                ->andWhere(['status' => [Pages::STATUS_ON, Pages::STATUS_OFF]])
+                ->andWhere(['id' => $id])
+                ->one()) === null) {
             throw new NotFoundHttpException('Страница не найдена.');
         }
         return $model;

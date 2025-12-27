@@ -1,15 +1,18 @@
 <?php
-
 namespace app\modules\backend\controllers;
 
 use Yii;
-use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use app\modules\backend\models\LoginForm;
 use app\modules\backend\models\AllItems;
 
-class DefaultController extends Controller
+/**
+ * Точка входа в админ-панель.
+ * Наследуем BackendController – доступ только по полю users.role = 'admin'
+ */
+class DefaultController extends BackendController
 {
     public $layout = 'master';   // основной layout backend
 
@@ -18,14 +21,22 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        /* 1. Гость -> на форму входа */
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['login']);
         }
 
-        /* ---- Информация о проекте ---- */
+        /* 2. Проверяем поле role в таблице users */
+        /* @var $identity \app\models\User */
+        $identity = Yii::$app->user->identity;
+        if ($identity->role !== 'admin') {
+            throw new ForbiddenHttpException('Доступ запрещён. Требуется роль admin.');
+        }
+
+        /* 3. Информация для дашборда */
         $info = [
             'Название'      => 'Oasis',
-            'Версия'        => '1.04.7 -  Open-Source fan Remaster',
+            'Версия'        => '1.04.8 - Open-Source fan Remaster',
             'Yii'           => Yii::getVersion(),
             'PHP'           => PHP_VERSION,
             'ОС'            => PHP_OS,
@@ -39,7 +50,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Страница авторизации
+     * Страница авторизации (остаётся публичной)
      */
     public function actionLogin()
     {
@@ -58,7 +69,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * AJAX-поиск/получение предметов (оставлено без изменений)
+     * AJAX-поиск/получение предметов
      */
     public function actionGetItemInfo()
     {

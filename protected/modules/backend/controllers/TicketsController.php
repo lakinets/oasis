@@ -3,7 +3,6 @@ namespace app\modules\backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use app\modules\backend\models\Tickets;
@@ -12,20 +11,12 @@ use app\modules\backend\models\TicketsAnswers;
 use app\modules\backend\models\TicketsCategories;
 use app\modules\backend\models\Gs;
 
+/**
+ * Управление тикетами.
+ * Наследует BackendController => доступ только для admin.
+ */
 class TicketsController extends BackendController
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    ['allow' => true, 'roles' => ['@']],
-                ],
-            ],
-        ];
-    }
-
     /************  TICKETS  ************/
 
     public function actionIndex()
@@ -60,12 +51,12 @@ class TicketsController extends BackendController
             $model->updated_at = date('Y-m-d H:i:s');
 
             if ($model->save(false)) {
-                $answerModel->ticket_id  = $model->id; // рџ”‘ СЃРІСЏР·СЊ СЃ С‚РёРєРµС‚РѕРј
+                $answerModel->ticket_id  = $model->id;
                 $answerModel->user_id    = Yii::$app->user->id;
                 $answerModel->created_at = date('Y-m-d H:i:s');
 
                 if ($answerModel->save(false)) {
-                    Yii::$app->session->setFlash('success', Yii::t('backend', 'РўРёРєРµС‚ СЃРѕР·РґР°РЅ'));
+                    Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет создан'));
                     return $this->redirect(['edit', 'id' => $model->id]);
                 }
             }
@@ -104,7 +95,7 @@ class TicketsController extends BackendController
 
             if ($answerModel->save(false)) {
                 $ticket->updateAttributes(['new_message_for_user' => Tickets::STATUS_NEW_MESSAGE_ON]);
-                Yii::$app->session->setFlash('success', Yii::t('backend', 'РћС‚РІРµС‚ РґРѕР±Р°РІР»РµРЅ'));
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Ответ добавлен'));
                 return $this->redirect(['edit', 'id' => $id]);
             }
         }
@@ -125,14 +116,14 @@ class TicketsController extends BackendController
                 : Tickets::STATUS_OPEN
         ]);
 
-        Yii::$app->session->setFlash('success', Yii::t('backend', 'РЎС‚Р°С‚СѓСЃ РёР·РјРµРЅС‘РЅ'));
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Статус изменён'));
         return $this->redirect(['index']);
     }
 
     public function actionDelete($id)
     {
         $this->findTicket($id)->delete();
-        Yii::$app->session->setFlash('success', Yii::t('backend', 'РўРёРєРµС‚ СѓРґР°Р»С‘РЅ'));
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Тикет удалён'));
         return $this->redirect(['index']);
     }
 
@@ -153,7 +144,7 @@ class TicketsController extends BackendController
         $model = $id ? TicketsCategories::findOne($id) : new TicketsCategories();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', Yii::t('backend', 'РљР°С‚РµРіРѕСЂРёСЏ СЃРѕС…СЂР°РЅРµРЅР°'));
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Категория сохранена'));
             return $this->redirect(['categories']);
         }
 
@@ -175,7 +166,7 @@ class TicketsController extends BackendController
     public function actionCategoryDel($id)
     {
         TicketsCategories::findOne($id)?->delete();
-        Yii::$app->session->setFlash('success', Yii::t('backend', 'РљР°С‚РµРіРѕСЂРёСЏ СѓРґР°Р»РµРЅР°'));
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Категория удалена'));
         return $this->redirect(['categories']);
     }
 
@@ -185,7 +176,7 @@ class TicketsController extends BackendController
     {
         $model = Tickets::find()->with(['category', 'user'])->where(['id' => $id])->one();
         if (!$model) {
-            throw new NotFoundHttpException(Yii::t('backend', 'РўРёРєРµС‚ РЅРµ РЅР°Р№РґРµРЅ'));
+            throw new NotFoundHttpException(Yii::t('backend', 'Тикет не найден'));
         }
         return $model;
     }

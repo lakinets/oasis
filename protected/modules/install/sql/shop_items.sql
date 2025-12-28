@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2025-12-27 22:22:40
+Date: 2025-12-28 14:45:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,12 +30,13 @@ CREATE TABLE `shop_items` (
   `count` int(10) unsigned NOT NULL DEFAULT 1 COMMENT 'Кол-во',
   `enchant` int(11) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `sort` int(10) unsigned NOT NULL DEFAULT 1 COMMENT 'Сортировка',
+  `sort` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Сортировка',
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of shop_items
 -- ----------------------------
+INSERT INTO `shop_items` VALUES ('51', '6', '57', 'Адена для теста', '10.00', '15', 'donat', '100000', null, '1', '1', '2025-12-27 23:23:35', '2025-12-27 23:23:35');

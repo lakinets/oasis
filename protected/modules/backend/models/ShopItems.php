@@ -34,10 +34,14 @@ class ShopItems extends ActiveRecord
             [['currency_type'], 'string', 'max' => 54],
             [['description'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
+
+            // значения по умолчанию
+            [['discount', 'sort'], 'default', 'value' => 0],
+            [['enchant'], 'default', 'value' => 0],
         ];
     }
 
-    /* ---------- Связи ---------- */
+    /* ---------- связи ---------- */
     public function getPack()
     {
         return $this->hasOne(ShopItemsPacks::class, ['id' => 'pack_id']);
@@ -48,24 +52,37 @@ class ShopItems extends ActiveRecord
         return $this->hasOne(AllItems::class, ['item_id' => 'item_id']);
     }
 
-    /* ---------- Логика описания ---------- */
+    /* ---------- подготовка к сохранению ---------- */
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) {
             return false;
         }
-        // Если в форме не ввели описание, берём из all_items
-        if ($this->description === null || $this->description === '') {
+
+        // подставляем 0, если не заполнено
+        if ($this->discount === null || $this->discount === '') {
+            $this->discount = 0;
+        }
+        if ($this->sort === null || $this->sort === '') {
+            $this->sort = 0;
+        }
+        if ($this->enchant === null || $this->enchant === '') {
+            $this->enchant = 0;
+        }
+
+        // описание: ручное или из all_items
+        if (!$this->description) {
             $ai = AllItems::findOne($this->item_id);
             if ($ai && !empty($ai->description)) {
                 $this->description = $ai->description;
             }
         }
+
         return true;
     }
 
     /**
-     * Человеко-читаемое описание: ручное или из all_items
+     * Человеко-читаемое описание
      */
     public function getFullDescription(): string
     {

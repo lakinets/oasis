@@ -36,7 +36,7 @@ class DefaultController extends BackendController
         /* 3. Информация для дашборда */
         $info = [
             'Название'      => 'Oasis',
-            'Версия'        => '1.04.9 - Open-Source fan Remaster',
+            'Версия'        => '1.04.10 - Open-Source fan Remaster',
             'Yii'           => Yii::getVersion(),
             'PHP'           => PHP_VERSION,
             'ОС'            => PHP_OS,

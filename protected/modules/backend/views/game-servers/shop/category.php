@@ -8,22 +8,14 @@ use yii\helpers\Url;
 /* @var $packs app\modules\backend\models\ShopItemsPacks[] */
 ?>
 
-<!-- Создать категорию / Создать пак -->
+<!-- Создать пак -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2><?= Html::encode($category->name) ?></h2>
-
-    <div>
-        <?= Html::a(
-            'Создать категорию',
-            ['/backend/game-servers/shop-category-form', 'gs_id' => $gs->id],
-            ['class' => 'btn btn-success btn-sm']
-        ) ?>
-        <?= Html::a(
-            'Создать пак',
-            ['/backend/game-servers/shop-pack-form', 'gs_id' => $gs->id, 'category_id' => $category->id],
-            ['class' => 'btn btn-primary btn-sm ml-2']
-        ) ?>
-    </div>
+    <?= Html::a(
+        'Создать пак',
+        ['/backend/game-servers/shop-pack-form', 'gs_id' => $gs->id, 'category_id' => $category->id],
+        ['class' => 'btn btn-primary btn-sm']
+    ) ?>
 </div>
 
 <!-- Список паков -->

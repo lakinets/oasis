@@ -130,8 +130,8 @@ $this->beginPage();
                                 <li><a href="<?= Url::home() ?>">Главная</a></li>
                                 <li><a href="<?= Url::to(['/page/files']) ?>">Файлы</a></li>
                                 <?php if (Yii::$app->user->isGuest): ?>
-									<li><a href="/register">Регистрация</a></li>
-								<?php endif; ?>
+                                    <li><a href="/register">Регистрация</a></li>
+                                <?php endif; ?>
                                 <li class="menu-item-has-children">
                                     <a href="#">Инфо</a>
                                     <ul class="sub-menu">
@@ -139,6 +139,7 @@ $this->beginPage();
                                     </ul>
                                 </li>
                                 <li><a href="/stats">Статус</a></li>
+                                <li><a href="https://forummaxi.ru/topic/100146-oasis-%D1%80%D0%B5%D0%BB%D0%B8%D0%B7/" target="_blank" rel="noopener">Поддержка</a></li>
                             </ul>
                         </nav>
                         <button type="button" class="vs-menu-toggle d-inline-block d-lg-none"><i class="fas fa-bars"></i></button>

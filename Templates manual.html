@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Инструкция по созданию шаблона Yii2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Подсветка кода -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .section-card { border-left: 4px solid #0d6efd; }
+        .code-toolbar { background:#282c34;color:#abb2bf;padding:.5rem 1rem;border-radius:.25rem .25rem 0 0;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px }
+        pre { margin: 0 !important; border-radius: 0 0 .25rem .25rem; }
+        .toc { position: sticky; top: 1rem; }
+        .toc a { text-decoration: none; }
+        .toc ul { list-style: none; padding-left: 1rem; }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-file-code me-2"></i>Структура шаблонов Yii2</a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Оглавление -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="toc bg-white p-3 rounded shadow-sm">
+                <h6 class="fw-bold text-uppercase text-muted mb-3">Оглавление</h6>
+                <ul class="nav flex-column">
+                    <li><a href="#intro" class="nav-link px-0 py-1 text-dark">Введение</a></li>
+                    <li><a href="#structure" class="nav-link px-0 py-1 text-dark">Структура папок</a></li>
+                    <li><a href="#main" class="nav-link px-0 py-1 text-dark">main.php</a></li>
+                    <li><a href="#main-public" class="nav-link px-0 py-1 text-dark">main-public.php</a></li>
+                    <li><a href="#css" class="nav-link px-0 py-1 text-dark">CSS-конвенции</a></li>
+                    <li><a href="#grid" class="nav-link px-0 py-1 text-dark">Grid & Utility</a></li>
+                    <li><a href="#alerts" class="nav-link px-0 py-1 text-dark">Алерты/кнопки</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Контент -->
+        <div class="col-lg-9">
+            <div class="card shadow-sm section-card mb-4" id="intro">
+                <div class="card-body">
+                    <h2 class="mb-3"><i class="fa-solid fa-circle-info text-primary me-2"></i>Введение</h2>
+                    <p class="mb-0">Создание собственного шаблона начинается с создания папки в <code>themes</code>.
+                        Название папки (например, <code>test</code>) автоматически становится именем шаблона в настройках
+                        админки; дополнительно прописывать ничего не нужно.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="structure">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-folder-tree text-primary me-2"></i>Структура папок</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">assets/</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fa-solid fa-image fa-fw text-secondary me-1"></i> img — изображения</li>
+                                <li><i class="fa-solid fa-css3-alt fa-fw text-secondary me-1"></i> css — стили</li>
+                                <li><i class="fa-solid fa-js fa-fw text-secondary me-1"></i> js — скрипты</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">views/layouts/</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main.php — основной
+                                    layout
+                                </li>
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main-public.php —
+                                    публичный layout
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="main">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main.php</h4>
+                    <p>Основной layout, отвечающий за общую структуру сайта: <code>&lt;html&gt;</code>,
+                        <code>&lt;head&gt;</code>, шапку, футер, подключение CSS/JS и вывод контента страниц.</p>
+                    <div class="code-toolbar">PHP (Yii2)</div>
+                    <pre><code class="language-php">&lt;?php
+$this->beginPage();
+$this->head();
+$this->beginBody();
+    /* Шапка, контент, футер */
+    echo $content;
+$this->endBody();
+$this->endPage();</code></pre>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$this->title</code> —
+                            заголовок страницы
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$content</code> —
+                            содержимое конкретного view-файла
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>Url::base()</code> и
+                            <code>Url::to()</code> — безопасная генерация URL
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>
+                            <code>Yii::$app->user->isGuest</code> — условная логика авторизации
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="main-public">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main-public.php</h4>
+                    <p>Layout для публичных страниц (главная, инфо, загрузки) без логики личного кабинета.</p>
+                    <div class="code-toolbar">PHP (Yii2)</div>
+                    <pre><code class="language-php">&lt;body class="layout-public" data-route="..."&gt;</code></pre>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> Класс
+                            <code>layout-public</code> позволяет применять разные стили и JS-логику
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> Атрибут
+                            <code>data-route</code> помогает определять текущий маршрут на фронте
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="css">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-css3-alt text-primary me-2"></i>CSS-конвенции</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Auth / Public</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.auth-form</code> — контейнер форм авторизации</li>
+                                <li><code>.login-form</code> — форма входа</li>
+                                <li><code>.form-title</code> — заголовок формы</li>
+                                <li><code>.captcha-inline</code> — горизонтальное расположение captcha</li>
+                            </ul>
+                            <h6 class="mt-3">Backend</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.backend-default-index</code> — главная админки</li>
+                                <li><code>.login-box</code> — центрированный контейнер формы входа</li>
+                                <li><code>.box</code> — общий контейнер блока</li>
+                                <li><code>.box-primary</code> — основной блок с акцентом</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Shop / Game Servers</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.game-servers-index</code> — список серверов</li>
+                                <li><code>.shop-category</code> — контейнер категории магазина</li>
+                                <li><code>.pack-items</code> — список предметов внутри пака</li>
+                                <li><code>.item-form</code> — форма предмета</li>
+                            </ul>
+                            <h6 class="mt-3">Bonuses</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.bonuses-index</code> — страница списка бонусов</li>
+                                <li><code>.bonuses-form</code> — форма создания/редактирования</li>
+                                <li><code>.bonus-codes-index</code> — список бонус-кодов</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="grid">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-th text-primary me-2"></i>Grid & Utility</h4>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Класс</th>
+                                <th>Назначение</th>
+                                <th>Где используется</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>.row</code></td>
+                                <td>Строка сетки</td>
+                                <td>Формы, списки, блоки с колонками</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-md-3</code></td>
+                                <td>Левая вспомогательная колонка</td>
+                                <td>Меню, фильтры, навигация</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-md-9</code></td>
+                                <td>Основной контент</td>
+                                <td>Рабочая зона страницы</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-lg-3</code></td>
+                                <td>Фиксированная левая колонка на больших экранах</td>
+                                <td>Формы (label)</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-lg-9</code></td>
+                                <td>Правая часть формы (input’ы)</td>
+                                <td>Формы бонусов, серверов, тикетов</td>
+                            </tr>
+                            <tr>
+                                <td><code>.d-flex</code></td>
+                                <td>Flex-контейнер</td>
+                                <td>Панели управления, заголовки + кнопки</td>
+                            </tr>
+                            <tr>
+                                <td><code>.justify-content-between</code></td>
+                                <td>Раздвигает элементы по краям</td>
+                                <td>Заголовок слева — кнопки справа</td>
+                            </tr>
+                            <tr>
+                                <td><code>.align-items-center</code></td>
+                                <td>Вертикальное выравнивание по центру</td>
+                                <td>Toolbar’ы, строки списков</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-3</code></td>
+                                <td>Отступ снизу (малый)</td>
+                                <td>Формы, заголовки, списки</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-4</code></td>
+                                <td>Средний отступ снизу</td>
+                                <td>Разделы настроек, формы</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-5</code></td>
+                                <td>Крупный отступ снизу</td>
+                                <td>Разделение больших секций</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="alerts">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-bell text-primary me-2"></i>Алерты и кнопки</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Алерты</h6>
+                            <div class="alert alert-success" role="alert">Успешное действие</div>
+                            <div class="alert alert-danger" role="alert">Ошибка</div>
+                            <p class="text-danger mt-2">Красный текст — <code>.text-danger</code></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Кнопки</h6>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button class="btn btn-primary">btn-primary</button>
+                                <button class="btn btn-success">btn-success</button>
+                                <button class="btn btn-danger">btn-danger</button>
+                                <button class="btn btn-warning">btn-warning</button>
+                            </div>
+                            <p class="small text-muted">Используйте <code>.btn-*</code> для обозначения действий:
+                                primary — основное, success — создание, danger — удаление, warning — статус.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
+                <i class="fa-solid fa-lightbulb fa-xl me-3"></i>
+                <div>
+                    <strong>Совет:</strong> сохраняйте файл в <code>\protected\l2j</code> и следуйте конвенциям
+                    именования классов — это упростит поддержку и расширение шаблона в будущем.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light text-center py-4 mt-5 border-top">
+    <div class="container text-muted small">
+        Powered by Yii2 & Bootstrap 5 | Инструкция по созданию шаблонов
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

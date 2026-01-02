@@ -14,7 +14,7 @@
 <?php
 use yii\widgets\ListView;
 
-$this->title = 'РњРѕРё Р±РѕРЅСѓСЃС‹';
+$this->title = 'Бонусы';
 ?>
 <h1>Бонусы</h1>
 

@@ -1,3 +1,21 @@
+<?php
+/**
+ * @var array  $content
+ * @var int    $totalOnline
+ * @var bool   $compact
+ * @var string $assetsUrl
+ */
+
+/* режим «заглушка» – выводим только как в макете */
+if ($compact ?? false) {
+    echo $this->render('server-status-compact', [
+        'content'   => $content,
+        'assetsUrl' => $assetsUrl,
+    ]);
+    return;
+}
+?>
+
 <?php if (!empty($content)): ?>
     <div class="panel panel-default server-status">
         <div class="panel-heading">Статус серверов</div>

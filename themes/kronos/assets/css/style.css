@@ -1,0 +1,617 @@
+/* Styles */
+
+body {
+	margin: 0;
+	height: 100%; 
+	color: #2c252b; 
+	font-family: 'times new roman';
+	font-size: 14px; 
+	background: #140507 url(/themes/kronos/assets/images/body_bg.png) center top repeat-y;
+}
+
+
+a:link {
+	color: #276a98; 
+	text-decoration: none;
+}
+
+a:visited {
+	color: #276a98; 
+	text-decoration: none;
+}
+
+a:hover {
+	color: #276a98; 
+	text-decoration: underline;
+}
+
+img {
+	border: 0px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#wrapper {
+	width: 1000px;
+	margin: 0px auto;
+	background: url(/themes/kronos/assets/images/content_bg.jpg) repeat-y;
+}
+
+#body_top {
+	background: url(/themes/kronos/assets/images/body_top_bg.jpg) center top no-repeat;
+}
+
+#body_bottom {
+	background: url(/themes/kronos/assets/images/body_bottom_bg.jpg) center bottom no-repeat;
+}
+
+#footer {
+	height: 76px;
+	background: url(/themes/kronos/assets/images/footer_bg.jpg) no-repeat;
+	text-align: center;
+	color: #cbd6d6;
+	padding-top: 75px;
+}
+
+#footer a {
+	color: #cbd6d6;
+}
+
+#status {
+	height: 44px;
+	background: url(/themes/kronos/assets/images/status_bg.jpg) no-repeat;
+	color: #9fa8ba;
+	text-align: center;
+	padding: 20px 315px 0px 315px;
+}
+
+#status div {
+	display: inline-block;
+	margin: 0px 14px;
+}
+
+#status div img {
+	margin-bottom: -3px;
+}
+
+#status div a {
+	color: #e9f4fc;
+}
+
+#header {
+	height: 178px;
+	background: url(/themes/kronos/assets/images/header_bg.jpg) no-repeat;
+	text-align: center;
+	padding-top: 173px;
+}
+
+#buttons {
+	height: 135px;
+	background: url(/themes/kronos/assets/images/buttons_bg.jpg);
+	padding-left: 298px;
+}
+
+#buttons a {
+	display: block;
+	float: left;
+}
+
+#reg_button {
+	width: 139px;
+	height: 33px;
+	background: url(/themes/kronos/assets/images/left_button_bg.jpg) no-repeat;
+	margin-top: 82px;
+	text-align: center;
+	color: #f9ffff;
+	padding-top: 20px;
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+}
+
+#reg_button:hover {
+	background: url(/themes/kronos/assets/images/left_button_bg_sel.jpg) no-repeat;
+	text-decoration: none;
+}
+
+#load_button {
+	width: 139px;
+	height: 33px;
+	background: url(/themes/kronos/assets/images/right_button_bg.jpg) no-repeat;
+	margin-top: 82px;
+	text-align: center;
+	color: #f9ffff;
+	padding-top: 20px;
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+}
+
+#load_button:hover {
+	background: url(/themes/kronos/assets/images/right_button_bg_sel.jpg) no-repeat;
+	text-decoration: none;
+}
+
+#start_button {
+	width: 126px;
+	height: 85px;
+	background: url(/themes/kronos/assets/images/start_button.jpg) no-repeat;
+	text-align: center;
+	color: #fff5d1;
+	padding-top: 50px;
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+}
+
+#start_button:hover {
+	background: url(/themes/kronos/assets/images/start_button_sel.jpg) no-repeat;
+	color: #fff;
+	text-decoration: none;
+}
+
+#menu {
+	height: 46px;
+	background: url(/themes/kronos/assets/images/menu_bg.jpg);
+	text-align: center;
+	color: #bbbcbe;
+	padding-top: 27px;
+	font-size: 11px;
+}
+
+#menu a {
+	color: #bbbcbe;
+	margin: 0px 17px;
+}
+
+#menu a span {
+	font-size: 13px;
+}
+
+#menu a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+#content {
+	background: url(/themes/kronos/assets/images/content_top.jpg) no-repeat;
+}
+
+#content_bottom {
+	background: url(/themes/kronos/assets/images/content_bottom.jpg) center bottom no-repeat;
+	min-height: 1200px;
+
+}
+
+#left_block {
+	float: left;
+	width: 133px;
+	padding: 57px 42px 0px 93px;
+	color: #5e5860;
+}
+
+#right_block {
+	margin-left: 268px;
+	padding: 54px 154px 54px 54px
+}
+
+#page_title {
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 45px;
+}
+
+#page_title span {
+	background: url(/themes/kronos/assets/images/page_title_bg.jpg);
+	padding: 0px 10px;
+}
+
+.news {
+	border-bottom: 1px solid #b5c5d7;
+	padding-bottom: 20px;
+	margin-bottom: 35px;
+}
+
+.news_title {
+	font-size: 18px;
+	margin-bottom: 15px;
+}
+
+.news_text {
+	margin-bottom: 15px;
+}
+
+.news_info, .news_info a {
+	color: #667277;
+}
+
+.author_link img {
+	margin-bottom: -3px;
+	margin-right: 5px;
+	margin-left: 4px;
+}
+
+.more_link {
+	background: url(/themes/kronos/assets/images/more_bg.png);
+	padding: 5px 10px 6px 10px;
+	color: #f0f4f6 !important;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	float: right;
+	margin-top: -6px;
+}
+
+.more_link:hover {
+	opacity: 0.6;
+	text-decoration: none;
+}
+
+.more_link img {
+	margin-bottom: -5px;
+	margin-left: 4px;
+}
+
+#pages {
+	text-align: center;
+	padding-bottom: 20px;
+	font-size: 14px;
+}
+
+#pages a {
+	color: #1c2529;
+	padding: 5px 8px;
+}
+
+#pages span a {
+	background: #e0dae0;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+}
+
+#prev {
+	background: url(/themes/kronos/assets/images/prev.gif) left 50% no-repeat !important;
+	padding-left: 18px !important;
+}
+
+#next {
+	background: url(/themes/kronos/assets/images/next.gif) right 50% no-repeat !important;
+	padding-right: 18px !important;
+}
+
+#left_block a {
+	color: #bbbbbd;
+}
+
+#login_block {
+	background: url(/themes/kronos/assets/images/login_bg.jpg) no-repeat;
+	padding-top: 49px;
+	margin-bottom: 22px;
+}
+
+#login_block input {
+	background: #180b0d;
+	border: 1px solid #45444a;
+	text-align: center;
+	color: #8e9aa8;
+	font-size: 12px;
+	font-family: 'times new roman';
+	padding: 5px 10px;
+	width: 111px;
+	margin-bottom: 4px;
+}
+
+#territory_block {
+	background: none;
+	padding-top: 64px;
+	margin-bottom: 70px;
+}
+
+#forum_block {
+	background: url(/themes/kronos/assets/images/forum_bg.jpg) no-repeat;
+	padding-top: 70px;
+	margin-bottom: 70px;
+}
+
+#login_button {
+	display: block;
+	width: 104px;
+	height: 32px;
+	margin: 0px auto;
+	background: url(/themes/kronos/assets/images/login_button.jpg) no-repeat;
+	text-align: center;
+	padding-top: 18px;
+	color: #fff !important;
+}
+
+#login_button:hover {
+	background: url(/themes/kronos/assets/images/login_button.jpg) left 100%;
+	text-decoration: none;
+}
+
+#login_links {
+	text-align: center;
+}
+
+#login_links a {
+	color: #646a72;
+	text-decoration: underline;
+}
+
+#login_links a:hover {
+	color: #fff;
+}
+
+#donate_button {
+	display: block;
+	width: 189px;
+	height: 55px;
+	text-align: center;
+	color: #fff !important;
+	font-size: 14px;
+	padding-top: 35px;
+	background: url(/themes/kronos/assets/images/donate_button.png) no-repeat;
+	margin-left: -29px;
+}
+
+#donate_button:hover {
+	background: url(/themes/kronos/assets/images/donate_button.png) left 100%;
+	text-decoration: none;
+}
+
+.tr {
+	margin-bottom: 5px;
+}
+
+.tr_title span {
+	float: right;
+	color: #64676e;
+	font-family: Arial;
+	font-size: 12px;
+}
+
+.tr_bar {
+	border: 1px solid #2d2b2f;
+	padding: 2px;
+	height: 4px;
+	margin-top: 5px;
+}
+
+.progress_green {
+	background: #57c562;
+	height: 4px;
+}
+
+.progress_yellow {
+	background: #c69a4d;
+	height: 4px;
+}
+
+.progress_red {
+	background: #cf4a40;
+	height: 4px;
+}
+
+.theme {
+	border-bottom: 1px solid #2b2023;
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+}
+
+.theme_title {
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+
+#dkarts {
+	display: block;
+	position: absolute;
+	width: 79px;
+	height: 15px;
+	background: url(/themes/kronos/assets/images/dkarts.png) no-repeat;
+	margin-left: 94px;
+	margin-top: 4px;
+}
+
+#dkarts:hover {
+	background: url(/themes/kronos/assets/images/dkarts.png) left 100%;
+}
+/* override-bootstrap.css */
+#login_block {
+	background: url(/themes/kronos/assets/images/login_bg.jpg) no-repeat;
+	padding-top: 49px;
+	margin-bottom: 22px;
+}
+
+#login_block input {
+	display: block !important;
+	width: 111px !important;
+	height: auto !important;
+	padding: 5px 10px !important;
+	margin: 0 auto 4px !important;
+	background: #180b0d !important;
+	border: 1px solid #45444a !important;
+	text-align: center !important;
+	color: #8e9aa8 !important;
+	font-size: 12px !important;
+	font-family: 'times new roman', serif !important;
+	line-height: normal !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	transition: none !important;
+}
+
+#login_button {
+	display: block !important;
+	width: 104px !important;
+	height: 50px !important;
+	margin: 0 auto !important;
+	padding: 0 !important;
+	border: none !important;
+	background: url(/themes/kronos/assets/images/login_button.jpg) no-repeat !important;
+	text-align: center !important;
+	line-height: 50px !important;
+	color: #fff !important;
+	font-size: 12px !important;
+	cursor: pointer !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	transition: none !important;
+}
+
+#login_button:hover {
+	background-position: left 100% !important;
+	text-decoration: none !important;
+}
+
+#login_links {
+	text-align: center !important;
+}
+
+#login_links a {
+	color: #646a72 !important;
+	text-decoration: underline !important;
+}
+
+#login_links a:hover {
+	color: #fff !important;
+}
+
+/* ---------- ЛОГОТИП (файл + центр) ---------- */
+/* ---------- ЛОГОТИП (путь в стилях + центр) ---------- */
+.logo-link {
+    display: block;
+    text-align: center;          /* центрируем img */
+    padding-top: 0px;           /* отступ сверху (по вкусу) */
+}
+
+.logo-link img {
+    display: inline-block;       /* видимая картинка */
+    border: none;
+    max-width: 100%;
+    height: auto;
+}
+
+.nav-mini {
+  display: flex;
+  flex-wrap: wrap;          /* ⬅ перенос строк */
+  justify-content: center;  /* центр по горизонтали */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px 15px;           /* расстояние между элементами */
+}
+/* Контейнер основного контента */
+#right_block {
+    color: #333; /* Темно-серый текст для хорошей читаемости на светлом */
+    line-height: 1.6;
+}
+
+/* Заголовки внутри контента (Регистрация, Магазин и т.д.) */
+#right_block h1, #right_block h2, .form-title {
+    font-family: 'Georgia', serif;
+    color: #4a2f1b; /* Древесно-коричневый */
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    font-size: 22px;
+}
+
+/* Стилизация форм */
+.item-form, .login-form, .auth-form {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Поля ввода (input, select, textarea) */
+#right_block input[type="text"], 
+#right_block input[type="password"], 
+#right_block input[type="email"], 
+#right_block select, 
+#right_block textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #c0b298; /* Цвет старой бумаги */
+    background: #fffefb;
+    color: #444;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    box-sizing: border-box; /* Чтобы padding не раздувал ширину */
+}
+
+#right_block input:focus {
+    border-color: #8a6d3b;
+    outline: none;
+    box-shadow: 0 0 5px rgba(138, 109, 59, 0.3);
+}
+
+/* Кнопки (Универсальный стиль под Kronos) */
+.btn-primary, .btn-success, input[type="submit"], button {
+    display: inline-block;
+    padding: 10px 25px;
+    background: linear-gradient(to bottom, #5a3e2b 0%, #3e2a1c 100%);
+    color: #e0ca9e !important;
+    border: 1px solid #2a1a10;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px #000;
+}
+
+.btn-primary:hover, input[type="submit"]:hover {
+    background: linear-gradient(to bottom, #7a563d 0%, #5a3e2b 100%);
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Сетки и утилиты (из вашей документации) */
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+/* Таблицы (например, в магазине или статистике) */
+#right_block table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#right_block table th {
+    background: #f4ece1;
+    color: #5d4037;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #d7ccc8;
+}
+
+#right_block table td {
+    padding: 10px;
+    border-bottom: 1px solid #efebe9;
+}
+
+/* Алерты (ошибки/успех) */
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 5px solid #28a745;
+}
+
+.text-danger {
+    color: #a94442;
+    font-weight: bold;
+    font-size: 0.9em;
+}

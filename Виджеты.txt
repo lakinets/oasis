@@ -18,6 +18,9 @@
 Выводит статистку по расам в процентах соотношение персонажей созданных игроками, админов не учитывает.
  <?= \app\widgets\RaceStat\RaceStatWidget::widget() ?>
 
+Добавлят упрощенный виджет статуса 
+<?= \app\widgets\ServerStatus\ServerStatusWidget::widget(['compact' => true]) ?>
+
 
 -----------------------------------
 Создай:

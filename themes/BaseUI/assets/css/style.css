@@ -1,0 +1,399 @@
+/* =========================================================
+   1. БАЗА И ФОНОВОЕ ИЗОБРАЖЕНИЕ
+========================================================= */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Убираем скролл самого окна */
+    font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    color: #1f2433;
+
+    /* НАСТРОЙКИ ФОНА */
+    background-image: url('../images/bg.png'); /* Путь к картинке */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover; /* Растягивает картинку на весь экран */
+    background-color: #0b0e18; /* Цвет, если картинка не прогрузилась */
+}
+
+/* Затемняющий слой поверх картинки (чтобы текст читался) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(11, 14, 24, 0.75); /* 75% затемнения */
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Сброс стилей списков и ссылок */
+ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #5f6cff;
+    transition: 0.2s;
+}
+a:hover { color: #7a85ff; }
+
+/* =========================================================
+   2. СТРУКТУРА (LAYOUT)
+========================================================= */
+.dashboard-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* =========================================================
+   3. САЙДБАР (ЛЕВАЯ ПАНЕЛЬ)
+========================================================= */
+.sidebar {
+    width: 300px;
+    min-width: 300px;
+    /* Полупрозрачный темный фон (Glassmorphism) */
+    background: rgba(14, 19, 36, 0.85);
+    backdrop-filter: blur(10px); 
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.logo-box {
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.logo { width: 130px; opacity: 0.9; }
+
+/* --- ИСПРАВЛЕННЫЙ MAIN-NAV --- */
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.nav-item {
+    display: block;
+    padding: 14px 25px;
+    color: #9aa3c7;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-left: 3px solid transparent; /* Подготовка для активной полоски */
+    transition: all 0.25s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding-left: 30px; /* Эффект сдвига при наведении */
+}
+
+/* Активный пункт меню */
+.nav-item.is-active, 
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(110,120,255,0.15), transparent);
+    color: #ffffff;
+    border-left-color: #6e78ff; /* Синяя полоска слева */
+}
+
+/* Виджеты внизу сайдбара */
+.race-status-widget {
+    margin-top: auto; /* Прижимаем к низу */
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.theme_title {
+    color: #ebca69; /* Золотой заголовок */
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.tr_title { color: #8890b5; font-size: 11px; display: block; margin-bottom: 3px; }
+.tr_title span { float: right; color: #fff; }
+
+.tr_bar {
+    background: rgba(255,255,255,0.1);
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+.progress_yellow { background: #c69a4d; height: 100%; box-shadow: 0 0 10px rgba(198,154,77,0.5); }
+.progress_green  { background: #57c562; height: 100%; }
+.progress_red    { background: #cf4a40; height: 100%; }
+
+/* =========================================================
+   4. КОНТЕНТ (ПРАВАЯ ЧАСТЬ)
+========================================================= */
+.content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 40px;
+    /* Светлый полупрозрачный фон */
+    background: rgba(238, 241, 248, 0.6); 
+    backdrop-filter: blur(5px);
+    box-sizing: border-box;
+}
+
+/* Заголовки страниц */
+.content h1, 
+.form-title {
+    font-size: 24px;
+    color: #1a1f33;
+    margin: 0 0 25px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* --- ИСПРАВЛЕНИЕ МЕНЮ ВНУТРИ КАБИНЕТА (HORIZONTAL MENU FIX) --- */
+/* Любой список ul внутри контента (кроме пагинации) превращаем в строку */
+.content ul:not(.pagination) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+.content ul li {
+    display: block;
+}
+
+.content ul li a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #ffffff;
+    color: #5f6cff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e1e5f0;
+}
+
+.content ul li a:hover {
+    background: #5f6cff;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(95,108,255,0.3);
+}
+
+/* =========================================================
+   5. ФОРМЫ (АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ)
+========================================================= */
+/* Карточка по центру */
+#login-form, 
+.register-form, 
+.auth-form {
+    max-width: 460px;
+    margin: 50px auto; 
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    border: 1px solid #dce1f0;
+}
+
+/* Обычные блоки (сервисы, профиль) */
+.box, .account-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+/* Поля ввода */
+.form-group { margin-bottom: 20px; }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #3e445b;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.form-control,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
+    height: 48px;
+    padding: 10px 15px;
+    background: #f9faff;
+    border: 1px solid #cfd5e6;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1f2433;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.form-control:focus,
+input:focus, select:focus {
+    outline: none;
+    border-color: #5f6cff;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(95,108,255,0.15);
+}
+
+/* =========================================================
+   6. КНОПКИ (BUTTONS)
+========================================================= */
+.btn, 
+button, 
+input[type="submit"] {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #5f6cff;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.btn:hover, button:hover, input[type="submit"]:hover {
+    background: #4b58ff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(95,108,255,0.4);
+}
+
+/* Кнопки ТОЛЬКО в формах входа/регистрации на всю ширину */
+#login-form button,
+.register-form button,
+.auth-form button {
+    width: 100%;
+    margin-top: 10px;
+    height: 50px; /* Чуть выше для важности */
+}
+
+/* =========================================================
+   7. ТАБЛИЦЫ
+========================================================= */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+table th {
+    background: #eef1f8;
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #5f6cff;
+    text-transform: uppercase;
+    border-bottom: 2px solid #dfe3ee;
+}
+
+table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f2f7;
+    color: #333;
+    font-size: 13px;
+}
+
+table tr:last-child td { border-bottom: none; }
+table tr:hover td { background: #fcfdff; }
+
+/* Уведомления */
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 20px;
+}
+.text-danger {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+/* =========================================================
+   SERVER STATUS — TEXT MODE (ENGINE SAFE)
+========================================================= */
+
+.server-status-widget {
+    margin: 20px;
+    padding: 12px 14px;
+
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+
+    font-size: 12px;
+    line-height: 1.4;
+    color: #cfd5ff;
+
+    text-align: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+/* любой текст внутри */
+.server-status-widget * {
+    font: inherit;
+    color: inherit;
+}
+
+/* числа (онлайн) */
+.server-status-widget {
+    font-variant-numeric: tabular-nums;
+}
+
+/* если онлайн выделен <b> или <strong> */
+.server-status-widget b,
+.server-status-widget strong {
+    color: #6effa8;
+    font-weight: 700;
+}
+
+/* если онлайн выделен <span> */
+.server-status-widget span {
+    color: #6effa8;
+    font-weight: 600;
+}
+
+/* аккуратный разделитель строк */
+.server-status-widget br {
+    content: "";
+    display: block;
+    margin-top: 6px;
+}
+

@@ -19,7 +19,6 @@ $this->beginPage();
 <body>
 <?php $this->beginBody() ?>
 
-<!-- Навбар со всеми пунктами -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= Url::to(['/backend']) ?>">Oasis</a>
@@ -41,6 +40,7 @@ $this->beginPage();
                         'items' => [
                             ['label' => 'Игровые сервера', 'url' => ['/backend/game-servers/index']],
                             ['label' => 'Логин сервера', 'url' => ['/backend/login-servers/index']],
+                            ['label' => 'Управление сервисами', 'url' => ['/backend/services-manager/index']],
                         ],
                     ],
                     [

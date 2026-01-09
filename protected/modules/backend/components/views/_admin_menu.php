@@ -13,6 +13,7 @@
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/config/index']) ?>">Настройки</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/game-servers/index']) ?>">Серверы</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/bonuses/index']) ?>">Бонусы</a></li>
+				<li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/services-manager/index']) ?>">Управление сервисами</a></li>
             </ul>
         </div>
     </div>

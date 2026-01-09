@@ -23,6 +23,7 @@ class m000000_000001_run_all_sql_files extends Migration
         'news.sql',
         'pages.sql',
         'gallery.sql',
+        'services.sql', // ← ДОБАВЛЕНО: новая таблица услуг
         'tickets_categories.sql',
         'tickets.sql',
         'tickets_answers.sql',

@@ -7,12 +7,12 @@ use yii\widgets\ActiveForm;
  * @var int|null $gs_id
  * @var array $characters
  * @var array $charMap
- * @var \app\models\forms\ChangeCharNameForm $model
+ * @var \app\models\forms\RemoveKarmaForm $model
  * @var float $cost
  * @var float $balance
  */
 
-$this->title = 'Смена имени персонажа';
+$this->title = 'Снятие кармы';
 ?>
 
 <ul class="nav-mini">
@@ -31,7 +31,6 @@ $this->title = 'Смена имени персонажа';
 
 <h1 class="orion-table-header"><?= Html::encode($this->title) ?></h1>
 
-<!-- БАЛАНС в шапке -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div></div>
     <div class="text-end">
@@ -40,7 +39,6 @@ $this->title = 'Смена имени персонажа';
     </div>
 </div>
 
-<!-- FLASH-сообщения -->
 <?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success"><?= Yii::$app->session->getFlash('success') ?></div>
 <?php endif; ?>
@@ -48,33 +46,22 @@ $this->title = 'Смена имени персонажа';
     <div class="alert alert-danger"><?= Yii::$app->session->getFlash('error') ?></div>
 <?php endif; ?>
 
-<!-- ОШИБКИ ФОРМЫ -->
-<?php if ($model->hasErrors()): ?>
-    <div class="alert alert-danger">
-        <?php foreach ($model->getErrors() as $attr => $errs): ?>
-            <strong><?= $model->getAttributeLabel($attr) ?>:</strong>
-            <?= implode('<br>', $errs) ?>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
-
-<!-- Кнопки-серверы (как в characters/index) -->
 <div style="margin: 10px 0;">
     <?php foreach ($servers as $s): ?>
         <a class="btn btn-sm <?= ($gs_id == $s->id ? 'btn-primary btn-orion' : 'btn-default btn-orion') ?>"
-           href="<?= \yii\helpers\Url::to(['change-char-name', 'gs_id' => $s->id]) ?>">
+           href="<?= \yii\helpers\Url::to(['remove-karma', 'gs_id' => $s->id]) ?>">
             <?= Html::encode($s->name) ?>
         </a>
     <?php endforeach; ?>
 </div>
 
 <?php if (empty($charMap)): ?>
-    <div class="alert alert-info">На выбранном сервере персонажи не найдены.</div>
+    <div class="alert alert-info">Нет персонажей с кармой на выбранном сервере.</div>
 <?php else: ?>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="box p-20">
-                <?php $form = ActiveForm::begin(['id' => 'change-name-form']); ?>
+                <?php $form = ActiveForm::begin(['id' => 'remove-karma-form']); ?>
 
                     <?= Html::hiddenInput('gs_id', $gs_id) ?>
 
@@ -83,18 +70,13 @@ $this->title = 'Смена имени персонажа';
                         'class'  => 'form-control'
                     ]) ?>
 
-                    <?= $form->field($model, 'newName')->textInput([
-                        'maxlength'   => 16,
-                        'placeholder' => 'Введите новое имя'
-                    ]) ?>
-
                     <div class="alert alert-info">
                         Стоимость услуги: <b><?= $cost ?> Web Aden</b><br>
-                        <small>Персонаж должен быть <b>OFFLINE</b> во время смены ника.</small>
+                        <small>Карма будет полностью снята (установлена в 0).</small>
                     </div>
 
                     <div class="form-group text-center">
-                        <?= Html::submitButton('Сменить имя', ['class' => 'btn btn-primary btn-lg btn-orion']) ?>
+                        <?= Html::submitButton('Снять карму', ['class' => 'btn btn-danger btn-lg btn-orion']) ?>
                         <br><br>
                         <?= Html::a('« Назад к услугам', ['/cabinet/services'], ['class' => 'text-muted']) ?>
                     </div>

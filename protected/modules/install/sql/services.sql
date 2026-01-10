@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2026-01-09 20:15:53
+Date: 2026-01-10 20:35:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +26,7 @@ CREATE TABLE `services` (
   `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1-РІРєР»СЋС‡РµРЅ, 0-РІС‹РєР»СЋС‡РµРЅ',
   `type` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of services
@@ -35,3 +35,4 @@ INSERT INTO `services` VALUES ('1', 'Смена имени персонажа', 
 INSERT INTO `services` VALUES ('2', 'Смена пола персонажа', '150.00', '1', 'CHANGE_GENDER');
 INSERT INTO `services` VALUES ('3', 'Снятие кармы', '50.00', '1', 'remove_karma');
 INSERT INTO `services` VALUES ('4', 'Статус дворянина', '300.00', '1', 'NOBLE_STATUS');
+INSERT INTO `services` VALUES ('5', 'Подарочный код', '10.00', '1', 'gift_code');

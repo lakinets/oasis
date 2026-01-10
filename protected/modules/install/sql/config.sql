@@ -124,8 +124,8 @@ INSERT INTO `config` VALUES ('85', 'gallery.small.height', '150', '150', 'Выс
 INSERT INTO `config` VALUES ('86', 'prefixes.allow', '0', '1', 'Вкл/Выкл префиксы', '18', '1', '', 'dropDownList', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES ('87', 'prefixes.length', '3', '3', 'Кол-во символов в префиксе', '18', '2', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES ('88', 'prefixes.count_for_list', '6', '6', 'Кол-во префиксов в выпадающем списке для выбора юзером', '18', '3', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES ('89', 'captcha.bg.color', '#2D1A13', '#FFFFFF', 'Задний фон капчи', '6', '5', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES ('90', 'captcha.font.color', '#FFFFFF', '#000000', 'Цвет текста', '6', '5', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES ('89', 'captcha.bg.color', '#2D1A13', '#FFFFFF', 'Цвет текста', '6', '5', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES ('90', 'captcha.font.color', '#FFFFFF', '#000000', 'Задний фон капчи', '6', '5', '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES ('91', 'register.multiemail', '0', '0', 'Разрешить регистрировать на один Email много аккаунтов', '2', '5', '', 'dropDownList', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES ('94', 'payop.secret_key', '', '', 'PayOp Secret Key', '10', '2', null, 'passwordField', '2025-08-25 20:06:49', null);
 INSERT INTO `config` VALUES ('95', 'payop.currency', 'USD', 'RUB', 'Валюта по умолчанию', '10', '3', null, 'textField', '2025-08-25 20:06:49', null);

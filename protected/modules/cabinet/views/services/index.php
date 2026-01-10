@@ -1,5 +1,7 @@
 ﻿<?php
 use yii\helpers\Html;
+use yii\helpers\Url;   // ← эту строку добавили
+use app\models\Services;
 
 $this->title = 'Услуги';
 ?>
@@ -33,6 +35,7 @@ $this->title = 'Услуги';
 <?php endif; ?>
 
 <ul class="services-list-links">
+    <li><a href="<?= Url::to(['/cabinet/services/gift-code']) ?>">Подарочный код</a></li>
     <li><a href="/cabinet/services/noble-status">Статус дворянина</a></li>
     <li><a href="/cabinet/services/remove-karma">Снять карму</a></li>
     <li><a href="/cabinet/services/change-char-name">Смена имени</a></li>

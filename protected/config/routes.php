@@ -40,4 +40,5 @@ return [
     'page/<page:[\w\-]+>' => 'site/view',
     '<controller:[\w\-]+>/<action:[\w\-]+>' => '<controller>/<action>',
     '<slug:[\w\-]+>' => 'site/page',
+	'cabinet/services/gift-code' => 'cabinet/services/gift-code',
 ];

@@ -22,6 +22,7 @@ class Services extends ActiveRecord
     const TYPE_CHANGE_GENDER = 'change_gender';
     const TYPE_REMOVE_KARMA  = 'remove_karma';
     const TYPE_NOBLE_STATUS  = 'noble_status';
+	const TYPE_GIFT_CODE = 'gift_code';
 
     /* ----------  базовые  ---------- */
     public static function tableName()

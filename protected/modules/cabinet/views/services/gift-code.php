@@ -1,3 +1,16 @@
+<ul class="nav-mini">
+    <li><a href="/cabinet/tickets">Поддержка</a></li>
+    <li><a href="/cabinet/characters">Персонажи</a></li>
+    <li><a href="/cabinet/shop">Магазин</a></li>
+    <li><a href="/cabinet/bonuses">Бонусы</a></li>
+    <li><a href="/cabinet/security">Безопасность</a></li>
+    <li><a href="/cabinet/messages">Сообщения</a></li>
+    <li><a href="/cabinet/deposit">Пополнение</a></li>
+    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
+    <li><a href="/cabinet/auth-history">История входов</a></li>
+    <li><a href="/cabinet/referals">Рефералы</a></li>
+    <li><a href="/cabinet/services">Услуги</a></li>
+</ul>
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -13,11 +26,6 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Подарочный код';
 ?>
-
-<ul class="nav-mini">
-    <li><a href="/cabinet/services" class="active">Назад к услугам</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
-</ul>
 
 <h1 class="orion-table-header"><?= Html::encode($this->title) ?></h1>
 
@@ -78,6 +86,11 @@ $this->title = 'Подарочный код';
         </div>
     </div>
 </div>
+
+<ul class="nav-mini">
+    <li><a href="/cabinet/services" class="active">Назад к услугам</a></li>
+    <li><a href="/cabinet/deposit">Пополнение</a></li>
+</ul>
 
 <div class="box p-20 mt-20">
     <h3>Мои активные коды (созданные мной)</h3>

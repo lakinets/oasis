@@ -8,7 +8,7 @@ use app\helpers\Config;
 /** @var yii\web\View $this */
 /** @var app\modules\auth\models\LoginForm $model */
 
-$this->title = 'Авторизация';
+$this->title = Yii::t('views', 'Авторизация');
 $captchaOn = Config::isOn('login.captcha.allow');
 ?>
 <div class="auth-form layout-public login-form">
@@ -18,26 +18,26 @@ $captchaOn = Config::isOn('login.captcha.allow');
 
         <?= $form->field($model, 'login')
             ->textInput(['autofocus' => true, 'class' => 'form-control'])
-            ->label('Логин', ['class' => 'form-label']) ?>
+            ->label(Yii::t('views', 'Логин'), ['class' => 'form-label']) ?>
 
         <?= $form->field($model, 'password')
             ->passwordInput(['class' => 'form-control'])
-            ->label('Пароль', ['class' => 'form-label']) ?>
+            ->label(Yii::t('views', 'Пароль'), ['class' => 'form-label']) ?>
 
         <?php if ($captchaOn): ?>
             <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
                 'captchaAction' => '/auth/default/captcha',
                 'template' => '<div class="captcha-inline">{image}{input}</div>',
                 'options' => ['class' => 'form-control captcha-input'],
-            ])->label('Код с картинки', ['class' => 'form-label']) ?>
+            ])->label(Yii::t('views', 'Код с картинки'), ['class' => 'form-label']) ?>
         <?php endif; ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <?= Html::submitButton(Yii::t('views', 'Войти'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
         </div>
 
         <div class="form-group text-center">
-            <?= Html::a('Забыли пароль?', ['/auth/default/request-password-reset']) ?>
+            <?= Html::a(Yii::t('views', 'Забыли пароль?'), ['/auth/default/request-password-reset']) ?>
         </div>
 
     <?php ActiveForm::end(); ?>

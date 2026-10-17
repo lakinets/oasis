@@ -28,7 +28,7 @@ class MessagesController extends CabinetBaseController
     {
         $model = UserMessages::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id]);
         if (!$model) {
-            throw new NotFoundHttpException('Сообщение не найдено.');
+            throw new NotFoundHttpException(Yii::t('views', 'Сообщение не найдено.'));
         }
 
         if ($model->read == 0) {

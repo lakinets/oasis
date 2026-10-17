@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\LoginForm */
 /* @var $form ActiveForm */
 
-$this->title = 'Вход в аккаунт';
+$this->title = Yii::t('auth', 'Вход в аккаунт');
 ?>
 
 <section class="vs-auth-wrapper space-top space-extra-bottom">
@@ -39,12 +39,12 @@ $this->title = 'Вход в аккаунт';
                     ]) ?>
 
                     <div class="form-group text-center">
-                        <?= Html::submitButton('Войти', ['class' => 'vs-btn vs-btn-primary w-100']) ?>
+                        <?= Html::submitButton(Yii::t('auth', 'Войти'), ['class' => 'vs-btn vs-btn-primary w-100']) ?>
                     </div>
 
                     <div class="text-center mt-3">
-                        <a href="<?= \yii\helpers\Url::to(['/register']) ?>">Нет аккаунта? Зарегистрируйтесь</a><br>
-                        <a href="<?= \yii\helpers\Url::to(['/request-password-reset']) ?>">Забыли пароль?</a>
+                        <a href="<?= \yii\helpers\Url::to(['/register']) ?>"><?= Yii::t('auth', 'Нет аккаунта? Зарегистрируйтесь') ?></a><br>
+                        <a href="<?= \yii\helpers\Url::to(['/request-password-reset']) ?>"><?= Yii::t('auth', 'Забыли пароль?') ?></a>
                     </div>
 
                     <?php ActiveForm::end(); ?>

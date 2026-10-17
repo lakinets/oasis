@@ -18,9 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="gs-form">
     <h1><?= Html::encode($this->title) ?></h1>
 
-
-
-
     <?php $form = ActiveForm::begin([
         'id' => 'gs-form',
         'options' => ['class' => 'form-horizontal'],
@@ -38,7 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
         ArrayHelper::map(LoginServers::find()->all(), 'id', 'name'),
         ['prompt' => Yii::t('backend', 'Выбрать')]
     ) ?>
-    <?= $form->field($model, 'version')->dropDownList($versions ?? [], ['prompt' => '']) ?>
+    
+    <!-- ИСПРАВЛЕНАЯ СТРОКА ЗДЕСЬ -->
+    <?= $form->field($model, 'version')->dropDownList($versions ?? [], ['prompt' => Yii::t('backend', 'Выбрать')]) ?>
+    
     <?= $form->field($model, 'status')->dropDownList($model->getStatusList()) ?>
 
     <legend><?= Yii::t('backend', 'Подключение к базе данных') ?></legend>

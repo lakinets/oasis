@@ -1,54 +1,101 @@
 <?php
 /**
- * @var yii\web\View $this
- * @var app\modules\backend\models\TicketsCategories $model
+ * @var yii\web\View                 $this
+ * @var yii\data\ActiveDataProvider $dataProvider
  */
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
-$isUpdate = (bool)$model->id;
-$title_   = Yii::t('backend', 'Тикеты - категории');
-
-$this->title = $isUpdate
-    ? Yii::t('backend', 'Редактирование')
-    : Yii::t('backend', 'Добавление категории');
-
-$this->params['breadcrumbs'] = [
-    ['label' => $title_, 'url' => ['categories']],
-    $this->title,
-];
+$title_ = Yii::t('backend', 'Тикеты - категории');
+$this->title = $title_;
+$this->params['breadcrumbs'][] = $title_;
 ?>
+<div class="tickets-categories">
 
-<?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
-    <div class="alert alert-<?= $type ?>"><?= $message ?></div>
-<?php endforeach; ?>
+    <!-- флеш-сообщения -->
+    <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
+        <div class="alert alert-<?= $type ?>"><?= $message ?></div>
+    <?php endforeach; ?>
 
-<?php $form = ActiveForm::begin([
-    'id'      => 'tickets-category-form',
-    'options' => ['class' => 'form-horizontal'],
-    'fieldConfig' => [
-        'template'     => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-lg-offset-3 col-lg-9\">{error}</div>",
-        'labelOptions' => ['class' => 'col-lg-3 control-label'],
-    ],
-]); ?>
-
-<?= $form->errorSummary($model) ?>
-
-<?= $form->field($model, 'title')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('title')]) ?>
-
-<?= $form->field($model, 'sort')->textInput(['type' => 'number', 'placeholder' => $model->getAttributeLabel('sort')]) ?>
-
-<?= $form->field($model, 'status')->dropDownList($model->getStatusList()) ?>
-
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
-        <?= Html::submitButton(
-            $isUpdate ? Yii::t('backend', 'Сохранить') : Yii::t('backend', 'Создать'),
+    <p>
+        <?= Html::a(
+            '<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('backend', 'Добавить новую категорию'),
+            ['category-form'],
             ['class' => 'btn btn-primary']
         ) ?>
-        <?= Html::a(Yii::t('backend', 'Отмена'), ['categories'], ['class' => 'btn btn-default']) ?>
-    </div>
-</div>
+    </p>
 
-<?php ActiveForm::end(); ?>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th width="5%">ID</th>
+                <th><?= Yii::t('backend', 'Название') ?></th>
+                <th width="10%"><?= Yii::t('backend', 'Статус') ?></th>
+                <th width="10%"><?= Yii::t('backend', 'Сортировка') ?></th>
+                <th width="25%" class="text-center"><?= Yii::t('backend', 'Действия') ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if ($models = $dataProvider->models): ?>
+                <?php foreach ($models as $row): ?>
+                    <tr>
+                        <td><?= $row->id ?></td>
+                        <td><?= Html::encode(Yii::t('backend', $row->title)) ?></td>
+                        <td>
+                            <span class="label <?= $row->isStatusOn() ? 'label-success' : 'label-default' ?>">
+                                <?= $row->getStatusLabel() ?>
+                            </span>
+                        </td>
+                        <td><?= $row->sort ?></td>
+                        <td class="text-center">
+                            <!-- Редактировать -->
+                            <?= Html::a(
+                                '<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('backend', 'Ред.'),
+                                ['category-form', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs btn-warning',
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;'
+                                ]
+                            ) ?>
+
+                            <!-- Включить / Выключить -->
+                            <?= Html::a(
+                                '<i class="glyphicon ' . ($row->isStatusOn() ? 'glyphicon-eye-close' : 'glyphicon-eye-open') . '"></i> ' .
+                                ($row->isStatusOn() ? Yii::t('backend', 'Выкл.') : Yii::t('backend', 'Вкл.')),
+                                ['category-allow', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs ' . ($row->isStatusOn() ? 'btn-danger' : 'btn-success'),
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
+                                    'data-confirm' => Yii::t('backend', 'Изменить статус?'),
+                                    'data-method'  => 'post',
+                                ]
+                            ) ?>
+
+                            <!-- Удалить -->
+                            <?= Html::a(
+                                '<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('backend', 'Удал.'),
+                                ['category-del', 'id' => $row->id],
+                                [
+                                    'class' => 'btn btn-xs btn-danger',
+                                    'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
+                                    'data-confirm' => Yii::t('backend', 'Удалить безвозвратно?'),
+                                    'data-method'  => 'post',
+                                ]
+                            ) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5"><?= Yii::t('backend', 'Нет данных.') ?></td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <?= LinkPager::widget(['pagination' => $dataProvider->pagination]) ?>
+</div>

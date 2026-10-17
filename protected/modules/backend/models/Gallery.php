@@ -51,7 +51,7 @@ class Gallery extends ActiveRecord
 
     public function getStatusLabel()
     {
-        return $this->status ? 'Активен' : 'Не активен';
+        return $this->status ? Yii::t('backend', 'Активен') : Yii::t('backend', 'Не активен');
     }
 
     public function getImageUrl()

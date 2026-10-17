@@ -153,6 +153,7 @@ export default function (qunit, Inputmask) {
 
       testmask.focus();
       $("#testmask").Type("some.body@mail.com");
+      testmask.blur();
 
       assert.equal(
         testmask.value,
@@ -175,6 +176,7 @@ export default function (qunit, Inputmask) {
 
       testmask.focus();
       $("#testmask").Type("denise.van.de.cruys@mail.com");
+      testmask.blur();
 
       assert.equal(
         testmask.value,
@@ -250,7 +252,7 @@ export default function (qunit, Inputmask) {
       testmask.focus();
       $("#testmask").Type("70-12-34");
 
-      assert.equal(testmask.value, "70-123-4__", "Result " + testmask.value);
+      assert.equal(testmask.value, "70-123-4___", "Result " + testmask.value);
     }
   );
 
@@ -475,6 +477,57 @@ export default function (qunit, Inputmask) {
         "10px",
         "Result " + testmask.inputmask.__valueGet.call(testmask)
       );
+    }
+  );
+
+  qunit.test(
+    '([A-Z]* [A-Z]*)|([a-z]* [a-z]*) - type 1 (non-matching) - no freeze',
+    function (assert) {
+      var $fixture = $("#qunit-fixture");
+      $fixture.append('<input type="text" id="testmask" />');
+      var testmask = document.getElementById("testmask");
+      Inputmask({
+        regex: "([A-Z]* [A-Z]*)|([a-z]* [a-z]*)"
+      }).mask(testmask);
+
+      testmask.focus();
+      $("#testmask").Type("1");
+
+      assert.equal(testmask.value, "", "Result " + testmask.value);
+    }
+  );
+
+  qunit.test(
+    '([A-Z]* [A-Z]*)|([a-z]* [a-z]*) - type uppercase',
+    function (assert) {
+      var $fixture = $("#qunit-fixture");
+      $fixture.append('<input type="text" id="testmask" />');
+      var testmask = document.getElementById("testmask");
+      Inputmask({
+        regex: "([A-Z]* [A-Z]*)|([a-z]* [a-z]*)"
+      }).mask(testmask);
+
+      testmask.focus();
+      $("#testmask").Type("AB CD");
+
+      assert.equal(testmask.value, "AB CD", "Result " + testmask.value);
+    }
+  );
+
+  qunit.test(
+    '([A-Z]* [A-Z]*)|([a-z]* [a-z]*) - type lowercase',
+    function (assert) {
+      var $fixture = $("#qunit-fixture");
+      $fixture.append('<input type="text" id="testmask" />');
+      var testmask = document.getElementById("testmask");
+      Inputmask({
+        regex: "([A-Z]* [A-Z]*)|([a-z]* [a-z]*)"
+      }).mask(testmask);
+
+      testmask.focus();
+      $("#testmask").Type("ab cd");
+
+      assert.equal(testmask.value, "ab cd", "Result " + testmask.value);
     }
   );
 }

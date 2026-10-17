@@ -37,9 +37,9 @@ class Services extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Имя сервиса',
-            'cost' => 'Стоимость',
-            'status' => 'Статус',
+            'name' => Yii::t('backend', 'Имя сервиса'),
+            'cost' => Yii::t('backend', 'Стоимость'),
+            'status' => Yii::t('backend', 'Статус'),
         ];
     }
 }

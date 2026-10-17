@@ -32,16 +32,16 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getRoleList()
     {
         return [
-            self::ROLE_ADMIN => 'Админ',
-            self::ROLE_USER  => 'Пользователь',
+            self::ROLE_ADMIN => Yii::t('backend', 'Админ'),
+            self::ROLE_USER  => Yii::t('backend', 'Пользователь'),
         ];
     }
 
     public static function getActivatedStatusList()
     {
         return [
-            0 => 'Не активен',
-            1 => 'Активен',
+            0 => Yii::t('backend', 'Не активен'),
+            1 => Yii::t('backend', 'Активен'),
         ];
     }
 

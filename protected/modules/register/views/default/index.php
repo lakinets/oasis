@@ -9,7 +9,7 @@ use yii\captcha\Captcha;
 /** @var bool $captchaEnabled */
 /** @var bool $referralsEnabled */
 
-$this->title = 'Регистрация';
+$this->title = Yii::t('views', 'Регистрация');
 ?>
 <div class="register-form">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -26,18 +26,18 @@ $this->title = 'Регистрация';
 
     <?= $form->field($model, 'gs_id')->dropDownList(
         ArrayHelper::map($model->gs_list, 'id', 'name'),
-        ['prompt' => 'Выберите сервер']
+        ['prompt' => Yii::t('views', 'Выберите сервер')]
     ) ?>
 
     <?php if ($prefixesEnabled): ?>
         <div class="mb-3">
-            <label class="form-label fw-bold">Префикс (назначен автоматически)</label>
+            <label class="form-label fw-bold"><?= Yii::t('views', 'Префикс (назначен автоматически)') ?></label>
             <div class="form-control-plaintext" style="padding-left:0;">
                 <code><?= Html::encode($model->prefix) ?></code>
             </div>
             <!-- скрытое поле, чтобы передать значение обратно -->
             <?= Html::activeHiddenInput($model, 'prefix') ?>
-            <div class="form-text">Префикс добавится к вашему логину автоматически.</div>
+            <div class="form-text"><?= Yii::t('views', 'Префикс добавится к вашему логину автоматически.') ?></div>
         </div>
     <?php endif; ?>
 
@@ -56,13 +56,13 @@ $this->title = 'Регистрация';
     <?php if ($captchaEnabled): ?>
         <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
             'captchaAction' => 'register/default/captcha',
-            'options' => ['class' => 'form-control', 'placeholder' => 'Код с картинки'],
+            'options' => ['class' => 'form-control', 'placeholder' => Yii::t('views', 'Код с картинки')],
             'template' => '<div class="row"><div class="col-sm-4">{image}</div><div class="col-sm-8">{input}</div></div>',
         ]) ?>
     <?php endif; ?>
 
     <div class="form-group mt-3">
-        <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('views', 'Зарегистрироваться'), ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

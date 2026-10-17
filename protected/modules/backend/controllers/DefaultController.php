@@ -30,20 +30,20 @@ class DefaultController extends BackendController
         /* @var $identity \app\models\User */
         $identity = Yii::$app->user->identity;
         if ($identity->role !== 'admin') {
-            throw new ForbiddenHttpException('Доступ запрещён. Требуется роль admin.');
+            throw new ForbiddenHttpException(Yii::t('backend', 'Доступ запрещён. Требуется роль admin.'));
         }
 
         /* 3. Информация для дашборда */
         $info = [
-            'Название'      => 'Oasis',
-            'Версия'        => '1.05.17 - Open-Source fan Remaster',
+            Yii::t('backend', 'Название')      => 'Oasis',
+            Yii::t('backend', 'Версия')        => '1.06.18 - Open-Source fan Remaster',
             'Yii'           => Yii::getVersion(),
             'PHP'           => PHP_VERSION,
-            'ОС'            => PHP_OS,
-            'Время'         => date('Y-m-d H:i:s'),
-            'Память (real)' => sprintf('%.2f MB', memory_get_usage(true) / 1048576),
-            'Каталог'       => Yii::getAlias('@app'),
-            'Кеш-хранилище' => get_class(Yii::$app->cache),
+            Yii::t('backend', 'ОС')            => PHP_OS,
+            Yii::t('backend', 'Время')         => date('Y-m-d H:i:s'),
+            Yii::t('backend', 'Память (real)') => sprintf('%.2f MB', memory_get_usage(true) / 1048576),
+            Yii::t('backend', 'Каталог')       => Yii::getAlias('@app'),
+            Yii::t('backend', 'Кеш-хранилище') => get_class(Yii::$app->cache),
         ];
 
         return $this->render('index', ['info' => $info]);
@@ -79,7 +79,7 @@ class DefaultController extends BackendController
         if ($id) {
             $model = AllItems::findOne($id);
             if (!$model) {
-                throw new NotFoundHttpException('Предмет не найден.');
+                throw new NotFoundHttpException(Yii::t('backend', 'Предмет не найден.'));
             }
             return [
                 'status' => 'success',
@@ -125,7 +125,7 @@ class DefaultController extends BackendController
     public function actionClearCache()
     {
         Yii::$app->cache->flush();
-        Yii::$app->session->setFlash('success', 'Кеш успешно очищен.');
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Кеш успешно очищен.'));
         return $this->redirect(['index']);
     }
 
@@ -134,7 +134,7 @@ class DefaultController extends BackendController
      */
     public function actionUpdate()
     {
-        Yii::$app->session->setFlash('success', 'Обновление выполнено.');
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Обновление выполнено.'));
         return $this->redirect(['index']);
     }
 }

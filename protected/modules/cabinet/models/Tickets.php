@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\cabinet\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 class Tickets extends ActiveRecord
@@ -31,33 +32,33 @@ class Tickets extends ActiveRecord
     {
         return [
             'id'                    => 'ID',
-            'user_id'               => 'Пользователь',
-            'category_id'           => 'Категория',
-            'priority'              => 'Приоритет',
-            'date_incident'         => 'Дата происшествия',
-            'char_name'             => 'Имя персонажа',
-            'title'                 => 'Заголовок',
-            'status'                => 'Статус',
-            'new_message_for_user'  => 'Новое сообщение пользователю',
-            'new_message_for_admin' => 'Новое сообщение админу',
-            'gs_id'                 => 'Сервер',
-            'created_at'            => 'Создан',
-            'updated_at'            => 'Обновлён',
+            'user_id'               => Yii::t('models', 'Пользователь'),
+            'category_id'           => Yii::t('models', 'Категория'),
+            'priority'              => Yii::t('models', 'Приоритет'),
+            'date_incident'         => Yii::t('models', 'Дата происшествия'),
+            'char_name'             => Yii::t('models', 'Имя персонажа'),
+            'title'                 => Yii::t('models', 'Заголовок'),
+            'status'                => Yii::t('models', 'Статус'),
+            'new_message_for_user'  => Yii::t('models', 'Новое сообщение пользователю'),
+            'new_message_for_admin' => Yii::t('models', 'Новое сообщение админу'),
+            'gs_id'                 => Yii::t('models', 'Сервер'),
+            'created_at'            => Yii::t('models', 'Создан'),
+            'updated_at'            => Yii::t('models', 'Обновлён'),
         ];
     }
 
     public static function getPriorityList()
     {
         return [
-            self::PRIORITY_LOW    => 'Низкий',
-            self::PRIORITY_MEDIUM => 'Средний',
-            self::PRIORITY_HIGH   => 'Высокий',
+            self::PRIORITY_LOW    => Yii::t('models', 'Низкий'),
+            self::PRIORITY_MEDIUM => Yii::t('models', 'Средний'),
+            self::PRIORITY_HIGH   => Yii::t('models', 'Высокий'),
         ];
     }
 
     public function getStatusLabel()
     {
-        return [self::STATUS_CLOSED => 'Закрыт', self::STATUS_OPEN => 'Открыт'][$this->status] ?? '';
+        return [self::STATUS_CLOSED => Yii::t('models', 'Закрыт'), self::STATUS_OPEN => Yii::t('models', 'Открыт')][$this->status] ?? '';
     }
 
     public function getPriorityLabel()
@@ -67,7 +68,6 @@ class Tickets extends ActiveRecord
 
     public function getCategory()
     {
-        // используем backend-модель, но через alias или полный namespace
         return $this->hasOne(\app\modules\backend\models\TicketsCategories::class, ['id' => 'category_id']);
     }
 

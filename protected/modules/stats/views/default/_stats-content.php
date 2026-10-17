@@ -8,20 +8,23 @@ if (!$gs) {
 
 switch ($type) {
     case 'pvp':
-        $title = 'Топ PVP';
+        $title = Yii::t('views', 'Топ PVP');
         break;
     case 'pk':
-        $title = 'Топ PK';
+        $title = Yii::t('views', 'Топ PK');
         break;
     case 'clans':
-        $title = 'Топ Clans';
+        $title = Yii::t('views', 'Топ Clans');
         break;
     default:
-        $title = 'Статистика';
+        $title = Yii::t('views', 'Статистика');
 }
 
 echo "<h2>{$title}</h2>";
-echo "<p>Данные по {$type} на сервере {$gs->name}</p>";
+echo Yii::t('views', 'Данные по {type} на сервере {server}', [
+    'type' => $type,
+    'server' => $gs->name,
+]);
 
 // Здесь должна быть логика получения данных из игрового сервера
 // Например, через API или подключение к базе данных сервера

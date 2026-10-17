@@ -615,3 +615,48 @@ table {
     font-weight: bold;
     font-size: 0.9em;
 }
+
+/* =========================================================
+   Переключатель языка (флаги) — правый верхний угол
+   ========================================================= */
+#wrapper {
+    position: relative; /* чтобы позиционировать переключатель от него */
+}
+
+.lang-switch-top {
+    position: absolute;
+    /* Опускаем ниже, чтобы выровнять по вертикали с текстом Test server */
+    top: 20px; 
+    
+    /* Привязываем к центру. 
+       Если нужно ближе к надписи — уменьшайте число (например, 150px). 
+       Если нужно дальше — увеличивайте (например, 300px). */
+    right: calc(50% - 200px); 
+    
+    z-index: 100;
+    line-height: 1;
+}
+
+.lang-switch-top .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    vertical-align: middle;
+}
+
+.lang-switch-top .language-switcher a {
+    display: inline-block;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.15s ease;
+}
+
+.lang-switch-top .language-switcher a:hover,
+.lang-switch-top .language-switcher a.active {
+    opacity: 1;
+}
+
+.lang-switch-top .language-switcher img {
+    display: block;
+    border-radius: 2px;
+}

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\modules\backend\models\Users;
 
-$this->title = 'Пользователи';
+$this->title = Yii::t('backend', 'Пользователи');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-index">
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'activated',
                 'format'    => 'boolean',
-                'value'     => fn($m) => $m->activated ? 'Да' : 'Нет',
+                'value'     => fn($m) => $m->activated ? Yii::t('backend', 'Да') : Yii::t('backend', 'Нет'),
             ],
         ],
     ]); ?>

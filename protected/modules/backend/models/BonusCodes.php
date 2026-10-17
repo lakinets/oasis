@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\backend\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -31,11 +32,11 @@ class BonusCodes extends ActiveRecord
     public function attributeLabels(): array
     {
         return [
-            'id' => 'ID',
-            'bonus_id' => 'Бонус',
-            'code' => 'Код',
-            'limit' => 'Лимит',
-            'status' => 'Статус',
+            'id'       => 'ID',
+            'bonus_id' => Yii::t('backend', 'Бонус'),
+            'code'     => Yii::t('backend', 'Код'),
+            'limit'    => Yii::t('backend', 'Лимит'),
+            'status'   => Yii::t('backend', 'Статус'),
         ];
     }
 
@@ -46,7 +47,7 @@ class BonusCodes extends ActiveRecord
 
     public function getStatusList(): array
     {
-        return [0 => 'Выключен', 1 => 'Активирован'];
+        return [0 => Yii::t('backend', 'Выключен'), 1 => Yii::t('backend', 'Активирован')];
     }
 
     public function getStatusName(): string

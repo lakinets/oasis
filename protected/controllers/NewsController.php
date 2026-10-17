@@ -25,7 +25,7 @@ class NewsController extends Controller
     {
         $model = News::findOne($id);
         if (!$model) {
-            throw new \yii\web\NotFoundHttpException('Новость не найдена');
+            throw new \yii\web\NotFoundHttpException(Yii::t('controllers', 'Новость не найдена'));
         }
 
         return $this->render('view', ['model' => $model]);

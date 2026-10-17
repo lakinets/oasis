@@ -4,7 +4,7 @@ use yii\captcha\Captcha;
 use yii\widgets\ActiveForm;
 use app\components\AppConfig;
 
-$this->title = 'Вход на сайт';
+$this->title = Yii::t('backend', 'Вход на сайт');
 ?>
 
 <div class="login-box">
@@ -14,7 +14,7 @@ $this->title = 'Вход на сайт';
 
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">Введите свои данные</p>
+            <p class="login-box-msg"><?= Yii::t('backend', 'Введите свои данные') ?></p>
 
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
@@ -24,7 +24,7 @@ $this->title = 'Вход на сайт';
             <?php if (AppConfig::captchaEnabled()): ?>
                 <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
                     'captchaAction' => 'login/captcha',
-                    'options' => ['class' => 'form-control', 'placeholder' => 'Код с картинки'],
+                    'options' => ['class' => 'form-control', 'placeholder' => Yii::t('backend', 'Код с картинки')],
                     'template' => '<div class="row"><div class="col-4">{image}</div><div class="col-8">{input}</div></div>',
                 ]) ?>
             <?php endif; ?>
@@ -32,10 +32,11 @@ $this->title = 'Вход на сайт';
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
             <div class="form-group">
-                <?= Html::submitButton('Войти', ['class' => 'btn btn-primary btn-block']) ?>
+                <?= Html::submitButton(Yii::t('backend', 'Войти'), ['class' => 'btn btn-primary btn-block']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>
+

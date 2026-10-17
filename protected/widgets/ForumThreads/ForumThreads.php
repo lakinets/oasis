@@ -62,7 +62,7 @@ class ForumThreads extends CWidget
                     }
                     else
                     {
-                        $data['error'] = Yii::t('main', 'Метод для обработки форума: :type не найден.', array(':type' => '<b>' . $forumType . '</b>'));
+                        $data['error'] = Yii::t('main', 'Метод для обработки форума: {type} не найден.', ['type' => '<b>' . $forumType . '</b>']);
                     }
                 }
                 catch(Exception $e)

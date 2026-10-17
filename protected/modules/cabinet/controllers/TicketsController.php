@@ -4,6 +4,7 @@ namespace app\modules\cabinet\controllers;
 use app\modules\cabinet\models\Tickets;
 use app\modules\cabinet\models\TicketsForm;
 use app\modules\cabinet\models\TicketsAnswers;
+use app\modules\cabinet\models\TicketsCategories;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -41,6 +42,8 @@ class TicketsController extends CabinetBaseController
             'name'
         );
 
+        $categories = TicketsCategories::getDropdownList();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $ticket = new Tickets([
                 'user_id'               => Yii::$app->user->id,
@@ -66,14 +69,15 @@ class TicketsController extends CabinetBaseController
                 ]);
                 $answer->save(false);
 
-                Yii::$app->session->setFlash('success', 'Тикет успешно создан');
+                Yii::$app->session->setFlash('success', Yii::t('views', 'Тикет успешно создан'));
                 return $this->redirect(['view', 'ticket_id' => $ticket->id]);
             }
         }
 
         return $this->render('add', [
-            'model'   => $model,
-            'servers' => $servers,
+            'model'      => $model,
+            'servers'    => $servers,
+            'categories' => $categories,
         ]);
     }
 
@@ -104,7 +108,7 @@ class TicketsController extends CabinetBaseController
 
             $ticket->updateAttributes(['new_message_for_admin' => 1]);
 
-            Yii::$app->session->setFlash('success', 'Ответ добавлен');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Ответ добавлен'));
             return $this->refresh();
         }
 
@@ -122,7 +126,7 @@ class TicketsController extends CabinetBaseController
         if ($ticket && $ticket->status == Tickets::STATUS_OPEN) {
             $ticket->status = Tickets::STATUS_CLOSED;
             $ticket->save(false);
-            Yii::$app->session->setFlash('success', 'Тикет закрыт');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Тикет закрыт'));
         }
         return $this->redirect(['index']);
     }
@@ -132,7 +136,7 @@ class TicketsController extends CabinetBaseController
     {
         $ticket = Tickets::findOne(['id' => $ticket_id, 'user_id' => Yii::$app->user->id]);
         if (!$ticket) {
-            throw new NotFoundHttpException('Тикет не найден.');
+            throw new NotFoundHttpException(Yii::t('views', 'Тикет не найден.'));
         }
 
         $model = new TicketsAnswers();
@@ -145,7 +149,7 @@ class TicketsController extends CabinetBaseController
 
             $ticket->updateAttributes(['new_message_for_admin' => 1]);
 
-            Yii::$app->session->setFlash('success', 'Ответ добавлен.');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Ответ добавлен.'));
         }
 
         return $this->redirect(['view', 'ticket_id' => $ticket->id]);

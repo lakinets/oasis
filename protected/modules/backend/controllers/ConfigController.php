@@ -24,7 +24,7 @@ class ConfigController extends BackendController   // <-- Наследуемся
                         $config->save(false, ['value']);
                     }
                 }
-                Yii::$app->session->setFlash('success', 'Настройки успешно сохранены.');
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Настройки успешно сохранены.'));
             }
             return $this->refresh();
         }

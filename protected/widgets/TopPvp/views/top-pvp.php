@@ -7,5 +7,5 @@
         <?php endforeach; ?>
     </ul>
 <?php else: ?>
-    <p>Нет данных о PVP</p>
+    <p><?= Yii::t('main', 'Нет данных о PVP') ?></p>
 <?php endif; ?>

@@ -11,7 +11,7 @@ $formatter->datetimeFormat = 'php:d.m.Y H:i'; // формат даты и вре
 <div class="card mb-2">
     <div class="card-body">
         <p><strong>IP:</strong> <?= $model->ip ?></p>
-        <p><strong>Браузер:</strong> <?= $model->user_agent ?></p>
+        <p><strong><?= Yii::t('views', 'Браузер:') ?></strong> <?= $model->user_agent ?></p>
         <small class="text-muted">
             <?= $formatter->asDatetime($model->created_at) ?>
         </small>

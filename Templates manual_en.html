@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yii2 Template Creation Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Code Highlighting -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .section-card { border-left: 4px solid #0d6efd; }
+        .code-toolbar { background:#282c34;color:#abb2bf;padding:.5rem 1rem;border-radius:.25rem .25rem 0 0;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px }
+        pre { margin: 0 !important; border-radius: 0 0 .25rem .25rem; }
+        .toc { position: sticky; top: 1rem; }
+        .toc a { text-decoration: none; }
+        .toc ul { list-style: none; padding-left: 1rem; }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-file-code me-2"></i>Yii2 Template Structure</a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Table of Contents -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="toc bg-white p-3 rounded shadow-sm">
+                <h6 class="fw-bold text-uppercase text-muted mb-3">Contents</h6>
+                <ul class="nav flex-column">
+                    <li><a href="#intro" class="nav-link px-0 py-1 text-dark">Introduction</a></li>
+                    <li><a href="#structure" class="nav-link px-0 py-1 text-dark">Folder Structure</a></li>
+                    <li><a href="#main" class="nav-link px-0 py-1 text-dark">main.php</a></li>
+                    <li><a href="#main-public" class="nav-link px-0 py-1 text-dark">main-public.php</a></li>
+                    <li><a href="#css" class="nav-link px-0 py-1 text-dark">CSS Conventions</a></li>
+                    <li><a href="#grid" class="nav-link px-0 py-1 text-dark">Grid & Utility</a></li>
+                    <li><a href="#alerts" class="nav-link px-0 py-1 text-dark">Alerts/Buttons</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-lg-9">
+            <div class="card shadow-sm section-card mb-4" id="intro">
+                <div class="card-body">
+                    <h2 class="mb-3"><i class="fa-solid fa-circle-info text-primary me-2"></i>Introduction</h2>
+                    <p class="mb-0">Creating a custom template begins by creating a folder in the <code>themes</code> directory.
+                        The folder name (e.g., <code>test</code>) automatically becomes the template name in the admin settings; you don't need to configure anything else.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="structure">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-folder-tree text-primary me-2"></i>Folder Structure</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">assets/</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fa-solid fa-image fa-fw text-secondary me-1"></i> img — images</li>
+                                <li><i class="fa-solid fa-css3-alt fa-fw text-secondary me-1"></i> css — styles</li>
+                                <li><i class="fa-solid fa-js fa-fw text-secondary me-1"></i> js — scripts</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">views/layouts/</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main.php — main
+                                    layout
+                                </li>
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main-public.php —
+                                    public layout
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="main">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main.php</h4>
+                    <p>The main layout responsible for the overall site structure: <code>&lt;html&gt;</code>,
+                        <code>&lt;head&gt;</code>, header, footer, CSS/JS inclusion, and rendering the page content.</p>
+                    <div class="code-toolbar">PHP (Yii2)</div>
+                    <pre><code class="language-php">&lt;?php
+$this->beginPage();
+$this->head();
+$this->beginBody();
+    /* Header, content, footer */
+    echo $content;
+$this->endBody();
+$this->endPage();</code></pre>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$this->title</code> —
+                            page title
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$content</code> —
+                            content of the specific view file
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>Url::base()</code> and
+                            <code>Url::to()</code> — safe URL generation
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>
+                            <code>Yii::$app->user->isGuest</code> — conditional authorization logic
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="main-public">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main-public.php</h4>
+                    <p>Layout for public pages (home, info, downloads) without personal account logic.</p>
+                    <div class="code-toolbar">PHP (Yii2)</div>
+                    <pre><code class="language-php">&lt;body class="layout-public" data-route="..."&gt;</code></pre>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> The
+                            <code>layout-public</code> class allows applying different styles and JS logic
+                        </li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> The
+                            <code>data-route</code> attribute helps determine the current route on the frontend
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="css">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-css3-alt text-primary me-2"></i>CSS Conventions</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Auth / Public</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.auth-form</code> — auth forms container</li>
+                                <li><code>.login-form</code> — login form</li>
+                                <li><code>.form-title</code> — form title</li>
+                                <li><code>.captcha-inline</code> — horizontal captcha layout</li>
+                            </ul>
+                            <h6 class="mt-3">Backend</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.backend-default-index</code> — admin dashboard</li>
+                                <li><code>.login-box</code> — centered login form container</li>
+                                <li><code>.box</code> — general block container</li>
+                                <li><code>.box-primary</code> — primary block with emphasis</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Shop / Game Servers</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.game-servers-index</code> — server list</li>
+                                <li><code>.shop-category</code> — shop category container</li>
+                                <li><code>.pack-items</code> — list of items inside a pack</li>
+                                <li><code>.item-form</code> — item form</li>
+                            </ul>
+                            <h6 class="mt-3">Bonuses</h6>
+                            <ul class="list-unstyled small">
+                                <li><code>.bonuses-index</code> — bonus list page</li>
+                                <li><code>.bonuses-form</code> — create/edit form</li>
+                                <li><code>.bonus-codes-index</code> — bonus code list</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="grid">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-th text-primary me-2"></i>Grid & Utility</h4>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Class</th>
+                                <th>Purpose</th>
+                                <th>Where used</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>.row</code></td>
+                                <td>Grid row</td>
+                                <td>Forms, lists, blocks with columns</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-md-3</code></td>
+                                <td>Left auxiliary column</td>
+                                <td>Menu, filters, navigation</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-md-9</code></td>
+                                <td>Main content</td>
+                                <td>Page working area</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-lg-3</code></td>
+                                <td>Fixed left column on large screens</td>
+                                <td>Forms (label)</td>
+                            </tr>
+                            <tr>
+                                <td><code>.col-lg-9</code></td>
+                                <td>Right part of the form (inputs)</td>
+                                <td>Bonus, server, ticket forms</td>
+                            </tr>
+                            <tr>
+                                <td><code>.d-flex</code></td>
+                                <td>Flex container</td>
+                                <td>Control panels, headers + buttons</td>
+                            </tr>
+                            <tr>
+                                <td><code>.justify-content-between</code></td>
+                                <td>Spreads elements to the edges</td>
+                                <td>Header on the left — buttons on the right</td>
+                            </tr>
+                            <tr>
+                                <td><code>.align-items-center</code></td>
+                                <td>Vertical center alignment</td>
+                                <td>Toolbars, list rows</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-3</code></td>
+                                <td>Bottom margin (small)</td>
+                                <td>Forms, headers, lists</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-4</code></td>
+                                <td>Medium bottom margin</td>
+                                <td>Settings sections, forms</td>
+                            </tr>
+                            <tr>
+                                <td><code>.mb-5</code></td>
+                                <td>Large bottom margin</td>
+                                <td>Separation of large sections</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm section-card mb-4" id="alerts">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-bell text-primary me-2"></i>Alerts and Buttons</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Alerts</h6>
+                            <div class="alert alert-success" role="alert">Successful action</div>
+                            <div class="alert alert-danger" role="alert">Error</div>
+                            <p class="text-danger mt-2">Red text — <code>.text-danger</code></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Buttons</h6>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button class="btn btn-primary">btn-primary</button>
+                                <button class="btn btn-success">btn-success</button>
+                                <button class="btn btn-danger">btn-danger</button>
+                                <button class="btn btn-warning">btn-warning</button>
+                            </div>
+                            <p class="small text-muted">Use <code>.btn-*</code> to denote actions:
+                                primary — main, success — create, danger — delete, warning — status.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
+                <i class="fa-solid fa-lightbulb fa-xl me-3"></i>
+                <div>
+                    <strong>Tip:</strong> save the file in <code>\protected\l2j</code> and follow class naming conventions — this will make template maintenance and expansion easier in the future.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light text-center py-4 mt-5 border-top">
+    <div class="container text-muted small">
+        Powered by Yii2 & Bootstrap 5 | Template Creation Guide
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

@@ -22,6 +22,7 @@ class m000000_000001_run_all_sql_files extends Migration
         'servers_config.sql',
         'news.sql',
         'pages.sql',
+        'page_translations.sql', // <--- ДОБАВЛЕНО СЮДА
         'gallery.sql',
         'services.sql',
         'tickets_categories.sql',
@@ -41,8 +42,8 @@ class m000000_000001_run_all_sql_files extends Migration
         'shop_items_packs.sql',
         'migration.sql',
         'all_items.sql',
-		'gift_codes.sql',
-		'gift_codes_attempts.sql',
+        'gift_codes.sql',
+        'gift_codes_attempts.sql',
     ];
 
     public function supportsTransaction(): bool
@@ -63,15 +64,15 @@ class m000000_000001_run_all_sql_files extends Migration
         foreach ($this->order as $file) {
             $path = $dir . $file;
             if (!is_file($path)) {
-                echo "Ошибка! Файл не найден: {$path}\n";
+                echo Yii::t('install', 'Ошибка! Файл не найден: {path}', ['path' => $path]) . "\n";
                 continue;
             }
 
-            echo "Выполняю файл: {$file}\n";
+            echo Yii::t('install', 'Выполняю файл: {file}', ['file' => $file]) . "\n";
 
             $sql = file_get_contents($path);
             if ($sql === false) {
-                echo "Ошибка! Не удалось прочитать файл: {$file}\n";
+                echo Yii::t('install', 'Ошибка! Не удалось прочитать файл: {file}', ['file' => $file]) . "\n";
                 continue;
             }
 
@@ -111,11 +112,11 @@ class m000000_000001_run_all_sql_files extends Migration
                             if ($mysqli->errno) {
                                 $mysqliErr = $mysqli->error;
                             } else {
-                                echo "Ок. {$file} выполнен (mysqli::multi_query).\n";
+                                echo Yii::t('install', 'Ок. {file} выполнен (mysqli::multi_query).', ['file' => $file]) . "\n";
                                 $executed = true;
                             }
                         } else {
-                            $mysqliErr = $mysqli->error ?: 'multi_query вернул false';
+                            $mysqliErr = $mysqli->error ?: 'multi_query returned false';
                         }
                         $mysqli->close();
                     }
@@ -129,7 +130,7 @@ class m000000_000001_run_all_sql_files extends Migration
             }
 
             if ($mysqliErr !== null) {
-                echo "Ошибка! mysqli::multi_query не удался для {$file}: {$mysqliErr}\n";
+                echo Yii::t('install', 'Ошибка! mysqli::multi_query не удался для {file}: {error}', ['file' => $file, 'error' => $mysqliErr]) . "\n";
             }
 
             $stmts = $this->splitSqlStatements($sql);
@@ -141,10 +142,10 @@ class m000000_000001_run_all_sql_files extends Migration
                     $this->execute($stmt);
                     $count++;
                 } catch (\Throwable $e) {
-                    echo "Ошибка! при выполнении запроса из {$file}: " . $e->getMessage() . "\n";
+                    echo Yii::t('install', 'Ошибка! при выполнении запроса из {file}: {error}', ['file' => $file, 'error' => $e->getMessage()]) . "\n";
                 }
             }
-            echo "Ок. {$file} ({$count} команд выполнено)\n";
+            echo Yii::t('install', 'Ок. {file} ({count} команд выполнено)', ['file' => $file, 'count' => $count]) . "\n";
         }
     }
 
@@ -183,7 +184,7 @@ class m000000_000001_run_all_sql_files extends Migration
 
     public function safeDown(): bool
     {
-        echo "Откат невозможен — таблицы создавались вручную.\n";
+        echo Yii::t('install', 'Откат невозможен — таблицы создавались вручную.') . "\n";
         return false;
     }
 }

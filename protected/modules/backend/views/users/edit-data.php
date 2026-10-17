@@ -6,8 +6,8 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\backend\models\EditUserForm */
 
-$this->title = 'Редактировать пользователя';
-$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
+$this->title = Yii::t('backend', 'Редактировать пользователя');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Пользователи'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'protected_ip')->textarea(['rows' => 6, 'placeholder' => "127.0.0.1\n192.168.1.100"]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
-            <?= Html::a('Отмена', ['index'], ['class' => 'btn btn-default']) ?>
+            <?= Html::submitButton(Yii::t('backend', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('backend', 'Отмена'), ['index'], ['class' => 'btn btn-default']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

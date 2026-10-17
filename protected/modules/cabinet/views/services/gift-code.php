@@ -1,18 +1,19 @@
 <ul class="nav-mini">
-    <li><a href="/cabinet/tickets">Поддержка</a></li>
-    <li><a href="/cabinet/characters">Персонажи</a></li>
-    <li><a href="/cabinet/shop">Магазин</a></li>
-    <li><a href="/cabinet/bonuses">Бонусы</a></li>
-    <li><a href="/cabinet/security">Безопасность</a></li>
-    <li><a href="/cabinet/messages">Сообщения</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
-    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
-    <li><a href="/cabinet/auth-history">История входов</a></li>
-    <li><a href="/cabinet/referals">Рефералы</a></li>
-    <li><a href="/cabinet/services">Услуги</a></li>
+    <li><a href="/cabinet/tickets"><?= Yii::t('views', 'Поддержка') ?></a></li>
+    <li><a href="/cabinet/characters"><?= Yii::t('views', 'Персонажи') ?></a></li>
+    <li><a href="/cabinet/shop"><?= Yii::t('views', 'Магазин') ?></a></li>
+    <li><a href="/cabinet/bonuses"><?= Yii::t('views', 'Бонусы') ?></a></li>
+    <li><a href="/cabinet/security"><?= Yii::t('views', 'Безопасность') ?></a></li>
+    <li><a href="/cabinet/messages"><?= Yii::t('views', 'Сообщения') ?></a></li>
+    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    <li><a href="/cabinet/transaction-history"><?= Yii::t('views', 'История транзакций') ?></a></li>
+    <li><a href="/cabinet/auth-history"><?= Yii::t('views', 'История входов') ?></a></li>
+    <li><a href="/cabinet/referals"><?= Yii::t('views', 'Рефералы') ?></a></li>
+    <li><a href="/cabinet/services"><?= Yii::t('views', 'Услуги') ?></a></li>
 </ul>
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /**
@@ -24,7 +25,7 @@ use yii\widgets\ActiveForm;
  * @var \app\models\GiftCode[] $myCodes
  */
 
-$this->title = 'Подарочный код';
+$this->title = Yii::t('views', 'Подарочный код');
 ?>
 
 <h1 class="orion-table-header"><?= Html::encode($this->title) ?></h1>
@@ -32,7 +33,7 @@ $this->title = 'Подарочный код';
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div></div>
     <div class="text-end">
-        <small class="text-muted">Баланс</small>
+        <small class="text-muted"><?= Yii::t('views', 'Баланс') ?></small>
         <div class="fs-5 fw-semibold text-warning"><?= (int)$balance ?> Web Aden</div>
     </div>
 </div>
@@ -47,62 +48,66 @@ $this->title = 'Подарочный код';
 <div class="row">
     <div class="col-md-6">
         <div class="box p-20">
-            <h3>Создать код</h3>
+            <h3><?= Yii::t('views', 'Создать код') ?></h3>
             <?php $form = ActiveForm::begin(['id' => 'create-form']); ?>
-            
+
             <?= $form->field($createModel, 'nominal')->dropDownList(
-                array_combine($nominals, $nominals), 
-                ['prompt' => '– Выберите номинал –', 'class' => 'form-control']
+                array_combine($nominals, $nominals),
+                ['prompt' => Yii::t('views', '– Выберите номинал –'), 'class' => 'form-control']
             ) ?>
-            
+
             <div class="alert alert-info" style="font-size: 0.9em;">
-                Комиссия сервиса: <b><?= $cost ?> Web Aden</b><br>
-                <hr>
-                <small>Вы создаете код, который можно передать другому игроку. С вашего баланса спишется <b>Номинал + Комиссия</b>.</small>
+                <?= Yii::t('views', 'Комиссия сервиса:') ?> <b><?= $cost ?> Web Aden</b>
+                <br>
+                <small><?= Yii::t('views', 'Вы создаете код, который можно передать другому игроку. С вашего баланса спишется ') ?><b><?= Yii::t('views', 'Номинал + Комиссия') ?></b>.</small>
             </div>
-            
-            <?= Html::submitButton('Создать и оплатить', ['class' => 'btn btn-success w-100']) ?>
+
+            <div class="d-flex gap-2">
+                <?= Html::submitButton(Yii::t('views', 'Создать и оплатить'), ['class' => 'btn btn-success flex-grow-1']) ?>
+                <?= Html::a(Yii::t('views', 'Пополнить баланс'), ['/cabinet/deposit'], ['class' => 'btn btn-outline-warning']) ?>
+            </div>
+
             <?php ActiveForm::end(); ?>
         </div>
     </div>
 
     <div class="col-md-6">
         <div class="box p-20">
-            <h3>Активировать код</h3>
+            <h3><?= Yii::t('views', 'Активировать код') ?></h3>
             <?php $form = ActiveForm::begin(['id' => 'activate-form']); ?>
-            
+
             <?= $form->field($activateModel, 'code')->textInput([
-                'maxlength' => 32, 
-                'placeholder' => 'Введите код...',
+                'maxlength' => 32,
+                'placeholder' => Yii::t('views', 'Введите код...'),
                 'class' => 'form-control'
             ]) ?>
-            
+
             <div class="alert alert-warning" style="font-size: 0.9em;">
-                <small>После 5 неудачных попыток ввода возможность активации блокируется на 72 часа.</small>
+                <small><?= Yii::t('views', 'После 5 неудачных попыток ввода возможность активации блокируется на 72 часа.') ?></small>
             </div>
-            
-            <?= Html::submitButton('Активировать', ['class' => 'btn btn-primary w-100']) ?>
+
+            <?= Html::submitButton(Yii::t('views', 'Активировать'), ['class' => 'btn btn-primary w-100']) ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>
 
 <ul class="nav-mini">
-    <li><a href="/cabinet/services" class="active">Назад к услугам</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
+    <li><a href="/cabinet/services" class="active"><?= Yii::t('views', 'Назад к услугам') ?></a></li>
+    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
 </ul>
 
 <div class="box p-20 mt-20">
-    <h3>Мои активные коды (созданные мной)</h3>
+    <h3><?= Yii::t('views', 'Мои активные коды (созданные мной)') ?></h3>
     <?php if (empty($myCodes)): ?>
-        <p class="text-muted">У вас нет активных созданных кодов.</p>
+        <p class="text-muted"><?= Yii::t('views', 'У вас нет активных созданных кодов.') ?></p>
     <?php else: ?>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Код</th>
-                    <th>Номинал</th>
-                    <th>Создан</th>
+                    <th><?= Yii::t('views', 'Код') ?></th>
+                    <th><?= Yii::t('views', 'Номинал') ?></th>
+                    <th><?= Yii::t('views', 'Создан') ?></th>
                 </tr>
             </thead>
             <tbody>

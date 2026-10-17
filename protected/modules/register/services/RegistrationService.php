@@ -124,8 +124,9 @@ class RegistrationService
 		$user->created_at = date('Y-m-d H:i:s'); 
 
         if (!$user->save()) {
-            throw new \RuntimeException('Не удалось сохранить пользователя: ' .
-                json_encode($user->getErrors(), JSON_UNESCAPED_UNICODE));
+            throw new \RuntimeException(Yii::t('views', 'Не удалось сохранить пользователя: {errors}', [
+                'errors' => json_encode($user->getErrors(), JSON_UNESCAPED_UNICODE),
+            ]));
         }
         return $user;
     }
@@ -167,7 +168,7 @@ class RegistrationService
 
             Yii::$app->mailer->compose('@app/mail/register/step1', ['hash' => $hash])
                 ->setTo($email)
-                ->setSubject('Активация аккаунта')
+                ->setSubject(Yii::t('views', 'Активация аккаунта'))
                 ->send();
 
             $tx->commit();

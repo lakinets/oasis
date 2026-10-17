@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\modules\backend\models\BonusActivateForm $model */
 
-$this->title = 'Активация бонуса';
+$this->title = Yii::t('backend', 'Активация бонуса');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bonuses-activate">
@@ -21,7 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'login')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
         <div class="form-group">
-            <?= Html::submitButton('Активировать', ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('backend', 'Активировать'), ['class' => 'btn btn-primary']) ?>
         </div>
     <?php ActiveForm::end(); ?>
 </div>
+

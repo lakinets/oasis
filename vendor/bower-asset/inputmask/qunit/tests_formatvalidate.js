@@ -5,7 +5,7 @@ export default function (qunit, Inputmask) {
     function (assert) {
       var formattedValue = Inputmask.format("2331973", {
         alias: "datetime",
-        inputFormat: "dd/mm/yyyy",
+        inputFormat: "dd/MM/yyyy",
         min: "01/01/1900"
       });
       assert.equal(formattedValue, "23/03/1973", "Result " + formattedValue);
@@ -97,7 +97,7 @@ export default function (qunit, Inputmask) {
     }
   );
 
-  qunit.test("Inputmask.isValid email => false", function (assert) {
+  qunit.test("Inputmask.isValid email => true", function (assert) {
     var isValid = Inputmask.isValid("some.body@mail.c", {
       alias: "email"
     });
@@ -111,7 +111,7 @@ export default function (qunit, Inputmask) {
     assert.equal(isValid, true, "Result " + isValid);
   });
 
-  qunit.test("Inputmask.isValid email greedy => false", function (assert) {
+  qunit.test("Inputmask.isValid email greedy => true", function (assert) {
     var isValid = Inputmask.isValid("some.body@mail.c", {
       alias: "email",
       greedy: true
@@ -276,6 +276,50 @@ export default function (qunit, Inputmask) {
       var isValid = Inputmask.isValid("some_body@mail.com", {
         alias: "email"
       });
+      assert.equal(isValid, true, "Result " + isValid);
+    }
+  );
+
+  qunit.test(
+    'isValid("some.body@mail.com.", {alias:"email"}) - trailing dot #1908',
+    function (assert) {
+      var isValid = Inputmask.isValid("some.body@mail.com.", {
+        alias: "email"
+      });
+      assert.equal(isValid, false, "Result " + isValid);
+    }
+  );
+
+  qunit.test(
+    'isValid("some.body@mail.com..", {alias:"email"}) - double trailing dot #1908',
+    function (assert) {
+      var isValid = Inputmask.isValid("some.body@mail.com..", {
+        alias: "email"
+      });
+      assert.equal(isValid, false, "Result " + isValid);
+    }
+  );
+
+  qunit.test(
+    'Inputmask("(99[ ]){1,3}").isValid("99 99") - space in quantifier-nested optional group',
+    function (assert) {
+      var isValid = Inputmask("(99[ ]){1,3}").isValid("99 99");
+      assert.equal(isValid, true, "Result " + isValid);
+    }
+  );
+
+  qunit.test(
+    'Inputmask("(99[ ]){1,3}").isValid("99 99 99") - space in quantifier-nested optional group',
+    function (assert) {
+      var isValid = Inputmask("(99[ ]){1,3}").isValid("99 99 99");
+      assert.equal(isValid, true, "Result " + isValid);
+    }
+  );
+
+  qunit.test(
+    'Inputmask("(99[ ]){1,3}").isValid("99") - first repetition without optional space',
+    function (assert) {
+      var isValid = Inputmask("(99[ ]){1,3}").isValid("99");
       assert.equal(isValid, true, "Result " + isValid);
     }
   );

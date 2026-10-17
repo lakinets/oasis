@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $title_;
                 <?php foreach ($models as $row): ?>
                     <tr>
                         <td><?= $row->id ?></td>
-                        <td><?= Html::encode($row->title) ?></td>
+                        <td><?= Html::encode(Yii::t('backend', $row->title)) ?></td>
                         <td>
                             <span class="label <?= $row->isStatusOn() ? 'label-success' : 'label-default' ?>">
-                                <?= $row->getStatus() ?>
+                                <?= $row->getStatusLabel() ?>
                             </span>
                         </td>
                         <td><?= $row->sort ?></td>

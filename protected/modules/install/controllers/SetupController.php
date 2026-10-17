@@ -8,50 +8,59 @@ use app\modules\install\models\{PhpCheckForm, DbForm, AdminForm};
 
 class SetupController extends Controller
 {
-    /* ---------- шаг 1 : проверка окружения + лицензия ---------- */
     public function actionIndex()
     {
         $model = new PhpCheckForm();
+        $failed = $model->getFailedCount();
 
         if (Yii::$app->request->isPost) {
             $accept = Yii::$app->request->post('accept_license');
-            if ($accept) {
-                return $this->redirect(['step2']);
+
+            if (!$accept) {
+                Yii::$app->session->setFlash('error', Yii::t('install', 'Вы должны принять условия лицензии, чтобы продолжить установку.'));
             } else {
-                Yii::$app->session->setFlash('error', 'Вы должны принять условия лицензии, чтобы продолжить установку.');
+                // Ставим метку, что Шаг 1 пройден, и пускаем дальше
+                Yii::$app->session->set('install_step1_passed', true);
+                return $this->redirect(['step2']);
             }
         }
 
-        return $this->render('step1', ['model' => $model]);
+        return $this->render('step1', [
+            'model'  => $model,
+            'failed' => $failed
+        ]);
     }
 
-    /* ---------- шаг 2 : подключение к БД ---------- */
     public function actionStep2()
     {
+        if (!Yii::$app->session->get('install_step1_passed')) {
+            return $this->redirect(['index']);
+        }
+
         $model = new DbForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->writeConfig();           // создаёт config/db.php
+            $model->writeConfig();
+            Yii::$app->session->set('install_step2_passed', true);
             return $this->redirect(['step3']);
         }
         return $this->render('step2', ['model' => $model]);
     }
 
-    /* ---------- шаг 3 : миграции (без all_items.sql и oasis.sql) ---------- */
     public function actionStep3()
     {
-        require_once Yii::getAlias('@app/modules/install/migrations/m000000_000001_run_all_sql_files.php');
+        if (!Yii::$app->session->get('install_step2_passed')) {
+            return $this->redirect(['index']);
+        }
 
+        require_once Yii::getAlias('@app/modules/install/migrations/m000000_000001_run_all_sql_files.php');
         $migration = new \m000000_000001_run_all_sql_files();
         $migration->db = Yii::$app->db;
-
         ob_start();
         $migration->up();
         $res = ob_get_clean();
-
         return $this->render('step3', ['res' => $res]);
     }
 
-    /* ---------- шаг 4 : создаём админа ---------- */
     public function actionStep4()
     {
         $model = new AdminForm();
@@ -62,10 +71,9 @@ class SetupController extends Controller
         return $this->render('step4', ['model' => $model]);
     }
 
-    /* ---------- шаг 5 : финал ---------- */
     public function actionStep5()
     {
-        $installPath = Yii::getAlias('@app/protected/modules/install');
+        $installPath = Yii::getAlias('@app/modules/install');
         $removed = false;
         $error = null;
 
@@ -78,9 +86,6 @@ class SetupController extends Controller
             $error = $e->getMessage();
         }
 
-        return $this->render('step5', [
-            'removed' => $removed,
-            'error'   => $error,
-        ]);
+        return $this->render('step5', ['removed' => $removed, 'error' => $error]);
     }
 }

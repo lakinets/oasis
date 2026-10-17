@@ -6,7 +6,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $services app\models\Services[] */
 
-$this->title = 'Управление сервисами';
+$this->title = Yii::t('backend', 'Управление сервисами');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerCss("
@@ -38,13 +38,15 @@ $this->registerCss("
     <?php endif; ?>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Список сервисов</h3></div>
+        <div class="panel-heading"><h3 class="panel-title"><?= Yii::t('backend', 'Список сервисов') ?></h3></div>
         <div class="panel-body">
             <div class="services-grid">
                 <?php foreach ($services as $service): ?>
                     <?php
-                    $confirmText = $service->status ? 'Выключить' : 'Включить';
                     $safeName    = Html::encode($service->name);
+                    $confirmText = $service->status
+                        ? Yii::t('backend', "Выключить сервис '{service}'?", ['service' => $safeName])
+                        : Yii::t('backend', "Включить сервис '{service}'?", ['service' => $safeName]);
                     ?>
                     <div class="service-item">
                         <div class="service-header">
@@ -61,9 +63,7 @@ $this->registerCss("
                                                value="<?= $service->cost ?>"
                                                step="0.01" min="0" max="999999.99">
                                         <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                Обновить
-                                            </button>
+                                            <button type="submit" class="btn btn-primary btn-sm"><?= Yii::t('backend', 'Обновить') ?></button>
                                         </span>
                                     </div>
                                 </form>
@@ -71,9 +71,9 @@ $this->registerCss("
                                 <!-- Переключатель статуса -->
                                 <a href="<?= Url::to(['toggle', 'id' => $service->id]) ?>"
                                    class="btn btn-sm status-toggle <?= $service->status ? 'btn-success' : 'btn-danger' ?>"
-                                   onclick="return confirm('<?= $confirmText ?> сервис \'<?= $safeName ?>\'?')">
+                                   onclick="return confirm('<?= $confirmText ?>')">
                                     <i class="glyphicon glyphicon-<?= $service->status ? 'ok' : 'remove' ?>"></i>
-                                    <?= $service->status ? 'Включен' : 'Выключен' ?>
+                                    <?= $service->status ? Yii::t('backend', 'Включен') : Yii::t('backend', 'Выключен') ?>
                                 </a>
                             </div>
                         </div>
@@ -81,19 +81,19 @@ $this->registerCss("
                         <div class="service-info">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <strong>Текущая стоимость:</strong>
+                                    <strong><?= Yii::t('backend', 'Текущая стоимость:') ?></strong>
                                     <span class="text-primary">
                                         <?= Yii::$app->formatter->asDecimal($service->cost) ?>
-                                        <?= Yii::t('app', 'Web Aden') ?>
+                                        Web Aden
                                     </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>Статус:</strong>
+                                    <strong><?= Yii::t('backend', 'Статус:') ?></strong>
                                     <span class="label label-<?= $service->status ? 'success' : 'danger' ?>">
-                                        <?= $service->status ? 'Включен' : 'Выключен' ?>
+                                        <?= $service->status ? Yii::t('backend', 'Включен') : Yii::t('backend', 'Выключен') ?>
                                     </span>
                                 </div>
-                                <div class="col-md-4"><strong>ID сервиса:</strong> <?= $service->id ?></div>
+                                <div class="col-md-4"><strong><?= Yii::t('backend', 'ID сервиса:') ?></strong> <?= $service->id ?></div>
                             </div>
                         </div>
                     </div>
@@ -101,20 +101,19 @@ $this->registerCss("
 
                 <?php if (empty($services)): ?>
                     <div class="alert alert-info">
-                        <i class="glyphicon glyphicon-info-sign"></i> Нет доступных сервисов
-                    </div>
+                        <i class="glyphicon glyphicon-info-sign"></i> <?= Yii::t('backend', 'Нет доступных сервисов') ?></div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 
     <div class="well">
-        <h4><i class="glyphicon glyphicon-info-sign"></i> Инструкция по использованию:</h4>
+        <h4><i class="glyphicon glyphicon-info-sign"></i><?= Yii::t('backend', ' Инструкция по использованию:') ?></h4>
         <ul>
-            <li><strong>Изменение стоимости:</strong> введите новую сумму в поле и нажмите кнопку обновления</li>
-            <li><strong>Включение/выключение:</strong> кликните на кнопку статуса для переключения</li>
-            <li>Все изменения применяются мгновенно</li>
-            <li>Только администраторы имеют доступ к этой странице</li>
+            <li><strong><?= Yii::t('backend', 'Изменение стоимости:') ?></strong><?= Yii::t('backend', ' введите новую сумму в поле и нажмите кнопку обновления') ?></li>
+            <li><strong><?= Yii::t('backend', 'Включение/выключение:') ?></strong><?= Yii::t('backend', ' кликните на кнопку статуса для переключения') ?></li>
+            <li><?= Yii::t('backend', 'Все изменения применяются мгновенно') ?></li>
+            <li><?= Yii::t('backend', 'Только администраторы имеют доступ к этой странице') ?></li>
         </ul>
     </div>
 </div>

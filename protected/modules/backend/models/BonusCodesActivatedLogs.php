@@ -27,9 +27,10 @@ class BonusCodesActivatedLogs extends ActiveRecord
     {
         return [
             'id'        => 'ID',
-            'code_id'   => 'ID бонус кода',
-            'user_id'   => 'ID пользователя',
-            'created_at'=> 'Дата активации',
+            'code_id'   => Yii::t('backend', 'ID бонус кода'),
+            'user_id'   => Yii::t('backend', 'ID пользователя'),
+            'created_at'=> Yii::t('backend', 'Дата активации'),
         ];
     }
 }
+

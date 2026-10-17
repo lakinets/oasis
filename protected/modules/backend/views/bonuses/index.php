@@ -5,14 +5,14 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Бонусы';
+$this->title = Yii::t('backend', 'Бонусы');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bonuses-index">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Создать бонус', ['form'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('backend', 'Создать бонус'), ['form'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -32,17 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{update} {toggle} {delete}',
                 'buttons' => [
                     'update' => function ($url, $model) {
-                        return Html::a('Редактировать', ['form', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm']);
+                        return Html::a(Yii::t('backend', 'Редактировать'), ['form', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm']);
                     },
                     'toggle' => function ($url, $model) {
-                        $label = $model->status == $model::STATUS_ACTIVE ? 'Деактивировать' : 'Активировать';
+                        $label = $model->status == $model::STATUS_ACTIVE ? Yii::t('backend', 'Деактивировать') : Yii::t('backend', 'Активировать');
                         return Html::a($label, ['allow', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm']);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('Удалить', ['delete', 'id' => $model->id], [
+                        return Html::a(Yii::t('backend', 'Удалить'), ['delete', 'id' => $model->id], [
                             'class' => 'btn btn-danger btn-sm',
                             'data' => [
-                                'confirm' => 'Точно удалить бонус?',
+                                'confirm' => Yii::t('backend', 'Точно удалить бонус?'),
                                 'method' => 'post',
                             ],
                         ]);
@@ -52,3 +52,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+

@@ -55,7 +55,7 @@ class GameServersController extends BackendController
         $model = $gs_id ? $this->findModel($gs_id) : new Gs();
         $versions = $this->getVersionList();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', $gs_id ? 'Изменения сохранены.' : 'Сервер добавлен.');
+            Yii::$app->session->setFlash('success', $gs_id ? Yii::t('backend', 'Изменения сохранены.') : Yii::t('backend', 'Сервер добавлен.'));
             return $this->redirect(['index']);
         }
         return $this->render('form', ['model' => $model, 'versions' => $versions]);
@@ -66,7 +66,7 @@ class GameServersController extends BackendController
         $model = $this->findModel($gs_id);
         $model->status = $model->status ? 0 : 1;
         $model->save(false);
-        Yii::$app->session->setFlash('success', 'Статус изменён.');
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Статус изменён.'));
         return $this->redirect(['index']);
     }
 
@@ -74,7 +74,7 @@ class GameServersController extends BackendController
     {
         $model = $this->findModel($gs_id);
         $model->delete();
-        Yii::$app->session->setFlash('success', 'Сервер удалён.');
+        Yii::$app->session->setFlash('success', Yii::t('backend', 'Сервер удалён.'));
         return $this->redirect(['index']);
     }
 
@@ -104,7 +104,7 @@ class GameServersController extends BackendController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash(
                 'success',
-                $category_id ? 'Категория обновлена.' : 'Категория добавлена.'
+                $category_id ? Yii::t('backend', 'Категория обновлена.') : Yii::t('backend', 'Категория добавлена.')
             );
             return $this->redirect(['shop', 'gs_id' => $gs_id]);
         }
@@ -121,7 +121,7 @@ class GameServersController extends BackendController
         if ($category) {
             $gs_id = $category->gs_id;
             $category->delete();
-            Yii::$app->session->setFlash('success', 'Категория удалена.');
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Категория удалена.'));
         }
         return $this->redirect(['shop', 'gs_id' => $gs_id]);
     }
@@ -139,7 +139,7 @@ class GameServersController extends BackendController
     {
         $model = $pack_id ? ShopItemsPacks::findOne($pack_id) : new ShopItemsPacks(['category_id' => $category_id]);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', $pack_id ? 'Пак обновлён.' : 'Пак добавлен.');
+            Yii::$app->session->setFlash('success', $pack_id ? Yii::t('backend', 'Пак обновлён.') : Yii::t('backend', 'Пак добавлен.'));
             return $this->redirect(['shop-category', 'gs_id' => $gs_id, 'category_id' => $category_id]);
         }
         return $this->render('shop/pack-form', [
@@ -156,7 +156,7 @@ class GameServersController extends BackendController
             $category_id = $pack->category_id;
             $gs_id = $pack->category->gs_id;
             $pack->delete();
-            Yii::$app->session->setFlash('success', 'Пак удалён.');
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Пак удалён.'));
         }
         return $this->redirect(['shop-category', 'gs_id' => $gs_id, 'category_id' => $category_id]);
     }
@@ -165,7 +165,7 @@ class GameServersController extends BackendController
     {
         $model = $item_id ? ShopItems::findOne($item_id) : new ShopItems(['pack_id' => $pack_id, 'status' => 1]);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', $item_id ? 'Изменения сохранены.' : 'Предмет добавлен.');
+            Yii::$app->session->setFlash('success', $item_id ? Yii::t('backend', 'Изменения сохранены.') : Yii::t('backend', 'Предмет добавлен.'));
             return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
         }
         return $this->render('shop/item-form', [
@@ -181,7 +181,7 @@ class GameServersController extends BackendController
         $item = ShopItems::findOne($item_id);
         if ($item) {
             $item->updateAttributes(['status' => 1 - $item->status]);
-            Yii::$app->session->setFlash('success', 'Статус изменён.');
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Статус изменён.'));
         }
         return $this->redirect(['shop-pack', 'gs_id' => $item->pack->category->gs_id, 'category_id' => $item->pack->category_id, 'pack_id' => $item->pack_id]);
     }
@@ -194,7 +194,7 @@ class GameServersController extends BackendController
             $category_id = $item->pack->category_id;
             $gs_id = $item->pack->category->gs_id;
             $item->delete();
-            Yii::$app->session->setFlash('success', 'Предмет удалён.');
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Предмет удалён.'));
         }
         return $this->redirect(['shop-pack', 'gs_id' => $gs_id, 'category_id' => $category_id, 'pack_id' => $pack_id]);
     }
@@ -206,7 +206,7 @@ class GameServersController extends BackendController
         if (($model = Gs::findOne($gs_id)) !== null) {
             return $model;
         }
-        throw new NotFoundHttpException('Сервер не найден.');
+        throw new NotFoundHttpException(Yii::t('backend', 'Сервер не найден.'));
     }
 
     private function findCategory($id, $gs_id)
@@ -214,7 +214,7 @@ class GameServersController extends BackendController
         if (($model = ShopCategories::findOne(['id' => $id, 'gs_id' => $gs_id])) !== null) {
             return $model;
         }
-        throw new NotFoundHttpException('Категория не найдена');
+        throw new NotFoundHttpException(Yii::t('backend', 'Категория не найдена'));
     }
 
     private function findPack($id, $category_id)
@@ -222,7 +222,7 @@ class GameServersController extends BackendController
         if (($model = ShopItemsPacks::findOne(['id' => $id, 'category_id' => $category_id])) !== null) {
             return $model;
         }
-        throw new NotFoundHttpException('Пак не найден');
+        throw new NotFoundHttpException(Yii::t('backend', 'Пак не найден'));
     }
 
     private function getVersionList(): array
@@ -232,7 +232,14 @@ class GameServersController extends BackendController
         $versions = [];
         if (is_array($files)) {
             foreach ($files as $file) {
-                $versions[basename($file, '.php')] = basename($file, '.php');
+                $name = basename($file, '.php');
+                
+                // Исключаем фабрику из списка выбора
+                if ($name === 'DriverFactory') {
+                    continue;
+                }
+                
+                $versions[$name] = $name;
             }
             ksort($versions);
         }

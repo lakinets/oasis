@@ -36,7 +36,7 @@ class ServicesController extends CabinetBaseController
     {
         $service = Services::findOne(['type' => Services::TYPE_GIFT_CODE]);
         if (!$service || $service->status != Services::STATUS_ENABLED) {
-            Yii::$app->session->setFlash('error', 'Сервис «Подарочный код» временно недоступен.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сервис «Подарочный код» временно недоступен.'));
             return $this->redirect(['index']);
         }
 
@@ -78,13 +78,13 @@ class ServicesController extends CabinetBaseController
     {
         $service = Services::findOne(['type' => Services::TYPE_CHANGE_NAME]);
         if (!$service || $service->status != Services::STATUS_ENABLED) {
-            Yii::$app->session->setFlash('error', 'Сервис «Смена имени» временно недоступен.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сервис «Смена имени» временно недоступен.'));
             return $this->redirect(['index']);
         }
 
         $servers = Gs::getOpenServers();
         if (!$servers) {
-            Yii::$app->session->setFlash('error', 'Нет доступных игровых серверов.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Нет доступных игровых серверов.'));
             return $this->redirect(['index']);
         }
 
@@ -94,7 +94,7 @@ class ServicesController extends CabinetBaseController
         try {
             $gameDb = $this->connectToGameDb($server);
         } catch (\Exception $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка БД игрового сервера.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка БД игрового сервера.'));
             return $this->redirect(['index']);
         }
 
@@ -113,7 +113,7 @@ class ServicesController extends CabinetBaseController
         $model = new ChangeCharNameForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->executeChange($service, $gameDb, $driver)) {
-            Yii::$app->session->setFlash('success', 'Имя успешно изменено!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Имя успешно изменено!'));
             return $this->redirect(['change-char-name', 'gs_id' => $gs_id]);
         }
 
@@ -128,13 +128,13 @@ class ServicesController extends CabinetBaseController
     {
         $service = Services::findOne(['type' => Services::TYPE_CHANGE_GENDER]);
         if (!$service || $service->status != Services::STATUS_ENABLED) {
-            Yii::$app->session->setFlash('error', 'Сервис «Смена пола» временно недоступен.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сервис «Смена пола» временно недоступен.'));
             return $this->redirect(['index']);
         }
 
         $servers = Gs::getOpenServers();
         if (!$servers) {
-            Yii::$app->session->setFlash('error', 'Нет доступных серверов.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Нет доступных серверов.'));
             return $this->redirect(['index']);
         }
 
@@ -144,7 +144,7 @@ class ServicesController extends CabinetBaseController
         try {
             $gameDb = $this->connectToGameDb($server);
         } catch (\Exception $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка подключения к БД игры.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка подключения к БД игры.'));
             return $this->redirect(['index']);
         }
 
@@ -157,14 +157,20 @@ class ServicesController extends CabinetBaseController
             $cid = $row['char_id'] ?? $row['obj_Id'] ?? null;
             $cn = $row['char_name'] ?? null;
             $sex = $row['sex'] ?? 0;
-            if ($cid) { $characters[] = ['char_id' => $cid, 'char_name' => $cn, 'sex' => $sex]; $charMap[$cid] = "$cn (" . ($sex ? 'Ж' : 'М') . ")"; }
+            if ($cid) {
+                $characters[] = ['char_id' => $cid, 'char_name' => $cn, 'sex' => $sex];
+                $charMap[$cid] = Yii::t('views', '{name} ({sex})', [
+                    'name' => $cn,
+                    'sex' => $sex ? Yii::t('views', 'Ж') : Yii::t('views', 'М'),
+                ]);
+            }
         }
 
         $profile = UserProfiles::findOne(['user_id' => Yii::$app->user->id]);
         $model = new ChangeCharGenderForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->executeChange($service, $gameDb, $driver)) {
-            Yii::$app->session->setFlash('success', 'Пол изменен!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Пол изменен!'));
             return $this->redirect(['change-gender', 'gs_id' => $gs_id]);
         }
 
@@ -179,7 +185,7 @@ class ServicesController extends CabinetBaseController
     {
         $service = Services::findOne(['type' => Services::TYPE_REMOVE_KARMA]);
         if (!$service || $service->status != Services::STATUS_ENABLED) {
-            Yii::$app->session->setFlash('error', 'Сервис снятия кармы отключен.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сервис снятия кармы отключен.'));
             return $this->redirect(['index']);
         }
 
@@ -190,7 +196,7 @@ class ServicesController extends CabinetBaseController
         try {
             $gameDb = $this->connectToGameDb($server);
         } catch (\Exception $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка БД.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка БД.'));
             return $this->redirect(['index']);
         }
 
@@ -202,14 +208,20 @@ class ServicesController extends CabinetBaseController
             $cid = $row['char_id'] ?? $row['obj_Id'] ?? null;
             $cn = $row['char_name'] ?? null;
             $karma = $row['karma'] ?? 0;
-            if ($cid) { $characters[] = ['char_id' => $cid, 'karma' => $karma]; $charMap[$cid] = "$cn (Карма: $karma)"; }
+            if ($cid) {
+                $characters[] = ['char_id' => $cid, 'karma' => $karma];
+                $charMap[$cid] = Yii::t('views', '{name} (Карма: {karma})', [
+                    'name' => $cn,
+                    'karma' => $karma,
+                ]);
+            }
         }
 
         $profile = UserProfiles::findOne(['user_id' => Yii::$app->user->id]);
         $model = new RemoveKarmaForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->executeChange($service, $gameDb, $driver)) {
-            Yii::$app->session->setFlash('success', 'Карма обнулена!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Карма обнулена!'));
             return $this->redirect(['remove-karma', 'gs_id' => $gs_id]);
         }
 
@@ -224,7 +236,7 @@ class ServicesController extends CabinetBaseController
     {
         $service = Services::findOne(['type' => Services::TYPE_NOBLE_STATUS]);
         if (!$service || $service->status != Services::STATUS_ENABLED) {
-            Yii::$app->session->setFlash('error', 'Сервис недоступен.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сервис недоступен.'));
             return $this->redirect(['index']);
         }
 
@@ -235,7 +247,7 @@ class ServicesController extends CabinetBaseController
         try {
             $gameDb = $this->connectToGameDb($server);
         } catch (\Exception $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка БД.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка БД.'));
             return $this->redirect(['index']);
         }
 
@@ -253,7 +265,7 @@ class ServicesController extends CabinetBaseController
         $model = new NobleStatusForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->executeChange($service, $gameDb, $driver)) {
-            Yii::$app->session->setFlash('success', 'Статус дворянина получен!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Статус дворянина получен!'));
             return $this->redirect(['noble-status', 'gs_id' => $gs_id]);
         }
 

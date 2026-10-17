@@ -1,26 +1,26 @@
-﻿<ul class="nav-mini">
-    <li><a href="/cabinet/tickets">Поддержка</a></li>
-    <li><a href="/cabinet/characters">Персонажи</a></li>
-    <li><a href="/cabinet/shop">Магазин</a></li>
-    <li><a href="/cabinet/bonuses">Бонусы</a></li>
-    <li><a href="/cabinet/security">Безопасность</a></li>
-    <li><a href="/cabinet/messages">Сообщения</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
-    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
-    <li><a href="/cabinet/auth-history">История входов</a></li>
-    <li><a href="/cabinet/referals">Рефералы</a></li>
-    <li><a href="/cabinet/services">Услуги</a></li>
+<ul class="nav-mini">
+    <li><a href="/cabinet/tickets"><?= Yii::t('views', 'Поддержка') ?></a></li>
+    <li><a href="/cabinet/characters"><?= Yii::t('views', 'Персонажи') ?></a></li>
+    <li><a href="/cabinet/shop"><?= Yii::t('views', 'Магазин') ?></a></li>
+    <li><a href="/cabinet/bonuses"><?= Yii::t('views', 'Бонусы') ?></a></li>
+    <li><a href="/cabinet/security"><?= Yii::t('views', 'Безопасность') ?></a></li>
+    <li><a href="/cabinet/messages"><?= Yii::t('views', 'Сообщения') ?></a></li>
+    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    <li><a href="/cabinet/transaction-history"><?= Yii::t('views', 'История транзакций') ?></a></li>
+    <li><a href="/cabinet/auth-history"><?= Yii::t('views', 'История входов') ?></a></li>
+    <li><a href="/cabinet/referals"><?= Yii::t('views', 'Рефералы') ?></a></li>
+    <li><a href="/cabinet/services"><?= Yii::t('views', 'Услуги') ?></a></li>
 </ul>
 <?php
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->title = 'Мои тикеты';
+$this->title = Yii::t('views', 'Мои тикеты');
 ?>
 <h2 class="orion-table-header"><?= Html::encode($this->title) ?></h2>
 
 <?= Html::a(
-    'Создать тикет',
+    Yii::t('views', 'Создать тикет'),
     ['/cabinet/tickets/add'],
     ['class' => 'btn btn-orion mb-3']
 ) ?>
@@ -37,8 +37,8 @@ $this->title = 'Мои тикеты';
                 'format' => 'raw',
                 'value' => function ($model) {
                     return $model->status == 1
-                        ? '<span class="badge bg-success">Открыт</span>'
-                        : '<span class="badge bg-danger">Закрыт</span>';
+                        ? '<span class="badge bg-success">' . Yii::t('views', 'Открыт') . '</span>'
+                        : '<span class="badge bg-danger">' . Yii::t('views', 'Закрыт') . '</span>';
                 },
             ],
             [
@@ -51,7 +51,7 @@ $this->title = 'Мои тикеты';
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a(
-                            'Открыть',
+                            Yii::t('views', 'Открыть'),
                             ['/cabinet/tickets/view', 'ticket_id' => $model->id],
                             ['class' => 'btn btn-orion-sm']
                         );
@@ -61,4 +61,3 @@ $this->title = 'Мои тикеты';
         ],
     ]); ?>
 </div>
-

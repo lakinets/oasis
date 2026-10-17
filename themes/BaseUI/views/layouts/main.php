@@ -26,67 +26,76 @@ $this->beginPage();
             <img src="<?= $baseUrl ?>/images/logo.png" alt="L2Web" class="logo">
         </div>
 
+        <!-- Переключатель языка (под логотипом) -->
+        <div class="lang-switch">
+            <?= \app\widgets\LanguageSwitcher\LanguageSwitcher::widget([
+                'containerClass' => 'language-switcher',
+                'activeClass'    => 'active',
+                'showCurrent'    => true,
+                'useFlags'       => true,
+                'flagWidth'      => 26,
+                'flagHeight'     => 18,
+                'flagLinkStyle'  => 'display:inline-block; line-height:1;',
+                'flagImgStyle'   => 'display:block; border-radius:2px;',
+            ]) ?>
+        </div>
+
         <!-- Виджет онлайна -->
         <div class="server-status-widget">
             <?= \app\widgets\ServerStatus\ServerStatusWidget::widget(['compact' => true]) ?>
         </div>
 
         <nav class="main-nav">
-            <a href="<?= Url::to(['/']) ?>" class="nav-item">ГЛАВНАЯ</a>
-            <a href="<?= Url::to(['/page/about']) ?>" class="nav-item">О СЕРВЕРЕ</a>
-            <a href="https://forummaxi.ru/topic/100146-oasis-%D1%80%D0%B5%D0%BB%D0%B8%D0%B7/" 
-			   class="nav-item" 
-			   target="_blank" 
-			   rel="noopener">ПОДДЕРЖКА</a>
-            
+            <a href="<?= Url::home() ?>" class="nav-item"><?= Yii::t('main', 'ГЛАВНАЯ') ?></a>
+            <a href="<?= Url::to(['/page/about']) ?>" class="nav-item"><?= Yii::t('main', 'О СЕРВЕРЕ') ?></a>
+            <a href="https://forummaxi.ru/topic/100146-oasis-%D1%80%D0%B5%D0%BB%D0%B8%D0%B7/"
+               class="nav-item"
+               target="_blank"
+               rel="noopener"><?= Yii::t('main', 'ПОДДЕРЖКА') ?></a>
+
             <hr class="nav-divider">
-            
+
             <?php if (Yii::$app->user->isGuest): ?>
-                <a href="<?= Url::to(['/register']) ?>" class="nav-item highlight">РЕГИСТРАЦИЯ</a>
-                <a href="<?= Url::to(['/login']) ?>" class="nav-item">ВХОД</a>
+                <a href="<?= Url::to(['/register']) ?>" class="nav-item highlight"><?= Yii::t('main', 'РЕГИСТРАЦИЯ') ?></a>
+                <a href="<?= Url::to(['/login']) ?>" class="nav-item"><?= Yii::t('main', 'ВХОД') ?></a>
             <?php else: ?>
-                <a href="<?= Url::to(['/cabinet/characters']) ?>" class="nav-item">ПРОФИЛЬ</a>
-                <a href="<?= Url::to(['/cabinet/deposit']) ?>" class="nav-item">БАЛАНС</a>
-                <a href="<?= Url::to(['/stats']) ?>" class="nav-item">Статус</a>
-                <a href="<?= Url::to(['/logout']) ?>" data-method="post" class="nav-item logout">ВЫЙТИ ИЗ ЛК</a>
+                <a href="<?= Url::to(['/cabinet/characters']) ?>" class="nav-item"><?= Yii::t('main', 'ПРОФИЛЬ') ?></a>
+                <a href="<?= Url::to(['/cabinet/deposit']) ?>" class="nav-item"><?= Yii::t('main', 'БАЛАНС') ?></a>
+                <a href="<?= Url::to(['/stats']) ?>" class="nav-item"><?= Yii::t('main', 'Статус') ?></a>
+                <a href="<?= Url::to(['/logout']) ?>" data-method="post" class="nav-item logout"><?= Yii::t('main', 'ВЫЙТИ ИЗ ЛК') ?></a>
             <?php endif; ?>
         </nav>
-					<!-- Виджет статистики рас -->
-	        <div class="race-status-widget">
+
+        <!-- Виджет статистики рас -->
+        <div class="race-status-widget">
             <?= \app\widgets\RaceStat\RaceStatWidget::widget() ?>
         </div>
     </aside>
- 
 
-	
-    <div class="content">
+    <div class="content" id="content">
         <?= $content ?>
     </div>
 </div>
 
-<?php $this->endBody(); ?>
-</body>
-</html>
-<?php $this->endPage(); ?>
-
-   <!-- Скрипт убрерает эффет подпрыгивания -->
+<!-- Скрипт убирает эффект подпрыгивания при внутренних переходах -->
 <script>
 (function() {
-    // 1. ПРИНУДИТЕЛЬНО отключаем автоматический скролл браузера
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
 
     const CONFIG = {
-        containerSelector: '#content', // ID блока, который меняем
+        containerSelector: '#content',
         linkSelector: 'a[href]:not([href^="#"]):not([target])'
     };
 
     document.addEventListener('click', function(e) {
         const a = e.target.closest(CONFIG.linkSelector);
-        
-        // Проверка: ссылка должна быть внутренней и вести на ту же область
         if (!a || a.hostname !== location.hostname) return;
+
+        // Ссылки переключателя языка не перехватываем —
+        // пусть браузер сам обработает Set-Cookie и редирект.
+        if (a.closest('.lang-switch')) return;
 
         e.preventDefault();
         loadPage(a.href, true);
@@ -99,10 +108,7 @@ $this->beginPage();
             return;
         }
 
-        // 2. ЗАМОРОЗКА СКРОЛЛА
-        // Запоминаем текущую позицию
         const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        // Фиксируем текущую высоту body, чтобы страница не "схлопнулась"
         document.body.style.minHeight = document.documentElement.scrollHeight + 'px';
 
         fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
@@ -114,7 +120,6 @@ $this->beginPage();
                 const newTitle = newDoc.querySelector('title');
 
                 if (newContent) {
-                    // 3. ОБНОВЛЕНИЕ КОНТЕНТА
                     container.innerHTML = newContent.innerHTML;
                     if (newTitle) document.title = newTitle.innerText;
 
@@ -122,11 +127,8 @@ $this->beginPage();
                         history.pushState({ scrollY: scrollY }, '', url);
                     }
 
-                    // 4. ВОССТАНОВЛЕНИЕ
-                    // Сначала восстанавливаем скролл
                     window.scrollTo(0, scrollY);
 
-                    // Даем браузеру время отрисовать DOM и картинки, потом снимаем фиксацию высоты
                     requestAnimationFrame(() => {
                         window.scrollTo(0, scrollY);
                         document.body.style.minHeight = '';
@@ -141,9 +143,7 @@ $this->beginPage();
             });
     }
 
-    // Обработка кнопки "Назад" (Popstate)
     window.addEventListener('popstate', function(e) {
-        // Если в истории есть сохраненный скролл — используем его, иначе перезагружаем
         if (e.state && typeof e.state.scrollY !== 'undefined') {
             loadPage(location.href, false);
         } else {
@@ -152,3 +152,8 @@ $this->beginPage();
     });
 })();
 </script>
+
+<?php $this->endBody(); ?>
+</body>
+</html>
+<?php $this->endPage(); ?>

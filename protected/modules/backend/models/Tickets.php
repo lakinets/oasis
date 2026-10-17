@@ -41,15 +41,15 @@ class Tickets extends ActiveRecord
 
     public static function getStatusList()
     {
-        return [self::STATUS_CLOSED => 'Закрыт', self::STATUS_OPEN => 'Открыт'];
+        return [self::STATUS_CLOSED => Yii::t('backend', 'Закрыт'), self::STATUS_OPEN => Yii::t('backend', 'Открыт')];
     }
 
     public static function getPriorityList()
     {
         return [
-            self::PRIORITY_LOW    => 'Низкий',
-            self::PRIORITY_MEDIUM => 'Средний',
-            self::PRIORITY_HIGH   => 'Высокий',
+            self::PRIORITY_LOW    => Yii::t('backend', 'Низкий'),
+            self::PRIORITY_MEDIUM => Yii::t('backend', 'Средний'),
+            self::PRIORITY_HIGH   => Yii::t('backend', 'Высокий'),
         ];
     }
 

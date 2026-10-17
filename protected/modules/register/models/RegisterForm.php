@@ -75,8 +75,8 @@ class RegisterForm extends Model
             ['email', 'email'],
             ['login', 'string', 'min' => 3, 'max' => 14],
             ['password', 'string', 'min' => 6],
-            ['re_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
-            ['login', 'match', 'pattern' => '/^[A-Za-z0-9-]+$/', 'message' => 'Недопустимые символы в логине'],
+            ['re_password', 'compare', 'compareAttribute' => 'password', 'message' => Yii::t('views', 'Пароли не совпадают')],
+            ['login', 'match', 'pattern' => '/^[A-Za-z0-9-]+$/', 'message' => Yii::t('views', 'Недопустимые символы в логине')],
             ['email', 'validateEmailUnique'],
             ['login', 'validateLoginUnique'],
             ['gs_id', 'validateGsExists'],
@@ -104,14 +104,14 @@ class RegisterForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'gs_id'       => 'Выбор сервера',
-            'prefix'      => 'Префикс',
-            'login'       => 'Игровой логин',
-            'password'    => 'Пароль',
-            're_password' => 'Повторите пароль',
+            'gs_id'       => Yii::t('views', 'Выбор сервера'),
+            'prefix'      => Yii::t('views', 'Префикс'),
+            'login'       => Yii::t('views', 'Игровой логин'),
+            'password'    => Yii::t('views', 'Пароль'),
+            're_password' => Yii::t('views', 'Повторите пароль'),
             'email'       => 'Email',
-            'referer'     => 'Реферал',
-            'verifyCode'  => 'Код с картинки',
+            'referer'     => Yii::t('views', 'Реферал'),
+            'verifyCode'  => Yii::t('views', 'Код с картинки'),
         ];
     }
 
@@ -119,38 +119,40 @@ class RegisterForm extends Model
     {
         if (!$this->gs_id || !isset($this->gs_list[$this->gs_id])) return;
         if (User::find()->where(['email' => $this->$attribute, 'ls_id' => $this->gs_list[$this->gs_id]->login_id])->exists()) {
-            $this->addError($attribute, 'Email уже существует.');
+            $this->addError($attribute, Yii::t('views', 'Email уже существует.'));
         }
     }
 
     public function validateLoginUnique($attribute): void
     {
         if (!$this->gs_id || !isset($this->gs_list[$this->gs_id])) {
-            $this->addError('gs_id', 'Выберите корректный сервер.');
+            $this->addError('gs_id', Yii::t('views', 'Выберите корректный сервер.'));
             return;
         }
         $login = $this->getLogin();
         $lsId  = $this->gs_list[$this->gs_id]->login_id;
 
         if (User::find()->where(['login' => $login, 'ls_id' => $lsId])->exists()) {
-            $this->addError($attribute, 'Логин уже существует.');
+            $this->addError($attribute, Yii::t('views', 'Логин уже существует.'));
             return;
         }
 
         try {
             $svc = new RegistrationService();
             if ($svc->lsLoginExists($lsId, $login)) {
-                $this->addError($attribute, 'Логин уже существует на сервере.');
+                $this->addError($attribute, Yii::t('views', 'Логин уже существует на сервере.'));
             }
         } catch (\Throwable $e) {
-            $this->addError($attribute, 'Ошибка подключения к login-серверу: ' . $e->getMessage());
+            $this->addError($attribute, Yii::t('views', 'Ошибка подключения к login-серверу: {error}', [
+                'error' => $e->getMessage(),
+            ]));
         }
     }
 
     public function validatePrefixAllowed($attribute): void
     {
         if (!in_array($this->$attribute, $this->allowedPrefixes, true)) {
-            $this->addError($attribute, 'Префикс недоступен. Обновите страницу и попробуйте снова.');
+            $this->addError($attribute, Yii::t('views', 'Префикс недоступен. Обновите страницу и попробуйте снова.'));
         }
     }
 
@@ -175,7 +177,7 @@ class RegisterForm extends Model
     public function validateGsExists($attribute): void
     {
         if (!isset($this->gs_list[$this->$attribute])) {
-            $this->addError($attribute, 'Выберите корректный сервер.');
+            $this->addError($attribute, Yii::t('views', 'Выберите корректный сервер.'));
         }
     }
 
@@ -192,10 +194,10 @@ class RegisterForm extends Model
 
         if (AppConfig::emailConfirmEnabled()) {
             $svc->registerWithEmailConfirm($lsId, $login, $this->password, $this->email);
-            Yii::$app->session->setFlash('success', 'На почту отправлены инструкции по активации.');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'На почту отправлены инструкции по активации.'));
         } else {
             $svc->registerImmediate($lsId, $login, $this->password, $this->email, $this->refererInfo->id ?? null);
-            Yii::$app->session->setFlash('success', 'Регистрация прошла успешно!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Регистрация прошла успешно!'));
         }
     }
 

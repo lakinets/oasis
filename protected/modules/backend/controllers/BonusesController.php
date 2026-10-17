@@ -34,10 +34,10 @@ class BonusesController extends \app\modules\backend\controllers\BackendControll
                 $model->date_end = null;
             }
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Сохранено.');
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Сохранено.'));
                 return $this->redirect(['index']);
             }
-            Yii::$app->session->setFlash('error', 'Ошибка при сохранении.');
+            Yii::$app->session->setFlash('error', Yii::t('backend', 'Ошибка при сохранении.'));
         }
 
         return $this->render('form', ['model' => $model]);
@@ -88,10 +88,10 @@ class BonusesController extends \app\modules\backend\controllers\BackendControll
                 $model->code = $this->generateRandomCode();
             }
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Сохранено.');
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Сохранено.'));
                 return $this->redirect(['codes', 'bonus_id' => $model->bonus_id]);
             }
-            Yii::$app->session->setFlash('error', 'Ошибка при сохранении.');
+            Yii::$app->session->setFlash('error', Yii::t('backend', 'Ошибка при сохранении.'));
         }
 
         return $this->render('codes/form', ['model' => $model]);
@@ -101,7 +101,7 @@ class BonusesController extends \app\modules\backend\controllers\BackendControll
     {
         $model = BonusCodes::findOne($id);
         if (!$model) {
-            throw new NotFoundHttpException('Код не найден.');
+            throw new NotFoundHttpException(Yii::t('backend', 'Код не найден.'));
         }
         $model->status = $model->status ? 0 : 1;
         $model->save(false);
@@ -139,6 +139,6 @@ class BonusesController extends \app\modules\backend\controllers\BackendControll
         if (($model = Bonuses::findOne($id)) !== null) {
             return $model;
         }
-        throw new NotFoundHttpException('Бонус не найден.');
+        throw new NotFoundHttpException(Yii::t('backend', 'Бонус не найден.'));
     }
 }

@@ -12,7 +12,7 @@ class ChangePasswordController extends CabinetBaseController
 
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
             // TODO: смена пароля
-            \Yii::$app->session->setFlash('success', 'Пароль изменён');
+            \Yii::$app->session->setFlash('success', Yii::t('views', 'Пароль изменён'));
             return $this->refresh();
         }
 

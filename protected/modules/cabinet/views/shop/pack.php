@@ -1,15 +1,15 @@
-﻿<ul class="nav-mini">
-    <li><a href="/cabinet/tickets">Поддержка</a></li>
-    <li><a href="/cabinet/characters">Персонажи</a></li>
-    <li><a href="/cabinet/shop">Магазин</a></li>
-    <li><a href="/cabinet/bonuses">Бонусы</a></li>
-    <li><a href="/cabinet/security">Безопасность</a></li>
-    <li><a href="/cabinet/messages">Сообщения</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
-    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
-    <li><a href="/cabinet/auth-history">История входов</a></li>
-    <li><a href="/cabinet/referals">Рефералы</a></li>
-    <li><a href="/cabinet/services">Услуги</a></li>
+<ul class="nav-mini">
+    <li><a href="/cabinet/tickets"><?= Yii::t('views', 'Поддержка') ?></a></li>
+    <li><a href="/cabinet/characters"><?= Yii::t('views', 'Персонажи') ?></a></li>
+    <li><a href="/cabinet/shop"><?= Yii::t('views', 'Магазин') ?></a></li>
+    <li><a href="/cabinet/bonuses"><?= Yii::t('views', 'Бонусы') ?></a></li>
+    <li><a href="/cabinet/security"><?= Yii::t('views', 'Безопасность') ?></a></li>
+    <li><a href="/cabinet/messages"><?= Yii::t('views', 'Сообщения') ?></a></li>
+    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    <li><a href="/cabinet/transaction-history"><?= Yii::t('views', 'История транзакций') ?></a></li>
+    <li><a href="/cabinet/auth-history"><?= Yii::t('views', 'История входов') ?></a></li>
+    <li><a href="/cabinet/referals"><?= Yii::t('views', 'Рефералы') ?></a></li>
+    <li><a href="/cabinet/services"><?= Yii::t('views', 'Услуги') ?></a></li>
 </ul>
 <?php
 use yii\helpers\Html;
@@ -26,23 +26,24 @@ use yii\helpers\Url;
  * @var bool $ownerOk
  */
 
-$this->title = $pack->title . ' – ' . $category->name;
+$this->title = $pack->getTitle() . ' – ' . $category->getName();
 ?>
 
-<!-- Заголовок + селектор персонажа + баланс -->
+<?php $packDescr = $pack->getDescription(); ?>
+
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
 
     <div>
-        <h3 class="mb-1"><?= Html::encode($pack->title) ?></h3>
-        <?php if ($pack->description): ?>
-            <p class="text-muted mb-0"><?= nl2br(Html::encode($pack->description)) ?></p>
+        <h3 class="mb-1"><?= Html::encode($pack->getTitle()) ?></h3>
+        <?php if ($packDescr !== ''): ?>
+            <p class="text-muted mb-0"><?= nl2br(Html::encode($packDescr)) ?></p>
         <?php endif; ?>
     </div>
 
     <div class="d-flex align-items-center gap-3">
         <select id="char-selector" class="form-select" style="width:auto;"
                 onchange="setChar(this.value)">
-            <option value="">— выберите персонажа —</option>
+            <option value=""><?= Yii::t('views', '— выберите персонажа —') ?></option>
             <?php foreach ($characters as $ch): ?>
                 <option value="<?= (int)$ch['char_id'] ?>" <?= (int)$char_id === (int)$ch['char_id'] ? 'selected' : '' ?>>
                     <?= Html::encode($ch['char_name']) ?>
@@ -51,7 +52,7 @@ $this->title = $pack->title . ' – ' . $category->name;
         </select>
 
         <div class="text-end">
-            <div class="small text-muted">Баланс</div>
+            <div class="small text-muted"><?= Yii::t('views', 'Баланс') ?></div>
             <div class="fs-5 fw-semibold"><?= (int)$balance ?> Web Aden</div>
         </div>
     </div>
@@ -66,7 +67,6 @@ function setChar(id) {
 }
 </script>
 
-<!-- Flash-сообщения -->
 <?php foreach (Yii::$app->session->getAllFlashes() as $type => $msg): ?>
     <div class="alert alert-<?= Html::encode($type) ?> alert-dismissible fade show" role="alert">
         <?= Html::encode($msg) ?>
@@ -75,28 +75,29 @@ function setChar(id) {
 <?php endforeach; ?>
 
 <?php if (empty($items)): ?>
-    <div class="alert alert-info">Пак пуст.</div>
+    <div class="alert alert-info"><?= Yii::t('views', 'Пак пуст.') ?></div>
 <?php else: ?>
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>Предмет</th>
-                    <th class="text-end">Кол-во</th>
-                    <th class="text-end">Заточка</th>
-                    <th class="text-end">Цена</th>
-                    <th class="text-end">Скидка</th>
+                    <th><?= Yii::t('views', 'Предмет') ?></th>
+                    <th class="text-end"><?= Yii::t('views', 'Кол-во') ?></th>
+                    <th class="text-end"><?= Yii::t('views', 'Заточка') ?></th>
+                    <th class="text-end"><?= Yii::t('views', 'Цена') ?></th>
+                    <th class="text-end"><?= Yii::t('views', 'Скидка') ?></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($items as $it):
-                    $info  = $it->itemInfo;
-                    $title = $info->name ?? ('ID: ' . $it->item_id);
-                    $icon  = ($info && $info->icon && file_exists(Yii::getAlias('@webroot/images/items/' . $info->icon . '.jpg')))
-                            ? '/images/items/' . $info->icon . '.jpg'
-                            : '/images/items/no-image.jpg';
-                    $final = round((float)$it->cost * (1 - max(0, min((float)($it->discount ?? 0), 100)) / 100), 2);
+                    $info       = $it->itemInfo;
+                    $title      = $info->name ?? ('ID: ' . $it->item_id);
+                    $icon       = ($info && $info->icon && file_exists(Yii::getAlias('@webroot/images/items/' . $info->icon . '.jpg')))
+                                ? '/images/items/' . $info->icon . '.jpg'
+                                : '/images/items/no-image.jpg';
+                    $final      = round((float)$it->cost * (1 - max(0, min((float)($it->discount ?? 0), 100)) / 100), 2);
+                    $itemDescr  = $it->getDescription();
                 ?>
                     <tr>
                         <td>
@@ -104,8 +105,8 @@ function setChar(id) {
                                 <img src="<?= Html::encode($icon) ?>" width="32" height="32" alt="">
                                 <div>
                                     <div class="fw-semibold"><?= Html::encode($title) ?></div>
-                                    <?php if ($it->description): ?>
-                                        <div class="small text-muted"><?= nl2br(Html::encode($it->description)) ?></div>
+                                    <?php if ($itemDescr !== ''): ?>
+                                        <div class="small text-muted"><?= nl2br(Html::encode($itemDescr)) ?></div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -120,9 +121,7 @@ function setChar(id) {
                                     data-item-id="<?= $it->id ?>"
                                     data-item-name="<?= Html::encode($title) ?>"
                                     data-price="<?= number_format($final, 2, '.', '') ?>"
-                                    <?= (!$gs_id || !$char_id || !$ownerOk) ? 'disabled' : '' ?>>
-                                Купить
-                            </button>
+                                    <?= (!$gs_id || !$char_id || !$ownerOk) ? 'disabled' : '' ?>><?= Yii::t('views', 'Купить') ?></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -131,20 +130,18 @@ function setChar(id) {
     </div>
 <?php endif; ?>
 
-<!-- Модаль подтверждения покупки -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Подтверждение покупки</h5>
+                <h5 class="modal-title"><?= Yii::t('views', 'Подтверждение покупки') ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Купить <b id="itemName"></b> за <span id="itemPrice"></span> Web Aden?
+            <div class="modal-body"><?= Yii::t('views', 'Купить') ?> <b id="itemName"></b> <?= Yii::t('views', 'за') ?> <span id="itemPrice"></span> Web Aden?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-primary" id="confirmBuy">Купить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= Yii::t('views', 'Отмена') ?></button>
+                <button type="button" class="btn btn-primary" id="confirmBuy"><?= Yii::t('views', 'Купить') ?></button>
             </div>
         </div>
     </div>

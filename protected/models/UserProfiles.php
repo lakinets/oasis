@@ -1,134 +1,149 @@
 <?php
+namespace app\models;
+
+use Yii;
+use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{user_profiles}}".
+ * Профиль пользователя.
  *
- * The followings are the available columns in table '{{user_profiles}}':
- * @property int $id
- * @property int $user_id
- * @property int $balance
- * @property int $vote_balance
+ * @property int    $id
+ * @property int    $user_id
+ * @property int    $balance
+ * @property int    $vote_balance
  * @property string $preferred_language
  * @property string $protected_ip
  * @property string $phone
  *
- * The followings are the available model relations:
- * @property Users $user
+ * @property Users  $user
  */
 class UserProfiles extends ActiveRecord
 {
-    const DEFAULT_BALANCE      = 0; // Дефолтное значение баланса
-    const DEFAULT_VOTE_BALANCE = 0; // Дефолтное значение баланса голосов
+    const DEFAULT_BALANCE      = 0;
+    const DEFAULT_VOTE_BALANCE = 0;
 
+    public static function tableName()
+    {
+        return '{{%user_profiles}}';
+    }
 
+    public function rules()
+    {
+        return [
+            [['balance'], 'required'],
+            [['balance', 'vote_balance', 'user_id'], 'integer'],
+            [['balance'], 'string', 'max' => 10],
+            [['protected_ip'], 'isValidIp', 'on' => 'security'],
+            [['id', 'user_id', 'balance'], 'safe', 'on' => 'search'],
+        ];
+    }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{user_profiles}}';
-	}
+    public function attributeLabels()
+    {
+        return [
+            'id'                 => 'ID',
+            'user_id'            => Yii::t('models', 'Юзер'),
+            'balance'            => Yii::t('models', 'Баланс'),
+            'vote_balance'       => Yii::t('models', 'Голоса'),
+            'preferred_language' => Yii::t('models', 'Предпочитаемый язык'),
+            'protected_ip'       => Yii::t('models', 'IP адрес(а)'),
+            'phone'              => Yii::t('models', 'Телефон'),
+        ];
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		return array(
-			array('balance', 'required'),
-			array('balance', 'length', 'max'=>10),
-
-            array('protected_ip', 'isValidIp', 'on' => 'security'),
-
-			array('id, user_id, balance', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-        return array(
-            'user' => array(self::HAS_ONE, 'Users', array('user_id' => 'user_id')),
-        );
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id'                 => 'ID',
-			'user_id'            => Yii::t('main', 'Юзер'),
-			'balance'            => Yii::t('main', 'Баланс'),
-			'vote_balance'       => Yii::t('main', 'Голоса'),
-			'preferred_language' => Yii::t('main', 'Предпочитаемый язык'),
-			'protected_ip'       => Yii::t('main', 'IP адрес(а)'),
-			'phone'              => Yii::t('main', 'Телефон'),
-		);
-	}
+    public function getUser()
+    {
+        return $this->hasOne(Users::class, ['user_id' => 'user_id']);
+    }
 
     /**
-     * Проверка IP адреса(ов)
+     * Возвращает профиль пользователя.
+     * Если профиля нет — создаёт его с балансом 0.
+     *
+     * Это единственный правильный способ получать профиль.
+     * Везде, где раньше было UserProfiles::findOne(['user_id' => X]),
+     * теперь должно быть UserProfiles::getOrCreate(X).
+     *
+     * @param int $userId
+     * @return self
+     */
+    public static function getOrCreate(int $userId): self
+    {
+        $profile = static::findOne(['user_id' => $userId]);
+        if ($profile) {
+            return $profile;
+        }
+
+        $profile = new static();
+        $profile->user_id            = $userId;
+        $profile->balance            = self::DEFAULT_BALANCE;
+        $profile->vote_balance       = self::DEFAULT_VOTE_BALANCE;
+        $profile->preferred_language = Yii::$app->language ?: 'ru';
+
+        // save(false) — пропускаем валидацию, чтобы не спотыкаться о 'balance' => 'required'
+        // при пограничных сценариях (например, если значение 0 и валидатор его отвергнет).
+        // Все поля мы задали явно — валидация не нужна.
+        $profile->save(false);
+
+        return $profile;
+    }
+
+    /**
+     * Проверка IP-адреса(ов).
      */
     public function isValidIp()
     {
-        if($this->protected_ip)
-        {
-            $ipList = explode("\r\n", $this->protected_ip);
+        if ($this->protected_ip) {
+            $ipList = is_array($this->protected_ip)
+                ? $this->protected_ip
+                : explode("\r\n", $this->protected_ip);
 
-            if($ipList)
-            {
-                foreach($ipList as $ip)
-                {
-                    if(!ip2long(trim($ip)))
-                    {
-                        $this->addError('protected_ip', Yii::t('main', ':bad_ip - не является верным IP адресом.', array(':bad_ip' => $ip)));
-                    }
+            foreach ($ipList as $ip) {
+                if (!ip2long(trim($ip))) {
+                    $this->addError(
+                        'protected_ip',
+                        Yii::t('models', '{bad_ip} - не является верным IP адресом.', ['bad_ip' => $ip])
+                    );
                 }
             }
         }
     }
 
-    protected function afterFind()
+    public function afterFind()
     {
-        if($this->protected_ip)
-        {
-            $this->protected_ip = json_decode($this->protected_ip, TRUE);
-        }
-
         parent::afterFind();
+        if ($this->protected_ip && is_string($this->protected_ip)) {
+            $this->protected_ip = json_decode($this->protected_ip, true);
+        }
     }
 
-    protected function beforeSave()
+    public function beforeSave($insert)
     {
-        if($this->protected_ip)
-        {
-            $ipList = str_replace(array("\r"), '', $this->protected_ip);
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if ($this->protected_ip && is_array($this->protected_ip)) {
+            $ipList = str_replace(["\r"], '', implode("\n", $this->protected_ip));
             $ipList = explode("\n", $ipList);
             $ipList = array_map('trim', $ipList);
-
             $this->protected_ip = json_encode($ipList);
         }
 
-        return parent::beforeSave();
+        return true;
     }
 
-    protected function afterSave()
+    public function afterSave($insert, $changedAttributes)
     {
-        if($this->protected_ip)
-        {
-            $this->protected_ip = json_decode($this->protected_ip, TRUE);
-        }
+        parent::afterSave($insert, $changedAttributes);
 
-        parent::afterSave();
+        if ($this->protected_ip && is_string($this->protected_ip)) {
+            $this->protected_ip = json_decode($this->protected_ip, true);
+        }
     }
 
     /**
-     * Возвращает баланс
+     * Возвращает баланс.
      *
      * @return int
      */

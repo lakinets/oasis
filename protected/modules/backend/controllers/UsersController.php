@@ -47,7 +47,7 @@ class UsersController extends BackendController
     {
         $user = Users::findOne($user_id);
         if (!$user) {
-            throw new NotFoundHttpException('Пользователь не найден');
+            throw new NotFoundHttpException(Yii::t('backend', 'Пользователь не найден'));
         }
         return $this->render('view', ['user' => $user]);
     }
@@ -59,7 +59,7 @@ class UsersController extends BackendController
     {
         $user = Users::findOne($user_id);
         if (!$user) {
-            throw new NotFoundHttpException('Пользователь не найден');
+            throw new NotFoundHttpException(Yii::t('backend', 'Пользователь не найден'));
         }
 
         $model = new EditUserForm();
@@ -67,10 +67,10 @@ class UsersController extends BackendController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->applyToUser($user)) {
-                Yii::$app->session->setFlash('success', 'Пользователь обновлён');
+                Yii::$app->session->setFlash('success', Yii::t('backend', 'Пользователь обновлён'));
                 return $this->redirect(['view', 'user_id' => $user->user_id]);
             }
-            Yii::$app->session->setFlash('error', 'Ошибка сохранения');
+            Yii::$app->session->setFlash('error', Yii::t('backend', 'Ошибка сохранения'));
         }
 
         return $this->render('edit-data', [

@@ -35,7 +35,7 @@ class Config extends ActiveRecord
 
     protected function yesNoOptions(): array
     {
-        return ['0' => 'Нет', '1' => 'Да'];
+        return ['0' => Yii::t('backend', 'Нет'), '1' => Yii::t('backend', 'Да')];
     }
 
     public function getThemes(): array
@@ -63,7 +63,7 @@ class Config extends ActiveRecord
 
     protected function indexPageTypes(): array
     {
-        return ['page' => 'Страница', 'news' => 'Новости'];
+        return ['page' => Yii::t('backend', 'Страница'), 'news' => Yii::t('backend', 'Новости')];
     }
 
     protected function pagesList(): array
@@ -89,7 +89,7 @@ class Config extends ActiveRecord
             'd/m/Y H:i'     => '11/08/2025 21:30',
             'd.m.Y'         => '11.08.2025',
             'd/m/Y'         => '11/08/2025',
-            'j F Y, H:i'    => '11 августа 2025, 21:30',
+            'j F Y, H:i'    => Yii::$app->formatter->asDatetime(time(), 'd MMMM y, HH:mm'),
             'D, M j, Y H:i' => 'Sun, Aug 11, 2025 21:30',
             'c'             => '2025-08-11T21:30:00+03:00',
         ];

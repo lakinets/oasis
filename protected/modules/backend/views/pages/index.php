@@ -7,14 +7,14 @@ use app\modules\backend\models\Pages;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Страницы';
+$this->title = Yii::t('backend', 'Страницы');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pages-index">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Добавить страницу', ['form'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('backend', 'Добавить страницу'), ['form'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'page',
-                'label' => 'Имя страницы (page)',
+                'label' => Yii::t('backend', 'Имя страницы (page)'),
                 'format' => 'text',
                 'value' => function (Pages $model) {
                     return $model->page;
@@ -40,10 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'status',
-                'label' => 'Статус',
+                'label' => Yii::t('backend', 'Статус'),
                 'format' => 'raw',
                 'value' => function (Pages $model) {
-                    return $model->status ? 'Активна' : 'Не активна';
+                    return $model->status ? Yii::t('backend', 'Активна') : Yii::t('backend', 'Не активна');
                 },
                 'filter' => false,
             ],
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $host = Yii::$app->request->hostInfo;
                         $page = $model->page ?: $model->id;
                         $urlFrontend = rtrim($host, '/') . '/page/' . $page;
-                        return Html::a('Просмотр', $urlFrontend, [
+                        return Html::a(Yii::t('backend', 'Просмотр'), $urlFrontend, [
                             'class' => 'btn btn-xs btn-default',
                             'target' => '_blank',
                             'rel' => 'noopener noreferrer',
@@ -65,16 +65,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     // Редактировать — ведёт на actionForm (редактирование в бэкенде)
                     'update' => function ($url, $model, $key) {
-                        return Html::a('Редактировать', ['form', 'id' => $model->id], [
+                        return Html::a(Yii::t('backend', 'Редактировать'), ['form', 'id' => $model->id], [
                             'class' => 'btn btn-xs btn-primary'
                         ]);
                     },
                     // Удаление (soft delete) — ведёт на actionDel
                     'delete' => function ($url, $model, $key) {
-                        return Html::a('Удалить', ['del', 'id' => $model->id], [
+                        return Html::a(Yii::t('backend', 'Удалить'), ['del', 'id' => $model->id], [
                             'class' => 'btn btn-xs btn-danger',
                             'data' => [
-                                'confirm' => 'Вы уверены, что хотите удалить эту страницу?',
+                                'confirm' => Yii::t('backend', 'Вы уверены, что хотите удалить эту страницу?'),
                                 'method' => 'post',
                             ],
                         ]);
@@ -84,3 +84,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+

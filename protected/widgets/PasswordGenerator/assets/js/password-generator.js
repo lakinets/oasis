@@ -48,7 +48,7 @@
             var $self = $(this),
                 pass = generator(rand(passwordGeneratorPasswordMinLength, passwordGeneratorPasswordMaxLength));
 
-            if(prompt("Запомните или запишите его.", pass))
+            if(prompt(passwordGeneratorPrompt, pass))
             {
                 $('#RegisterForm_password').val(pass);
                 $('#RegisterForm_re_password').val(pass);

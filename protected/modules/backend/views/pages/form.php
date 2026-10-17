@@ -1,36 +1,112 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use app\modules\backend\models\Pages; // <- импорт модели Pages
+use yii\bootstrap5\ActiveForm;
+use app\modules\backend\models\Pages;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\backend\models\Pages */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $translations app\models\PageTranslation[] */
+/* @var $languages array */
 ?>
 
 <div class="pages-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'page')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'page')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'status')->dropDownList([
+                Pages::STATUS_ON  => Yii::t('backend', 'Активна'),
+                Pages::STATUS_OFF => Yii::t('backend', 'Не активна'),
+            ]) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <hr>
+    <h4 class="mb-3"><?= Yii::t('backend', 'Переводы') ?></h4>
 
-    <!-- Поле в БД называется text, поэтому используем text -->
-    <?= $form->field($model, 'text')->textarea(['rows' => 12]) ?>
+    <?php if (empty($languages)): ?>
+        <div class="alert alert-warning">
+            <?= Yii::t('backend', 'Языки не настроены в params.languages') ?>
+        </div>
+    <?php else: ?>
 
-    <?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'seo_keywords')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'seo_description')->textInput(['maxlength' => true]) ?>
+        <?php $sourceLang = Yii::$app->sourceLanguage; ?>
 
-    <?= $form->field($model, 'status')->dropDownList([
-        Pages::STATUS_ON  => 'Активна',
-        Pages::STATUS_OFF => 'Не активна',
-    ]) ?>
+        <ul class="nav nav-tabs mb-3" role="tablist">
+            <?php foreach ($languages as $code => $name): ?>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <?= $code === $sourceLang ? 'active' : '' ?>"
+                            id="tab-btn-<?= $code ?>"
+                            data-bs-toggle="tab"
+                            data-bs-target="#lang-<?= $code ?>"
+                            type="button" role="tab"
+                            aria-controls="lang-<?= $code ?>"
+                            aria-selected="<?= $code === $sourceLang ? 'true' : 'false' ?>">
+                        <?= Html::encode($name) ?>
+                    </button>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 
+        <div class="tab-content">
+            <?php foreach ($languages as $code => $name): ?>
+                <div class="tab-pane fade <?= $code === $sourceLang ? 'show active' : '' ?>"
+                     id="lang-<?= $code ?>"
+                     role="tabpanel"
+                     aria-labelledby="tab-btn-<?= $code ?>">
+
+                    <?= $form->field($translations[$code], "[{$code}]title")
+                        ->textInput(['maxlength' => true])
+                        ->label(Yii::t('backend', 'Заголовок')) ?>
+
+                    <?= $form->field($translations[$code], "[{$code}]text")
+                        ->textarea(['rows' => 12])
+                        ->label(Yii::t('backend', 'Содержимое')) ?>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($translations[$code], "[{$code}]seo_title")
+                                ->textInput(['maxlength' => true])
+                                ->label('SEO title') ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($translations[$code], "[{$code}]seo_keywords")
+                                ->textInput(['maxlength' => true])
+                                ->label('SEO keywords') ?>
+                        </div>
+                    </div>
+
+                    <?= $form->field($translations[$code], "[{$code}]seo_description")
+                        ->textInput(['maxlength' => true])
+                        ->label('SEO description') ?>
+
+                    <?php if ($code !== $sourceLang): ?>
+                        <div class="alert alert-info">
+                            <?= Yii::t('backend', 'Если перевод не заполнен — на этом языке будет показан текст с языка «{source}».', [
+                                'source' => $languages[$sourceLang] ?? $sourceLang,
+                            ]) ?>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+    <?php endif; ?>
+
+    <hr>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Отмена', ['index'], ['class'=>'btn btn-default']) ?>
+        <?= Html::submitButton(
+            $model->isNewRecord
+                ? Yii::t('backend', 'Добавить')
+                : Yii::t('backend', 'Сохранить'),
+            ['class' => 'btn btn-primary']
+        ) ?>
+        <?= Html::a(Yii::t('backend', 'Отмена'), ['index'], ['class' => 'btn btn-secondary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

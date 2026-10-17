@@ -37,7 +37,7 @@ class BonusesController extends CabinetBaseController
 
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
             // TODO: логика активации
-            \Yii::$app->session->setFlash('success', 'Код активирован');
+            \Yii::$app->session->setFlash('success', Yii::t('views', 'Код активирован'));
             return $this->refresh();
         }
 
@@ -49,7 +49,7 @@ class BonusesController extends CabinetBaseController
     public function actionActivation($bonus_id)
     {
         // TODO: логика активации бонуса
-        \Yii::$app->session->setFlash('success', 'Бонус активирован');
+        \Yii::$app->session->setFlash('success', Yii::t('views', 'Бонус активирован'));
         return $this->redirect(['index']); // 'bonuses/'
     }
 }

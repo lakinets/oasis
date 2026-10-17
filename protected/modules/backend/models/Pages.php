@@ -30,20 +30,21 @@ class Pages extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'page' => 'Имя страницы (page)',
-            'title' => 'Заголовок',
-            'text' => 'Содержимое',
+            'page' => Yii::t('backend', 'Имя страницы (page)'),
+            'title' => Yii::t('backend', 'Заголовок'),
+            'text' => Yii::t('backend', 'Содержимое'),
             'seo_title' => 'SEO title',
             'seo_keywords' => 'SEO keywords',
             'seo_description' => 'SEO description',
-            'status' => 'Статус',
-            'created_at' => 'Создано',
-            'updated_at' => 'Обновлено',
+            'status' => Yii::t('backend', 'Статус'),
+            'created_at' => Yii::t('backend', 'Создано'),
+            'updated_at' => Yii::t('backend', 'Обновлено'),
         ];
     }
 
     public function getStatusLabel(): string
     {
-        return $this->status == self::STATUS_ON ? 'Активна' : 'Не активна';
+        return $this->status == self::STATUS_ON ? Yii::t('backend', 'Активна') : Yii::t('backend', 'Не активна');
     }
 }
+

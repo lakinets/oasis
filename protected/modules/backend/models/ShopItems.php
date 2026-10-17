@@ -1,7 +1,7 @@
 <?php
-
 namespace app\modules\backend\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -32,12 +32,27 @@ class ShopItems extends ActiveRecord
             [['pack_id', 'item_id', 'count', 'enchant', 'sort', 'status'], 'integer'],
             [['cost', 'discount'], 'number'],
             [['currency_type'], 'string', 'max' => 54],
-            [['description'], 'string'],
+            [['description', 'description_en'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
 
-            // значения по умолчанию
             [['discount', 'sort'], 'default', 'value' => 0],
             [['enchant'], 'default', 'value' => 0],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'item_id'        => Yii::t('backend', 'ID предмета'),
+            'description'    => Yii::t('backend', 'Описание (RU)'),
+            'description_en' => Yii::t('backend', 'Описание (EN)'),
+            'count'          => Yii::t('backend', 'Кол-во'),
+            'enchant'        => Yii::t('backend', 'Заточка'),
+            'cost'           => Yii::t('backend', 'Цена (Web Adena)'),
+            'discount'       => Yii::t('backend', 'Скидка (%)'),
+            'currency_type'  => Yii::t('backend', 'Валюта покупки'),
+            'status'         => Yii::t('backend', 'Активен'),
+            'sort'           => Yii::t('backend', 'Сортировка'),
         ];
     }
 
@@ -59,7 +74,6 @@ class ShopItems extends ActiveRecord
             return false;
         }
 
-        // подставляем 0, если не заполнено
         if ($this->discount === null || $this->discount === '') {
             $this->discount = 0;
         }
@@ -70,11 +84,19 @@ class ShopItems extends ActiveRecord
             $this->enchant = 0;
         }
 
-        // описание: ручное или из all_items
-        if (!$this->description) {
+        // Описание: если у предмета пусто — берём из all_items (для каждого языка отдельно).
+        $needRu = !$this->description;
+        $needEn = !$this->description_en;
+
+        if ($needRu || $needEn) {
             $ai = AllItems::findOne($this->item_id);
-            if ($ai && !empty($ai->description)) {
-                $this->description = $ai->description;
+            if ($ai) {
+                if ($needRu && !empty($ai->description)) {
+                    $this->description = $ai->description;
+                }
+                if ($needEn && !empty($ai->description_en)) {
+                    $this->description_en = $ai->description_en;
+                }
             }
         }
 
@@ -82,10 +104,41 @@ class ShopItems extends ActiveRecord
     }
 
     /**
-     * Человеко-читаемое описание
+     * Описание предмета с учётом языка.
+     *
+     * Приоритет:
+     *   1. shop_items.description_[lang]  — ручной override админа
+     *   2. all_items.description_[lang]   — из игровой базы
+     *   3. пусто (например, для Adena — нормально)
+     *
+     * @param string|null $lang 'ru' | 'en' | null (текущий язык приложения)
+     */
+    public function getDescription($lang = null): string
+    {
+        $lang = $lang ?: Yii::$app->language;
+        $isEn = ($lang === 'en');
+
+        $own = $isEn ? $this->description_en : $this->description;
+        if ($own !== null && $own !== '') {
+            return (string)$own;
+        }
+
+        $ai = $this->itemInfo;
+        if ($ai) {
+            $fromAi = $isEn ? $ai->description_en : $ai->description;
+            if ($fromAi !== null && $fromAi !== '') {
+                return (string)$fromAi;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @deprecated Оставлен для обратной совместимости. Используйте getDescription().
      */
     public function getFullDescription(): string
     {
-        return $this->description ?: ($this->itemInfo ? $this->itemInfo->description : '');
+        return $this->getDescription();
     }
 }

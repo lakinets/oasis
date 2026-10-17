@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Pages */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Страницы', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Страницы'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pages-view">
@@ -13,11 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('backend', 'Редактировать'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('backend', 'Удалить'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Вы уверены, что хотите удалить эту страницу?',
+                'confirm' => Yii::t('backend', 'Вы уверены, что хотите удалить эту страницу?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -28,3 +28,4 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+

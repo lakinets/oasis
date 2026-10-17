@@ -34,25 +34,34 @@ if (!is_dir(\Yii::getAlias('@themes'))) {
 }
 
 return [
-    'id'         => 'l2-legacy',
-    'name'       => 'L2 Legacy',
-    'basePath'   => dirname(__DIR__),
-    'language'   => 'ru',
-    'timeZone'   => 'Europe/Moscow',
-    'layout'     => "@themes/views/layouts/main",
-    'vendorPath' => dirname(__DIR__, 2) . '/vendor',
+    'id'             => 'l2-legacy',
+    'name'           => 'L2 Legacy',
+    'basePath'       => dirname(__DIR__),
+    'language'       => 'ru',
+    'sourceLanguage' => 'ru',
+    'timeZone'       => 'Europe/Moscow',
+    'layout'         => "@themes/views/layouts/main",
+    'vendorPath'     => dirname(__DIR__, 2) . '/vendor',
 
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
 
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'language-selector', 'profile-initializer'],
 
     'components' => [
         'request' => [
             'cookieValidationKey' => 'Qt0TUb2LME-ES9T5l5srJJh2n9QAbbwT',
             'enableCsrfValidation' => true,
+        ],
+
+        'language-selector' => [
+            'class' => \app\components\LanguageSelector::class,
+        ],
+
+        'profile-initializer' => [
+            'class' => \app\components\ProfileInitializer::class,
         ],
 
         'view' => [
@@ -82,7 +91,10 @@ return [
                 /* ===== INSTALL (в самый верх) ===== */
                 'install' => 'install/setup/index',
                 'install/<action:\w+>' => 'install/setup/<action>',
-				'install/<action:\w+>/' => 'install/setup/<action>',
+                'install/<action:\w+>/' => 'install/setup/<action>',
+
+                /* -------- LANGUAGE SWITCH -------- */
+                'language/<lang:[a-z]{2}>' => 'site/language',
 
                 /* -------- BACKEND -------- */
                 'backend' => 'backend/default/index',
@@ -140,28 +152,102 @@ return [
             ],
         ],
 
+        /* ================== ЛОГИРОВАНИЕ (сохранено) ================== */
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 ['class' => \yii\log\FileTarget::class, 'levels' => ['error', 'warning', 'info']],
             ],
         ],
+        /* ============================================================ */
 
+        /* ================== i18n ================== */
         'i18n' => [
             'translations' => [
-                'main' => [
-                    'class'      => \yii\i18n\PhpMessageSource::class,
-                    'basePath'   => '@app/messages',
-                    'sourceLanguage' => 'ru',
+
+                'main*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['main' => 'main.php'],
                 ],
+
+                'views*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['views' => 'views.php'],
+                ],
+
+                'controllers*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['controllers' => 'controllers.php'],
+                ],
+
+                'models*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['models' => 'models.php'],
+                ],
+
                 'backend*' => [
-                    'class'      => \yii\i18n\PhpMessageSource::class,
-                    'basePath'   => '@app/messages/backend',
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['backend' => 'backend.php'],
+                ],
+
+                'mail*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['mail' => 'mail.php'],
+                ],
+
+                'page*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['page' => 'page.php'],
+                ],
+
+                /* --- auth (формы входа, регистрации, сброса пароля) --- */
+                'auth*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['auth' => 'auth.php'],
+                ],
+
+                /* --- install (шаги установщика) --- */
+                'install*' => [
+                    'class'            => \yii\i18n\PhpMessageSource::class,
+                    'basePath'         => '@app/messages',
+                    'sourceLanguage'   => 'ru',
+                    'forceTranslation' => true,
+                    'fileMap'          => ['install' => 'install.php'],
+                ],
+
+                /* --- Встроенные сообщения Yii --- */
+                'yii' => [
+                    'class'          => \yii\i18n\PhpMessageSource::class,
+                    'basePath'       => '@vendor/yiisoft/yii2/messages',
                     'sourceLanguage' => 'en-US',
-                    'fileMap'    => ['backend' => 'backend.php'],
                 ],
             ],
         ],
+        /* ================ /i18n ================= */
 
         'assetManager' => [
             'basePath' => '@webroot/assets',
@@ -193,6 +279,8 @@ return [
 
     'params' => array_merge(
         require __DIR__ . '/params.php',
-        ['servers' => $servers]
+        [
+            'servers' => $servers,
+        ]
     ),
 ];

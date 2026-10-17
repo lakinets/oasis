@@ -38,7 +38,11 @@ class PasswordGenerator extends CWidget
 
         Yii::app()->clientScript->registerScript('passwordGenerator', '
         var passwordGeneratorPasswordMaxLength = ' . $this->maxLength . ',
-            passwordGeneratorPasswordMinLength = ' . $this->minLength . ';', CClientScript::POS_END);
+            passwordGeneratorPasswordMinLength = ' . $this->minLength . ',
+            passwordGeneratorPrompt = ' . json_encode(
+                Yii::t('main', 'Запомните или запишите его.'),
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
+            ) . ';', CClientScript::POS_END);
 
         Yii::app()->clientScript->registerScriptFile($assetsUrl . '/js/password-generator.js', CClientScript::POS_END);
         echo '<a class="js-password-generator">' . $this->text . '</a>';

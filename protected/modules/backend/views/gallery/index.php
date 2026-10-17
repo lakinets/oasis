@@ -2,9 +2,9 @@
 use yii\helpers\Html;
 use yii\widgets\ListView;
 
-$this->title = 'Галерея';
+$this->title = Yii::t('backend', 'Галерея');
 ?>
-<p><?= Html::a('Добавить картинку', ['form'], ['class' => 'btn btn-success']) ?></p>
+<p><?= Html::a(Yii::t('backend', 'Добавить картинку'), ['form'], ['class' => 'btn btn-success']) ?></p>
 
 <?= ListView::widget([
     'dataProvider' => $dataProvider,

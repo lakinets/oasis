@@ -20,8 +20,8 @@ class DepositForm extends Model
     public function attributeLabels()
     {
         return [
-            'amount' => 'Сумма (Web Adena)',
-            'payment_system' => 'Платёжная система',
+            'amount' => Yii::t('views', 'Сумма (Web Adena)'),
+            'payment_system' => Yii::t('views', 'Платёжная система'),
         ];
     }
 }

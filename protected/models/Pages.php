@@ -7,67 +7,101 @@ use yii\db\ActiveRecord;
 /**
  * Модель страницы (таблица `pages`).
  *
- * Ожидаемые поля в таблице (минимум):
+ * Поля:
  *  - id
- *  - page      (строка, уникальный ключ, например 'main', 'about' и т.д.)
- *  - title
- *  - content
- *  - status    (1 = опубликовано, 0 = скрыто)
- *  - created_at, updated_at (опционально)
+ *  - page      (уникальный ключ, например 'main', 'about')
+ *  - title     (fallback для sourceLanguage, используется если переводов нет)
+ *  - text      (fallback, см. выше)
+ *  - seo_title, seo_keywords, seo_description (fallback SEO)
+ *  - status    (1 = опубликовано, 0 = скрыто, 2 = удалено)
+ *  - created_at, updated_at
+ *
+ * Переводы хранятся в таблице `page_translations` (модель PageTranslation).
  */
 class Pages extends ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
+    public const STATUS_ON      = 1;
+    public const STATUS_OFF     = 0;
+    public const STATUS_DELETED = 2;
+
     public static function tableName()
     {
         return 'pages';
     }
 
-    /**
-     * Правила валидации.
-     */
     public function rules()
     {
         return [
             [['page'], 'required'],
-            [['content'], 'string'],
+            [['text'], 'string'],
             [['status'], 'integer'],
-            [['page', 'title'], 'string', 'max' => 255],
+            [['page', 'title', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
         ];
     }
 
-    /**
-     * Метки атрибутов.
-     */
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'page' => Yii::t('app', 'Page'),
-            'title' => Yii::t('app', 'Title'),
-            'content' => Yii::t('app', 'Content'),
-            'status' => Yii::t('app', 'Status'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'id'              => 'ID',
+            'page'            => Yii::t('models', 'Имя страницы (page)'),
+            'title'           => Yii::t('models', 'Заголовок'),
+            'text'            => Yii::t('models', 'Содержимое'),
+            'seo_title'       => 'SEO title',
+            'seo_keywords'    => 'SEO keywords',
+            'seo_description' => 'SEO description',
+            'status'          => Yii::t('models', 'Статус'),
+            'created_at'      => Yii::t('models', 'Создано'),
+            'updated_at'      => Yii::t('models', 'Обновлено'),
         ];
     }
 
     /**
-     * Удобный скоуп для опубликованных страниц.
-     * Пример использования: Pages::find()->published()->where(...)->all();
+     * Связь с переводами.
      */
-    public static function find()
+    public function getTranslations()
     {
-        return parent::find()->alias('p');
+        return $this->hasMany(PageTranslation::class, ['page_id' => 'id']);
     }
 
     /**
-     * По желанию: helper для получения опубликованной страницы по slug'у.
+     * Возвращает перевод для указанного языка с fallback на sourceLanguage.
+     *
+     * @param string|null $lang
+     * @return PageTranslation|null
+     */
+    public function getTranslation($lang = null)
+    {
+        $lang   = $lang ?: Yii::$app->language;
+        $source = Yii::$app->sourceLanguage;
+
+        $translations = $this->translations ?: [];
+
+        // 1. Искомый язык
+        foreach ($translations as $t) {
+            if ($t->language === $lang) {
+                return $t;
+            }
+        }
+
+        // 2. Fallback на sourceLanguage
+        if ($lang !== $source) {
+            foreach ($translations as $t) {
+                if ($t->language === $source) {
+                    return $t;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Опубликованная страница по slug'у.
      */
     public static function getPublishedBySlug(string $slug)
     {
-        return static::find()->where(['page' => $slug, 'status' => 1])->one();
+        return static::find()
+            ->where(['page' => $slug, 'status' => self::STATUS_ON])
+            ->one();
     }
 }

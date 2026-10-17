@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\auth\models\PasswordResetRequestForm */
 
-$this->title = 'Сброс пароля';
+$this->title = Yii::t('views', 'Сброс пароля');
 ?>
 <div class="auth-form layout-public request-password-reset">
     <h2 class="form-title"><?= Html::encode($this->title) ?></h2>
@@ -23,15 +23,15 @@ $this->title = 'Сброс пароля';
         <?= $form->field($model, 'email', [
             'inputOptions' => ['class' => 'form-control', 'autofocus' => true],
             'labelOptions' => ['class' => 'form-label'],
-        ])->textInput()->label('E-mail') ?>
+        ])->textInput()->label(Yii::t('views', 'E-mail')) ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('views', 'Отправить'), ['class' => 'btn btn-primary']) ?>
         </div>
 
     <?php ActiveForm::end(); ?>
 
     <div class="text-center">
-        <?= Html::a('Вернуться ко входу', ['/auth/default/login']) ?>
+        <?= Html::a(Yii::t('views', 'Вернуться ко входу'), ['/auth/default/login']) ?>
     </div>
 </div>

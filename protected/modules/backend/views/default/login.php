@@ -2,14 +2,14 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Вход в админку';
+$this->title = Yii::t('backend', 'Вход в админку');
 $this->context->layout = 'login'; // необязательно, если задано в контроллере
 ?>
 
 <div class="site-login" style="max-width:400px;margin:50px auto;">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Введите логин и пароль:</p>
+    <p><?= Yii::t('backend', 'Введите логин и пароль:') ?></p>
 
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
@@ -20,8 +20,9 @@ $this->context->layout = 'login'; // необязательно, если зад
     <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+        <?= Html::submitButton(Yii::t('backend', 'Войти'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 </div>
+

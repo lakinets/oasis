@@ -36,7 +36,7 @@ class ShopController extends CabinetBaseController
     {
         $category = ShopCategories::findOne(['link' => $category_link, 'status' => 1]);
         if (!$category) {
-            throw new NotFoundHttpException('Категория не найдена.');
+            throw new NotFoundHttpException(Yii::t('views', 'Категория не найдена.'));
         }
 
         $gs_id = (int)Yii::$app->request->get('gs_id');
@@ -70,7 +70,7 @@ class ShopController extends CabinetBaseController
     {
         $category = ShopCategories::findOne(['link' => $category_link, 'status' => 1]);
         if (!$category) {
-            throw new NotFoundHttpException('Категория не найдена.');
+            throw new NotFoundHttpException(Yii::t('views', 'Категория не найдена.'));
         }
 
         $pack_id = (int)Yii::$app->request->get('pack_id');
@@ -78,12 +78,12 @@ class ShopController extends CabinetBaseController
         $char_id = (int)Yii::$app->request->get('char_id');
 
         if (!$pack_id || !$gs_id) {
-            throw new NotFoundHttpException('Не хватает данных.');
+            throw new NotFoundHttpException(Yii::t('views', 'Не хватает данных.'));
         }
 
         $pack = ShopItemsPacks::findOne(['id' => $pack_id, 'category_id' => $category->id, 'status' => 1]);
         if (!$pack) {
-            throw new NotFoundHttpException('Пак не найден.');
+            throw new NotFoundHttpException(Yii::t('views', 'Пак не найден.'));
         }
 
         [$gameDb, $driver] = $this->getGameDbAndDriver($gs_id);
@@ -132,7 +132,7 @@ class ShopController extends CabinetBaseController
     {
         $request = Yii::$app->request;
         if (!$request->isPost) {
-            throw new BadRequestHttpException('Неверный метод.');
+            throw new BadRequestHttpException(Yii::t('views', 'Неверный метод.'));
         }
 
         $item_id = (int)$request->post('item_id');
@@ -140,12 +140,12 @@ class ShopController extends CabinetBaseController
         $char_id = (int)$request->post('char_id');
 
         if (!$item_id || !$gs_id || !$char_id) {
-            throw new BadRequestHttpException('Ошибка данных MySQL, данные персонажей недоступны.');
+            throw new BadRequestHttpException(Yii::t('views', 'Ошибка данных MySQL, данные персонажей недоступны.'));
         }
 
         $item = ShopItems::findOne(['id' => $item_id, 'status' => 1]);
         if (!$item) {
-            throw new NotFoundHttpException('Предмет не найден.');
+            throw new NotFoundHttpException(Yii::t('views', 'Предмет не найден.'));
         }
 
         $cost     = (float)$item->cost;
@@ -159,7 +159,7 @@ class ShopController extends CabinetBaseController
             ->scalar();
 
         if ($balance < $price) {
-            Yii::$app->session->setFlash('error', 'Недостаточно средств.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Недостаточно средств.'));
             return $this->redirect($request->referrer ?: ['index']);
         }
 
@@ -170,7 +170,7 @@ class ShopController extends CabinetBaseController
             ->where(['obj_Id' => $char_id, 'account_name' => $login])
             ->exists($gameDb);
         if (!$ownerOk) {
-            Yii::$app->session->setFlash('error', 'Персонаж не ваш.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Персонаж не ваш.'));
             return $this->redirect($request->referrer ?: ['index']);
         }
 
@@ -191,11 +191,13 @@ class ShopController extends CabinetBaseController
             );
 
             $tx->commit();
-            Yii::$app->session->setFlash('success', 'Покупка завершена.');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Покупка завершена.'));
         } catch (\Throwable $e) {
             $tx->rollBack();
             Yii::error($e->getMessage(), 'shop.buy');
-            Yii::$app->session->setFlash('error', 'Ошибка покупки: ' . $e->getMessage());
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка покупки: {error}', [
+                'error' => $e->getMessage(),
+            ]));
         }
 
         return $this->redirect([
@@ -212,7 +214,7 @@ class ShopController extends CabinetBaseController
     {
         $request = Yii::$app->request;
         if (!$request->isPost) {
-            throw new BadRequestHttpException('Неверный метод.');
+            throw new BadRequestHttpException(Yii::t('views', 'Неверный метод.'));
         }
 
         $pack_id = (int)$request->post('pack_id');
@@ -220,12 +222,12 @@ class ShopController extends CabinetBaseController
         $char_id = (int)$request->post('char_id');
 
         if (!$pack_id || !$gs_id || !$char_id) {
-            throw new BadRequestHttpException('Ошибка данных MySQL, покупка предметов невозможна.');
+            throw new BadRequestHttpException(Yii::t('views', 'Ошибка данных MySQL, покупка предметов невозможна.'));
         }
 
         $pack = ShopItemsPacks::findOne(['id' => $pack_id, 'status' => 1]);
         if (!$pack) {
-            throw new NotFoundHttpException('Пак не найден.');
+            throw new NotFoundHttpException(Yii::t('views', 'Пак не найден.'));
         }
 
         $items = ShopItems::find()
@@ -233,7 +235,7 @@ class ShopController extends CabinetBaseController
             ->all();
 
         if (empty($items)) {
-            Yii::$app->session->setFlash('error', 'Пак пуст.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Пак пуст.'));
             return $this->redirect($request->referrer ?: ['index']);
         }
 
@@ -251,7 +253,7 @@ class ShopController extends CabinetBaseController
             ->scalar();
 
         if ($balance < $total) {
-            Yii::$app->session->setFlash('error', 'Недостаточно средств.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Недостаточно средств.'));
             return $this->redirect($request->referrer ?: ['index']);
         }
 
@@ -262,7 +264,7 @@ class ShopController extends CabinetBaseController
             ->where(['obj_Id' => $char_id, 'account_name' => $login])
             ->exists($gameDb);
         if (!$ownerOk) {
-            Yii::$app->session->setFlash('error', 'Персонаж не ваш.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Персонаж не ваш.'));
             return $this->redirect($request->referrer ?: ['index']);
         }
 
@@ -285,11 +287,13 @@ class ShopController extends CabinetBaseController
             }
 
             $tx->commit();
-            Yii::$app->session->setFlash('success', 'Пак куплен.');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Пак куплен.'));
         } catch (\Throwable $e) {
             $tx->rollBack();
             Yii::error($e->getMessage(), 'shop.buy');
-            Yii::$app->session->setFlash('error', 'Ошибка покупки: ' . $e->getMessage());
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка покупки: {error}', [
+                'error' => $e->getMessage(),
+            ]));
         }
 
         return $this->redirect([
@@ -306,7 +310,7 @@ class ShopController extends CabinetBaseController
     {
         $gs = Gs::findOne(['id' => $gs_id, 'status' => 1]);
         if (!$gs) {
-            throw new NotFoundHttpException('Сервер не найден или выключен.');
+            throw new NotFoundHttpException(Yii::t('views', 'Сервер не найден или выключен.'));
         }
 
         $dsn = "mysql:host={$gs->db_host};port={$gs->db_port};dbname={$gs->db_name}";
@@ -319,7 +323,9 @@ class ShopController extends CabinetBaseController
 
         $className = '\\app\\l2j\\' . ucfirst((string)$gs->version);
         if (!class_exists($className)) {
-            throw new NotFoundHttpException("Конфигурация \"{$gs->version}\" не найдена.");
+            throw new NotFoundHttpException(Yii::t('views', 'Конфигурация "{version}" не найдена.', [
+                'version' => $gs->version,
+            ]));
         }
 
         $driver = new $className($gameDb, $gs->db_name);

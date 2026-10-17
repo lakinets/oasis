@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $searchModel app\modules\backend\models\TransactionsSearch */
 
-$this->title = 'История транзакций';
+$this->title = Yii::t('backend', 'История транзакций');
 ?>
 <div class="transactions-index">
     <h1><?= Html::encode($this->title) ?></h1>

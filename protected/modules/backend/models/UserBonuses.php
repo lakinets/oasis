@@ -32,6 +32,7 @@ class UserBonuses extends ActiveRecord
 
     public function getStatusName()
     {
-        return $this->status ? 'Активирован' : 'Не активирован';
+        return $this->status ? Yii::t('backend', 'Активирован') : Yii::t('backend', 'Не активирован');
     }
 }
+

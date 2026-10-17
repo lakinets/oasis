@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\cabinet\models;
 
+use Yii;
 use yii\base\Model;
 
 class TicketsForm extends Model
@@ -26,13 +27,13 @@ class TicketsForm extends Model
     public function attributeLabels()
     {
         return [
-            'category_id'   => 'Категория',
-            'gs_id'         => 'Сервер',
-            'priority'      => 'Приоритет',
-            'title'         => 'Заголовок',
-            'char_name'     => 'Имя персонажа',
-            'date_incident' => 'Дата происшествия',
-            'text'          => 'Сообщение',
+            'category_id'   => Yii::t('models', 'Категория'),
+            'gs_id'         => Yii::t('models', 'Сервер'),
+            'priority'      => Yii::t('models', 'Приоритет'),
+            'title'         => Yii::t('models', 'Заголовок'),
+            'char_name'     => Yii::t('models', 'Имя персонажа'),
+            'date_incident' => Yii::t('models', 'Дата происшествия'),
+            'text'          => Yii::t('models', 'Сообщение'),
         ];
     }
 }

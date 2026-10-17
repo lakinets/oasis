@@ -84,13 +84,13 @@ class Gs extends ActiveRecord
     {
         return [
             'id'         => 'ID',
-            'name'       => 'Название',
+            'name'       => Yii::t('models', 'Название'),
             'ip'         => 'IP',
-            'port'       => 'Порт',
-            'login_id'   => 'Login-сервер',
-            'status'     => 'Статус',
-            'created_at' => 'Создано',
-            'updated_at' => 'Обновлено',
+            'port'       => Yii::t('models', 'Порт'),
+            'login_id'   => Yii::t('models', 'Login-сервер'),
+            'status'     => Yii::t('models', 'Статус'),
+            'created_at' => Yii::t('models', 'Создано'),
+            'updated_at' => Yii::t('models', 'Обновлено'),
         ];
     }
 }

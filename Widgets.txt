@@ -1,0 +1,33 @@
+Output via main \themes\your_theme\views\layouts
+
+Server Status
+<?= \app\widgets\ServerStatus\ServerStatusWidget::widget() ?>
+
+Top PK
+<?= \app\widgets\TopPk\TopPkWidget::widget() ?>
+
+Top PvP
+<?= \app\widgets\TopPvp\TopPvpWidget::widget() ?>
+
+Outputs text to the homepage from the pages table
+<div class="container">
+    <div class="news-block">
+        <?= $content ?> <!-- Add this line -->
+    </div>
+</div>
+
+Outputs statistics by races as a percentage ratio of characters created by players, excludes admins.
+<?= \app\widgets\RaceStat\RaceStatWidget::widget() ?>
+
+Adds a simplified status widget
+<?= \app\widgets\ServerStatus\ServerStatusWidget::widget(['compact' => true]) ?>
+
+Language Switcher
+<?= \app\widgets\LanguageSwitcher\LanguageSwitcher::widget([
+    'containerClass' => 'language-switcher d-none d-lg-flex',
+]) ?>
+
+-----------------------------------
+Create:
+/web/uploads/gallery/
+and grant permissions 775.

@@ -48,10 +48,10 @@ class DefaultController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Проверьте e-mail.');
+                Yii::$app->session->setFlash('success', Yii::t('views', 'Проверьте e-mail.'));
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'Не удалось отправить письмо.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Не удалось отправить письмо.'));
         }
 
         return $this->render('requestPasswordReset', ['model' => $model]);
@@ -61,19 +61,19 @@ class DefaultController extends Controller
     public function actionResetPassword($token)
     {
         if (empty($token) || strlen($token) < 20) {
-            throw new \yii\web\BadRequestHttpException('Неверный токен.');
+            throw new \yii\web\BadRequestHttpException(Yii::t('views', 'Неверный токен.'));
         }
 
         $user = Users::findOne(['reset_token' => $token]);
         if (!$user || !$user->validatePasswordResetToken()) {
-            throw new \yii\web\BadRequestHttpException('Токен просрочен или неверен.');
+            throw new \yii\web\BadRequestHttpException(Yii::t('views', 'Токен просрочен или неверен.'));
         }
 
         $model = new ResetPasswordForm($user);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->resetPassword()) {
-                Yii::$app->session->setFlash('success', 'Новый пароль сохранён.');
+                Yii::$app->session->setFlash('success', Yii::t('views', 'Новый пароль сохранён.'));
                 return $this->redirect(['/auth/default/login']);
             }
         }

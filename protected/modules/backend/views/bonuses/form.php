@@ -6,8 +6,8 @@ use app\modules\backend\models\Bonuses; // Добавил подключение
 /* @var $this yii\web\View */
 /* @var $model app\modules\backend\models\Bonuses */
 
-$this->title = $model->isNewRecord ? 'Создать бонус' : 'Редактировать бонус';
-$this->params['breadcrumbs'][] = ['label' => 'Бонусы', 'url' => ['index']];
+$this->title = $model->isNewRecord ? Yii::t('backend', 'Создать бонус') : Yii::t('backend', 'Редактировать бонус');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Бонусы'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bonuses-form">
@@ -20,9 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'status')->dropDownList(Bonuses::getStatusList()) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Отмена', ['index'], ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('backend', 'Создать') : Yii::t('backend', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('backend', 'Отмена'), ['index'], ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 </div>
+

@@ -29,7 +29,7 @@ class CharactersController extends CabinetBaseController
                 'servers'    => [],
                 'gs_id'      => null,
                 'characters' => [],
-                'error'      => 'Нет активных игровых серверов.',
+                'error'      => Yii::t('views', 'Нет активных игровых серверов.'),
             ]);
         }
 
@@ -64,7 +64,9 @@ class CharactersController extends CabinetBaseController
     }
         } catch (\Throwable $e) {
             Yii::error($e->getMessage(), __METHOD__);
-            $error = 'Ошибка загрузки персонажей: ' . $e->getMessage();
+            $error = Yii::t('views', 'Ошибка загрузки персонажей: {error}', [
+                'error' => $e->getMessage(),
+            ]);
         }
 
         return $this->render('index', [
@@ -104,7 +106,7 @@ class CharactersController extends CabinetBaseController
             }
 
             if (!$character) {
-                throw new NotFoundHttpException('Персонаж не найден или вам не принадлежит.');
+                throw new NotFoundHttpException(Yii::t('views', 'Персонаж не найден или вам не принадлежит.'));
             }
 
             // Инвентарь — универсальная схема L2J: таблица items (owner_id = char_id)
@@ -151,7 +153,9 @@ class CharactersController extends CabinetBaseController
 
         } catch (\Throwable $e) {
             Yii::error($e->getMessage(), __METHOD__);
-            throw new NotFoundHttpException('Ошибка загрузки данных персонажа: ' . $e->getMessage());
+            throw new NotFoundHttpException(Yii::t('views', 'Ошибка загрузки данных персонажа: {error}', [
+                'error' => $e->getMessage(),
+            ]));
         }
 
         return $this->render('view', [

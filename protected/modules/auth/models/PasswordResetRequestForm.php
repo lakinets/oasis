@@ -17,7 +17,7 @@ class PasswordResetRequestForm extends Model
             ['email', 'email'],
             ['email', 'exist',
                 'targetClass' => Users::class,
-                'message' => 'Такой e-mail не зарегистрирован.'
+                'message' => Yii::t('views', 'Такой e-mail не зарегистрирован.')
             ],
         ];
     }
@@ -47,7 +47,9 @@ class PasswordResetRequestForm extends Model
             )
             ->setFrom([Yii::$app->params['mail.sender'] => Yii::$app->params['mail.senderName']])
             ->setTo($this->email)
-            ->setSubject('Сброс пароля на ' . Yii::$app->name)
+            ->setSubject(Yii::t('views', 'Сброс пароля на {siteName}', [
+                'siteName' => Yii::$app->name,
+            ]))
             ->send();
     }
 }

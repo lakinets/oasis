@@ -27,6 +27,6 @@ class News extends ActiveRecord
 
     public function getStatusLabel()
     {
-        return $this->status == self::STATUS_ON ? 'Активна' : 'Не активна';
+        return $this->status == self::STATUS_ON ? Yii::t('backend', 'Активна') : Yii::t('backend', 'Не активна');
     }
 }

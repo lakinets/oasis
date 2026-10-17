@@ -94,7 +94,10 @@ class Lineage
     {
         $hours   = floor($time / 3600);
         $minutes = floor(($time % 3600) / 60);
-        return "{$hours}ч {$minutes}м";
+        return Yii::t('views', '{hours}ч {minutes}м', [
+            'hours' => $hours,
+            'minutes' => $minutes,
+        ]);
     }
 
     /**

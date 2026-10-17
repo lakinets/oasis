@@ -14,7 +14,7 @@ class SecurityController extends CabinetBaseController
         $model->setScenario('security');
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', 'Данные сохранены');
+            \Yii::$app->session->setFlash('success', Yii::t('views', 'Данные сохранены'));
             return $this->refresh();
         }
 

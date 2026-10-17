@@ -5,7 +5,7 @@ foreach ($stats as $s): ?>
         <div class="tr_title" style="color:<?=
             $s['color'] === 'green'  ? '#47ae58' :
             ($s['color'] === 'yellow'? '#dbb054' : '#cf4a40') ?>">
-            <span><?= htmlspecialchars($s['race']) ?></span>
+            <span><?= htmlspecialchars(Yii::t('main', $s['race']), ENT_QUOTES, 'UTF-8') ?></span>
             <?= $s['percent'] ?>%
         </div>
         <div class="tr_bar">

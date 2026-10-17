@@ -18,9 +18,9 @@ $actionUrl = Url::to(['/cabinet/shop/category', 'category_link' => $category_lin
             <input type="hidden" name="category_link" value="<?= Html::encode($category_link) ?>">
 
             <div class="col-md-3">
-                <label class="form-label">Сервер</label>
+                <label class="form-label"><?= Yii::t('views', 'Сервер') ?></label>
                 <select name="gs_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">— выберите сервер —</option>
+                    <option value=""><?= Yii::t('views', '— выберите сервер —') ?></option>
                     <?php foreach ($servers as $s): ?>
                         <option value="<?= (int)$s->id ?>" <?= (int)$gs_id === (int)$s->id ? 'selected' : '' ?>>
                             <?= Html::encode($s->name) ?>
@@ -30,9 +30,9 @@ $actionUrl = Url::to(['/cabinet/shop/category', 'category_link' => $category_lin
             </div>
 
             <div class="col-md-3">
-                <label class="form-label">Персонаж</label>
+                <label class="form-label"><?= Yii::t('views', 'Персонаж') ?></label>
                 <select name="char_id" class="form-select" <?= $gs_id ? '' : 'disabled' ?> onchange="this.form.submit()">
-                    <option value="">— выберите персонажа —</option>
+                    <option value=""><?= Yii::t('views', '— выберите персонажа —') ?></option>
                     <?php foreach ($characters as $ch): ?>
                         <option value="<?= (int)$ch['char_id'] ?>" <?= (int)($char_id ?? 0) === (int)$ch['char_id'] ? 'selected' : '' ?>>
                             <?= Html::encode($ch['char_name']) ?>
@@ -42,17 +42,17 @@ $actionUrl = Url::to(['/cabinet/shop/category', 'category_link' => $category_lin
             </div>
 
             <div class="col-md-3">
-                <div class="small text-muted">Баланс</div>
+                <div class="small text-muted"><?= Yii::t('views', 'Баланс') ?></div>
                 <div class="fs-5 fw-semibold"><?= (int)$balance ?> Web Aden</div>
             </div>
 
             <div class="col-md-3 text-end">
                 <?php if (!$gs_id): ?>
-                    <div class="text-danger">Выберите сервер</div>
+                    <div class="text-danger"><?= Yii::t('views', 'Выберите сервер') ?></div>
                 <?php elseif (!$char_id): ?>
-                    <div class="text-warning">Выберите персонажа</div>
+                    <div class="text-warning"><?= Yii::t('views', 'Выберите персонажа') ?></div>
                 <?php else: ?>
-                    <div class="text-success">Готово к покупке</div>
+                    <div class="text-success"><?= Yii::t('views', 'Готово к покупке') ?></div>
                 <?php endif; ?>
             </div>
         </form>

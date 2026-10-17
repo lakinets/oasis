@@ -40,12 +40,12 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         if (!AppConfig::registerEnabled()) {
-            throw new NotFoundHttpException('Регистрация отключена.');
+            throw new NotFoundHttpException(Yii::t('views', 'Регистрация отключена.'));
         }
 
         $model = new RegisterForm();
         if (!$model->gs_list) {
-            throw new NotFoundHttpException('Регистрация невозможна из-за отсутствия серверов.');
+            throw new NotFoundHttpException(Yii::t('views', 'Регистрация невозможна из-за отсутствия серверов.'));
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -53,7 +53,9 @@ class DefaultController extends Controller
                 $model->registerAccount();
                 return $this->refresh();
             } catch (\Throwable $e) {
-                Yii::$app->session->setFlash('error', 'Ошибка регистрации: ' . $e->getMessage());
+                Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка регистрации: {error}', [
+                    'error' => $e->getMessage(),
+                ]));
             }
         }
 
@@ -72,17 +74,17 @@ class DefaultController extends Controller
         $cache->delete('registerActivated' . $hash);
 
         if ($data === false) {
-            Yii::$app->session->setFlash('error', 'Ключ для активации аккаунта не найден.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ключ для активации аккаунта не найден.'));
             return $this->redirect(['index']);
         }
 
         $user = \app\models\User::findOne($data['user_id']);
         if (!$user) {
-            Yii::$app->session->setFlash('error', 'Аккаунт не найден.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Аккаунт не найден.'));
             return $this->redirect(['index']);
         }
         if ((int)$user->activated === 1) {
-            Yii::$app->session->setFlash('error', 'Аккаунт уже активирован.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Аккаунт уже активирован.'));
             return $this->redirect(['index']);
         }
 
@@ -90,9 +92,11 @@ class DefaultController extends Controller
             (new RegistrationService())->createLsAccount($user->ls_id, $user->login, $data['password']);
             $user->activated = 1;
             $user->save(false);
-            Yii::$app->session->setFlash('success', 'Активация аккаунта прошла успешно. Приятной игры!');
+            Yii::$app->session->setFlash('success', Yii::t('views', 'Активация аккаунта прошла успешно. Приятной игры!'));
         } catch (\Throwable $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка при активации: ' . $e->getMessage());
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка при активации: {error}', [
+                'error' => $e->getMessage(),
+            ]));
         }
 
         return $this->redirect(['index']);

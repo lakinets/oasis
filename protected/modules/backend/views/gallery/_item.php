@@ -8,10 +8,10 @@ use yii\helpers\Url;
     <img src="<?= $model->imageUrl ?>" width="150">
     <p><?= Html::encode($model->title) ?></p>
     <p>
-        <?= Html::a('Редактировать', ['form', 'id' => $model->id], ['class' => 'btn btn-xs btn-primary']) ?>
-        <?= Html::a('Удалить', ['del', 'id' => $model->id], [
+        <?= Html::a(Yii::t('backend', 'Редактировать'), ['form', 'id' => $model->id], ['class' => 'btn btn-xs btn-primary']) ?>
+        <?= Html::a(Yii::t('backend', 'Удалить'), ['del', 'id' => $model->id], [
             'class' => 'btn btn-xs btn-danger',
-            'data'  => ['confirm' => 'Удалить?', 'method' => 'post'],
+            'data'  => ['confirm' => Yii::t('backend', 'Удалить?'), 'method' => 'post'],
         ]) ?>
     </p>
 </div>

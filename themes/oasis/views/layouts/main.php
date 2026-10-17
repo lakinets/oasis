@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /** @var yii\web\View $this */
 /** @var string $content */
 
@@ -7,7 +7,7 @@ use yii\helpers\Url;
 $this->beginPage();
 ?>
 <!doctype html>
-<html class="no-js" lang="zxx">
+<html class="no-js" lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -52,7 +52,7 @@ $this->beginPage();
 
 <!-- Preloader -->
 <div class="preloader">
-    <button class="vs-btn preloaderCls">Не ждать полную загрузку страницы.</button>
+    <button class="vs-btn preloaderCls"><?= Yii::t('main', 'Не ждать полную загрузку страницы.') ?></button>
     <div class="preloader-inner">
         <div class="vs-loadholder">
             <div class="vs-loader">
@@ -73,10 +73,11 @@ $this->beginPage();
         </div>
         <div class="vs-mobile-menu">
             <ul>
-                <li><a href="<?= Url::home() ?>">Главная</a></li>
-                <li><a href="<?= Url::to(['/stats']) ?>">Статус</a></li>
-                <li><a href="<?= Url::to(['/page/onlypc']) ?>">Файлы</a></li>
-                <li><a href="<?= Url::to(['/login']) ?>">Кабинет</a></li>
+                <li><a href="<?= Url::home() ?>"><?= Yii::t('main', 'Главная') ?></a></li>
+                <li><a href="<?= Url::to(['/stats']) ?>"><?= Yii::t('main', 'Статус') ?></a></li>
+                <li><a href="<?= Url::to(['/page/onlypc']) ?>"><?= Yii::t('main', 'Файлы') ?></a></li>
+                <li><a href="<?= Url::to(['/login']) ?>"><?= Yii::t('main', 'Кабинет') ?></a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -85,7 +86,7 @@ $this->beginPage();
 <div class="popup-search-box d-none d-lg-block">
     <button class="searchClose border-theme text-theme"><i class="fal fa-times"></i></button>
     <form action="#">
-        <input type="text" class="border-theme" placeholder="What are you looking for">
+        <input type="text" class="border-theme" placeholder="<?= Yii::t('main', 'Что вы ищете?') ?>">
         <button type="submit"><i class="fal fa-search"></i></button>
     </form>
 </div>
@@ -110,10 +111,7 @@ $this->beginPage();
 
 <!-- Header -->
 <header class="vs-header header-layout3">
-    <div class="container"> 
-                </div>
-            </div>
-        </div>
+    <div class="container">
     </div>
     <div class="sticky-wrapper">
         <div class="sticky-active">
@@ -127,41 +125,52 @@ $this->beginPage();
                     <div class="col-auto">
                         <nav class="main-menu menu-style2 d-none d-lg-block">
                             <ul>
-                                <li><a href="<?= Url::home() ?>">Главная</a></li>
-                                <li><a href="<?= Url::to(['/page/files']) ?>">Файлы</a></li>
+                                <li><a href="<?= Url::home() ?>"><?= Yii::t('main', 'Главная') ?></a></li>
+                                <li><a href="<?= Url::to(['/page/files']) ?>"><?= Yii::t('main', 'Файлы') ?></a></li>
                                 <?php if (Yii::$app->user->isGuest): ?>
-                                    <li><a href="/register">Регистрация</a></li>
+                                    <li><a href="/register"><?= Yii::t('main', 'Регистрация') ?></a></li>
                                 <?php endif; ?>
                                 <li class="menu-item-has-children">
-                                    <a href="#">Инфо</a>
+                                    <a href="#"><?= Yii::t('main', 'Инфо') ?></a>
                                     <ul class="sub-menu">
                                         <?php // \app\widgets\ServerStatus\ServerStatusWidget::widget() ?>
                                     </ul>
                                 </li>
-                                <li><a href="/stats">Статус</a></li>
-                                <li><a href="https://forummaxi.ru/topic/100146-oasis-%D1%80%D0%B5%D0%BB%D0%B8%D0%B7/" target="_blank" rel="noopener">Поддержка</a></li>
+                                <li><a href="/stats"><?= Yii::t('main', 'Статус') ?></a></li>
+                                <li><a href="https://forummaxi.ru/topic/100146-oasis-%D1%80%D0%B5%D0%BB%D0%B8%D0%B7/" target="_blank" rel="noopener"><?= Yii::t('main', 'Поддержка') ?></a></li>
                             </ul>
                         </nav>
                         <button type="button" class="vs-menu-toggle d-inline-block d-lg-none"><i class="fas fa-bars"></i></button>
                     </div>
 
+                    <!-- ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА -->
+                    <div class="col-auto d-none d-lg-block">
+                        <?= \app\widgets\LanguageSwitcher\LanguageSwitcher::widget([
+                            'containerClass' => 'language-switcher',
+                            'activeClass'    => 'active',
+                            'showCurrent'    => true,
+                            'useFlags'       => true,
+                        ]) ?>
+                    </div>
+                    <!-- /ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА -->
+
                     <!-- КНОПКА ЛК/КАБИНЕТ/ВЫХОД -->
                     <div class="col-auto d-none d-lg-block">
                         <?php
-                        $path = Yii::$app->request->pathInfo; // без ведущего слеша
+                        $path = Yii::$app->request->pathInfo;
                         $inCabinet = strpos($path, 'cabinet') === 0;
                         if (Yii::$app->user->isGuest): ?>
                             <a href="<?= Url::to(['/login']) ?>" class="vs-btn outline-style d-none d-xl-block">
-                                <i class="fab fa-expeditedssl"></i>Личный кабинет
+                                <i class="fab fa-expeditedssl"></i><?= Yii::t('main', 'Личный кабинет') ?>
                             </a>
                         <?php else: ?>
                             <?php if ($inCabinet): ?>
                                 <a href="<?= Url::to(['/logout']) ?>" class="vs-btn outline-style d-none d-xl-block">
-                                    <i class="fal fa-sign-out"></i>Выход
+                                    <i class="fal fa-sign-out"></i><?= Yii::t('main', 'Выход') ?>
                                 </a>
                             <?php else: ?>
                                 <a href="<?= Url::to(['/cabinet']) ?>" class="vs-btn outline-style d-none d-xl-block">
-                                    <i class="fal fa-user"></i>Кабинет
+                                    <i class="fal fa-user"></i><?= Yii::t('main', 'Кабинет') ?>
                                 </a>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -187,7 +196,7 @@ $this->beginPage();
                     <div class="row">
                         <div class="col-sm-8 col-xxl-6 offset-xl-1">
                             <div class="hero-clip-content">
-                                <h1 class="hero-clip-title">GHTWEB 5 <span class="text-theme3"><br>REMASTER</br></span> <span class="text-theme2"><br>opensource for lineage 2</br></h1>
+                                <h1 class="hero-clip-title">GHTWEB 5 <span class="text-theme3"><br>REMASTER</span> <span class="text-theme2"><br>opensource for lineage 2</span></h1>
                             </div>
                         </div>
                     </div>
@@ -205,6 +214,7 @@ $this->beginPage();
             <span class="sub-title"></span>
             <?= $content ?>
         </div>
+    </div>
 </section>
 
 <!-- Blog Area -->
@@ -212,7 +222,7 @@ $this->beginPage();
     <div class="parallax" data-bg-class="bg-title" data-parallax-image="<?= Url::base(true) ?>/themes/oasis/assets/img/bg/blog-1-11.jpg"></div>
     <div class="container z-index-common">
         <div class="title-area text-center">
-            <h2 class="sec-title-style2">Пару слов о проекте</h2>
+            <h2 class="sec-title-style2"><?= Yii::t('main', 'Пару слов о проекте') ?></h2>
         </div>
         <div class="row flex-row-reverse">
             <div class="col-xxl-6">
@@ -222,21 +232,15 @@ $this->beginPage();
                     </div>
                     <div class="blog-content">
                         <div class="blog-meta">
-                            <a href="#"><i class="fal fa-user"></i>Автор</a>
+                            <a href="#"><i class="fal fa-user"></i><?= Yii::t('main', 'Автор') ?></a>
                             <a href="#"><i class="fal fa-calendar-alt"></i>29.06.2025</a>
                         </div>
-                        <h3 class="blog-title"><a href="#">Открытый бесплатный проект.</a></h3>
-                        <p class="blog-text">"Это полностью открытый и бесплатный проект.   Если вам понравилось — вы можете просто сказать «спасибо»… или кинуть пару монет на кофе в USDT (TRC-20), через мобильное приложение по QR коду, или же через обменник в браузере по ссылке ниже."</p>
-                        <a
-        href="javascript:void(0);"
-        class="menu-style2"
-        onclick="
-            navigator.clipboard.writeText('TQAT6fNJBhaqTnjwRYVeHFtsbh576iYqPk');
-            window.open('https://exchange.mercuryo.io/?to=usdt&network=TRC20', '_blank');
-        "
-    >
-        Скопировать адрес кошелька и открыть обменник
-    </a>
+                        <h3 class="blog-title"><a href="#"><?= Yii::t('main', 'Открытый бесплатный проект.') ?></a></h3>
+                        <p class="blog-text"><?= Yii::t('main', '"Это полностью открытый и бесплатный проект. Если вам понравилось — вы можете просто сказать «спасибо»… или кинуть пару монет на кофе в USDT (TRC-20), через мобильное приложение по QR коду, или же через обменник в браузере по ссылке ниже."') ?></p>
+                        <a href="javascript:void(0);" class="menu-style2"
+                           onclick="navigator.clipboard.writeText('TQAT6fNJBhaqTnjwRYVeHFtsbh576iYqPk'); window.open('https://exchange.mercuryo.io/?to=usdt&network=TRC20', '_blank');">
+                            <?= Yii::t('main', 'Скопировать адрес кошелька и открыть обменник') ?>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -249,11 +253,11 @@ $this->beginPage();
                             </div>
                             <div class="blog-content">
                                 <div class="blog-meta">
-                                    <a href="#"><i class="fal fa-user"></i>Автор</a>
+                                    <a href="#"><i class="fal fa-user"></i><?= Yii::t('main', 'Автор') ?></a>
                                     <a href="#"><i class="fal fa-calendar-alt"></i>29.06.2025</a>
                                 </div>
-                                <h3 class="blog-title"><a href="#">От автора</a></h3>
-                                <p class="blog-text">"Проделана огромная  работа что бы это заработало, все для вас дорогие фанаты Lineage 2. Искрене надеюсь что смог вас порадовать, я и правда старался для вас."</p>
+                                <h3 class="blog-title"><a href="#"><?= Yii::t('main', 'От автора') ?></a></h3>
+                                <p class="blog-text"><?= Yii::t('main', '"Проделана огромная работа что бы это заработало, все для вас дорогие фанаты Lineage 2. Искрене надеюсь что смог вас порадовать, я и правда старался для вас."') ?></p>
                             </div>
                         </div>
                     </div>
@@ -264,11 +268,11 @@ $this->beginPage();
                             </div>
                             <div class="blog-content">
                                 <div class="blog-meta">
-                                    <a href="#"><i class="fal fa-user"></i>Автор</a>
+                                    <a href="#"><i class="fal fa-user"></i><?= Yii::t('main', 'Автор') ?></a>
                                     <a href="#"><i class="fal fa-calendar-alt"></i>29.06.2025</a>
                                 </div>
-                                <h3 class="blog-title"><a href="#">Только в перед.</a></h3>
-                                <p class="blog-text">"Никаких устаревших решений, все самые свежие фишки уже здесь с Yii 2 + Bootstrap 5 на PHP 8.2"</p>
+                                <h3 class="blog-title"><a href="#"><?= Yii::t('main', 'Только вперёд.') ?></a></h3>
+                                <p class="blog-text"><?= Yii::t('main', '"Никаких устаревших решений, все самые свежие фишки уже здесь с Yii 2 + Bootstrap 5 на PHP 8.2"') ?></p>
                             </div>
                         </div>
                     </div>
@@ -288,13 +292,13 @@ $this->beginPage();
                     <div class="row justify-content-between">
                         <div class="col-md-6 col-lg-4 col-xl-auto">
                             <h2>Oasis</h2>
-                            <p>Opensource</p>
+                            <p><?= Yii::t('main', 'Opensource') ?></p>
                         </div>
                         <div class="col-md-12 col-lg-3 col-xl-auto">
                             <img src="<?= Url::base(true) ?>/themes/oasis/assets/img/logo.png" alt="Logo">
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-auto">
-                            <h2>Контакты</h2>
+                            <h2><?= Yii::t('main', 'Контакты') ?></h2>
                             <p class="footer-info"><i class="fab fa-facebook-f"></i>Facebook: <a href="https://www.facebook.com/groups/1799664900688601" target="_blank">OASIS</a></p>
                         </div>
                     </div>
@@ -324,13 +328,10 @@ $this->beginPage();
 <script src="<?= Url::base(true) ?>/themes/oasis/assets/js/vscustom-carousel.min.js"></script>
 <script src="<?= Url::base(true) ?>/themes/oasis/assets/js/main.js"></script>
 
-<!-- Сохранение позиции скролла и защита от href="#" -->
 <script>
 (function() {
   try {
     var key = 'scroll:' + location.pathname + location.search;
-
-    // Восстановить позицию при загрузке
     document.addEventListener('DOMContentLoaded', function () {
       var y = sessionStorage.getItem(key);
       if (y !== null) {
@@ -338,20 +339,16 @@ $this->beginPage();
         if (!isNaN(pos)) window.scrollTo(0, pos);
       }
     });
-
-    // Запомнить перед уходом/перезагрузкой
     window.addEventListener('beforeunload', function () {
       sessionStorage.setItem(key, String(window.pageYOffset || document.documentElement.scrollTop || 0));
     });
-
-    // Не прыгать вверх на ссылках "#", кроме кнопки "вверх"
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href="#"]');
       if (a && !a.classList.contains('scrollToTop')) {
         e.preventDefault();
       }
     });
-  } catch (e) { /* молча, чтобы ничего не ломать */ }
+  } catch (e) { }
 })();
 </script>
 

@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\backend\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 class AllItems extends ActiveRecord
@@ -13,9 +14,10 @@ class AllItems extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name'        => 'Название',
-            'description' => 'Описание',
-            'icon'        => 'Иконка',
+            'name'           => Yii::t('backend', 'Название'),
+            'description'    => Yii::t('backend', 'Описание (RU)'),
+            'description_en' => Yii::t('backend', 'Описание (EN)'),
+            'icon'           => Yii::t('backend', 'Иконка'),
         ];
     }
 }

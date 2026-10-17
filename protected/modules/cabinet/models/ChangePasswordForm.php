@@ -21,7 +21,7 @@ class ChangePasswordForm extends Model
     public function validateOldPassword($attribute)
     {
         if (!\Yii::$app->security->validatePassword($this->old_password, \Yii::$app->user->identity->password_hash)) {
-            $this->addError($attribute, 'Неверный старый пароль');
+            $this->addError($attribute, Yii::t('views', 'Неверный старый пароль'));
         }
     }
 }

@@ -1,15 +1,15 @@
-﻿<ul class="nav-mini">
-    <li><a href="/cabinet/tickets">Поддержка</a></li>
-    <li><a href="/cabinet/characters">Персонажи</a></li>
-    <li><a href="/cabinet/shop">Магазин</a></li>
-    <li><a href="/cabinet/bonuses">Бонусы</a></li>
-    <li><a href="/cabinet/security">Безопасность</a></li>
-    <li><a href="/cabinet/messages">Сообщения</a></li>
-    <li><a href="/cabinet/deposit">Пополнение</a></li>
-    <li><a href="/cabinet/transaction-history">История транзакций</a></li>
-    <li><a href="/cabinet/auth-history">История входов</a></li>
-    <li><a href="/cabinet/referals">Рефералы</a></li>
-    <li><a href="/cabinet/services">Услуги</a></li>
+<ul class="nav-mini">
+    <li><a href="/cabinet/tickets"><?= Yii::t('views', 'Поддержка') ?></a></li>
+    <li><a href="/cabinet/characters"><?= Yii::t('views', 'Персонажи') ?></a></li>
+    <li><a href="/cabinet/shop"><?= Yii::t('views', 'Магазин') ?></a></li>
+    <li><a href="/cabinet/bonuses"><?= Yii::t('views', 'Бонусы') ?></a></li>
+    <li><a href="/cabinet/security"><?= Yii::t('views', 'Безопасность') ?></a></li>
+    <li><a href="/cabinet/messages"><?= Yii::t('views', 'Сообщения') ?></a></li>
+    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    <li><a href="/cabinet/transaction-history"><?= Yii::t('views', 'История транзакций') ?></a></li>
+    <li><a href="/cabinet/auth-history"><?= Yii::t('views', 'История входов') ?></a></li>
+    <li><a href="/cabinet/referals"><?= Yii::t('views', 'Рефералы') ?></a></li>
+    <li><a href="/cabinet/services"><?= Yii::t('views', 'Услуги') ?></a></li>
 </ul>
 <?php
 /**
@@ -21,12 +21,11 @@
  */
 use yii\helpers\Html;
 use yii\helpers\Url;
-$this->title = $category->name;
+$this->title = $category->getName();
 ?>
 
-<h1><?= Html::encode($category->name) ?></h1>
+<h1><?= Html::encode($category->getName()) ?></h1>
 
-<!-- Flash-сообщения -->
 <?php foreach (Yii::$app->session->getAllFlashes() as $type => $msg): ?>
     <div class="alert alert-<?= Html::encode($type) ?> alert-dismissible fade show" role="alert">
         <?= Html::encode($msg) ?>
@@ -34,16 +33,15 @@ $this->title = $category->name;
     </div>
 <?php endforeach; ?>
 
-<!-- Селектор ТОЛЬКО сервера -->
 <div class="card mb-3">
     <div class="card-body">
         <form method="get" action="" class="row g-2 align-items-end">
             <input type="hidden" name="category_link" value="<?= Html::encode($category->link) ?>">
 
             <div class="col-md-4">
-                <label class="form-label">Сервер</label>
+                <label class="form-label"><?= Yii::t('views', 'Сервер') ?></label>
                 <select name="gs_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">— выберите сервер —</option>
+                    <option value=""><?= Yii::t('views', '— выберите сервер —') ?></option>
                     <?php foreach ($servers as $s): ?>
                         <option value="<?= (int)$s->id ?>" <?= (int)$gs_id === (int)$s->id ? 'selected' : '' ?>>
                             <?= Html::encode($s->name) ?>
@@ -53,7 +51,7 @@ $this->title = $category->name;
             </div>
 
             <div class="col-md-4">
-                <div class="small text-muted">Баланс</div>
+                <div class="small text-muted"><?= Yii::t('views', 'Баланс') ?></div>
                 <div class="fs-5 fw-semibold"><?= (int)$balance ?> Web Aden</div>
             </div>
         </form>
@@ -61,27 +59,26 @@ $this->title = $category->name;
 </div>
 
 <?php if (!$gs_id): ?>
-    <div class="alert alert-info">Выберите сервер, чтобы увидеть товары.</div>
+    <div class="alert alert-info"><?= Yii::t('views', 'Выберите сервер, чтобы увидеть товары.') ?></div>
 <?php elseif (empty($packs)): ?>
-    <div class="alert alert-info">В категории пока нет товаров.</div>
+    <div class="alert alert-info"><?= Yii::t('views', 'В категории пока нет товаров.') ?></div>
 <?php else: ?>
     <div class="row">
         <?php foreach ($packs as $pack): ?>
+            <?php $packDescr = $pack->getDescription(); ?>
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title"><?= Html::encode($pack->title) ?></h5>
-                        <?php if ($pack->description): ?>
-                            <p class="card-text small text-muted"><?= nl2br(Html::encode($pack->description)) ?></p>
+                        <h5 class="card-title"><?= Html::encode($pack->getTitle()) ?></h5>
+                        <?php if ($packDescr !== ''): ?>
+                            <p class="card-text small text-muted"><?= nl2br(Html::encode($packDescr)) ?></p>
                         <?php endif; ?>
                         <a class="btn btn-primary btn-sm"
                            href="<?= Url::to(['/cabinet/shop/pack',
                                'category_link' => $category->link,
                                'pack_id'       => $pack->id,
-                               'gs_id'         => $gs_id       // <-- только сервер
-                           ]) ?>">
-                            Посмотреть товары
-                        </a>
+                               'gs_id'         => $gs_id
+                           ]) ?>"><?= Yii::t('views', 'Посмотреть товары') ?></a>
                     </div>
                 </div>
             </div>

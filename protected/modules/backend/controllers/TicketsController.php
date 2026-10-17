@@ -28,7 +28,7 @@ class TicketsController extends BackendController
             'dataProvider' => $dataProvider,
             'searchModel'  => $searchModel,
             'gsList'       => Gs::find()->select(['name'])->indexBy('id')->column(),
-            'categories'   => TicketsCategories::find()->select(['title'])->indexBy('id')->column(),
+            'categories'   => TicketsCategories::getDropdownList(),
         ]);
     }
 
@@ -37,7 +37,7 @@ class TicketsController extends BackendController
         $model       = new Tickets();
         $answerModel = new TicketsAnswers();
 
-        $categories = TicketsCategories::find()->select(['title'])->indexBy('id')->column();
+        $categories = TicketsCategories::getDropdownList();
         $servers    = Gs::find()->select(['name'])->indexBy('id')->column();
 
         if (

@@ -6,7 +6,7 @@ use yii\widgets\LinkPager;
 /** @var app\modules\backend\models\GsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Игровые сервера';
+$this->title = Yii::t('backend', 'Игровые сервера');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="game-servers-index">
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(
-            '<i class="glyphicon glyphicon-plus"></i> Создать',
+            '<i class="glyphicon glyphicon-plus"></i> ' . Yii::t('backend', 'Создать'),
             ['form'],
             ['class' => 'btn btn-success']
         ) ?>
@@ -25,12 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <thead>
             <tr>
                 <th width="5%">ID</th>
-                <th>Название</th>
+                <th><?= Yii::t('backend', 'Название') ?></th>
                 <th width="12%">IP</th>
-                <th width="7%">Порт</th>
-                <th width="12%">Версия</th>
-                <th width="10%">Статус</th>
-                <th width="36%" class="text-center">Действия</th>
+                <th width="7%"><?= Yii::t('backend', 'Порт') ?></th>
+                <th width="12%"><?= Yii::t('backend', 'Версия') ?></th>
+                <th width="10%"><?= Yii::t('backend', 'Статус') ?></th>
+                <th width="36%" class="text-center"><?= Yii::t('backend', 'Действия') ?></th>
             </tr>
             </thead>
             <tbody>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </td>
                     <td class="text-center">
                         <?= Html::a(
-                            '<i class="glyphicon glyphicon-shopping-cart"></i> Магазин',
+                            '<i class="glyphicon glyphicon-shopping-cart"></i> ' . Yii::t('backend', 'Магазин'),
                             ['shop', 'gs_id' => $row->id],
                             [
                                 'class' => 'btn btn-xs btn-primary',
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ) ?>
 
                         <?= Html::a(
-                            '<i class="glyphicon glyphicon-pencil"></i> Ред.',
+                            '<i class="glyphicon glyphicon-pencil"></i> ' . Yii::t('backend', 'Ред.'),
                             ['form', 'gs_id' => $row->id],
                             [
                                 'class' => 'btn btn-xs btn-warning',
@@ -66,24 +66,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         ) ?>
 
                         <?= Html::a(
-                            '<i class="glyphicon glyphicon-trash"></i> Удал.',
+                            '<i class="glyphicon glyphicon-trash"></i> ' . Yii::t('backend', 'Удал.'),
                             ['del', 'gs_id' => $row->id],
                             [
                                 'class' => 'btn btn-xs btn-danger',
                                 'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
-                                'data-confirm' => 'Удалить безвозвратно?',
+                                'data-confirm' => Yii::t('backend', 'Удалить безвозвратно?'),
                                 'data-method'  => 'post',
                             ]
                         ) ?>
 
                         <?= Html::a(
                             '<i class="glyphicon ' . ($row->isStatusOn() ? 'glyphicon-eye-close' : 'glyphicon-eye-open') . '"></i> ' .
-                            ($row->isStatusOn() ? 'Выкл.' : 'Вкл.'),
+                            ($row->isStatusOn() ? Yii::t('backend', 'Выкл.') : Yii::t('backend', 'Вкл.')),
                             ['allow', 'gs_id' => $row->id],
                             [
                                 'class' => 'btn btn-xs ' . ($row->isStatusOn() ? 'btn-danger' : 'btn-success'),
                                 'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
-                                'data-confirm' => 'Изменить статус?',
+                                'data-confirm' => Yii::t('backend', 'Изменить статус?'),
                                 'data-method'  => 'post', // из кнопки — POST, по прямой ссылке GET тоже сработает
                             ]
                         ) ?>
@@ -96,3 +96,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= LinkPager::widget(['pagination' => $dataProvider->pagination]) ?>
 </div>
+

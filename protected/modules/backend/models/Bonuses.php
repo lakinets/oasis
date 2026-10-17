@@ -37,17 +37,17 @@ class Bonuses extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Название',
-            'status' => 'Статус',
-            'date_end' => 'Дата окончания',
+            'title' => Yii::t('backend', 'Название'),
+            'status' => Yii::t('backend', 'Статус'),
+            'date_end' => Yii::t('backend', 'Дата окончания'),
         ];
     }
 
     public static function getStatusList(): array
     {
         return [
-            self::STATUS_INACTIVE => 'Выключен',
-            self::STATUS_ACTIVE => 'Активирован',
+            self::STATUS_INACTIVE => Yii::t('backend', 'Выключен'),
+            self::STATUS_ACTIVE => Yii::t('backend', 'Активирован'),
         ];
     }
 
@@ -68,3 +68,4 @@ class Bonuses extends ActiveRecord
             : '-';
     }
 }
+

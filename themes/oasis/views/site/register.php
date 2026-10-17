@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\SignupForm */
 
-$this->title = 'Регистрация';
+$this->title = Yii::t('auth', 'Регистрация');
 ?>
 
 <section class="vs-auth-wrapper space-top space-extra-bottom">
@@ -32,11 +32,11 @@ $this->title = 'Регистрация';
                     <?= $form->field($model, 'password')->passwordInput() ?>
 
                     <div class="form-group text-center">
-                        <?= Html::submitButton('Зарегистрироваться', ['class' => 'vs-btn vs-btn-primary w-100']) ?>
+                        <?= Html::submitButton(Yii::t('auth', 'Зарегистрироваться'), ['class' => 'vs-btn vs-btn-primary w-100']) ?>
                     </div>
 
                     <div class="text-center mt-3">
-                        Уже есть аккаунт? <a href="<?= \yii\helpers\Url::to(['/login']) ?>">Войти</a>
+                        <?= Yii::t('auth', 'Уже есть аккаунт?') ?> <a href="<?= \yii\helpers\Url::to(['/login']) ?>"><?= Yii::t('auth', 'Войти') ?></a>
                     </div>
 
                     <?php ActiveForm::end(); ?>

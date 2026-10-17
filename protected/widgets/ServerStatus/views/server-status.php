@@ -18,7 +18,7 @@ if ($compact ?? false) {
 
 <?php if (!empty($content)): ?>
     <div class="panel panel-default server-status">
-        <div class="panel-heading">Статус серверов</div>
+        <div class="panel-heading"><?= Yii::t('main', 'Статус серверов') ?></div>
         <div class="panel-body">
             <?php foreach ($content as $id => $row): ?>
                 <div>
@@ -32,7 +32,7 @@ if ($compact ?? false) {
                 </div>
                 <hr>
             <?php endforeach; ?>
-            <p><strong>Всего онлайн: <?= $totalOnline ?></strong></p>
+            <p><strong><?= Yii::t('main', 'Всего онлайн: {count}', ['count' => $totalOnline]) ?></strong></p>
         </div>
     </div>
 <?php endif; ?>

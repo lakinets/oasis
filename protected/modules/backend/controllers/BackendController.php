@@ -37,7 +37,7 @@ class BackendController extends Controller
                     if (Yii::$app->user->isGuest) {
                         return Yii::$app->response->redirect(['/backend/login']);
                     }
-                    throw new ForbiddenHttpException('Доступ запрещён');
+                    throw new ForbiddenHttpException(Yii::t('backend', 'Доступ запрещён'));
                 },
             ],
         ];

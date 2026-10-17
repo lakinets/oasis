@@ -71,7 +71,7 @@ class NewsController extends BackendController
                 ->andWhere(['!=', 'status', News::STATUS_DELETED])
                 ->andWhere(['id' => $id])
                 ->one()) === null) {
-            throw new NotFoundHttpException('Новость не найдена.');
+            throw new NotFoundHttpException(Yii::t('backend', 'Новость не найдена.'));
         }
         return $model;
     }

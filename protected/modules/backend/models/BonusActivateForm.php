@@ -31,25 +31,25 @@ class BonusActivateForm extends Model
 
         $user = Users::findOne(['login' => $this->login]);
         if (!$user) {
-            $this->addError('login', 'Пользователь не найден.');
+            $this->addError('login', Yii::t('backend', 'Пользователь не найден.'));
             return false;
         }
 
         $bonusCode = BonusCodes::findOne(['code' => $this->code, 'status' => 1]);
         if (!$bonusCode) {
-            $this->addError('code', 'Бонус код не найден или неактивен.');
+            $this->addError('code', Yii::t('backend', 'Бонус код не найден или неактивен.'));
             return false;
         }
 
         $activationsCount = BonusCodesActivatedLogs::find()->where(['code_id' => $bonusCode->id])->count();
         if ($activationsCount >= $bonusCode->limit) {
-            $this->addError('code', 'Достигнут лимит активаций для этого кода.');
+            $this->addError('code', Yii::t('backend', 'Достигнут лимит активаций для этого кода.'));
             return false;
         }
 
         $alreadyActivated = BonusCodesActivatedLogs::find()->where(['code_id' => $bonusCode->id, 'user_id' => $user->user_id])->exists();
         if ($alreadyActivated) {
-            $this->addError('code', 'Вы уже активировали этот бонус.');
+            $this->addError('code', Yii::t('backend', 'Вы уже активировали этот бонус.'));
             return false;
         }
 
@@ -59,7 +59,7 @@ class BonusActivateForm extends Model
         $userBonus->status = 1;
         $userBonus->created_at = date('Y-m-d H:i:s');
         if (!$userBonus->save()) {
-            $this->addError('code', 'Не удалось выдать бонус.');
+            $this->addError('code', Yii::t('backend', 'Не удалось выдать бонус.'));
             return false;
         }
 
@@ -72,3 +72,4 @@ class BonusActivateForm extends Model
         return true;
     }
 }
+

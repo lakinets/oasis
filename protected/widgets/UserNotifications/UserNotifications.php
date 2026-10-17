@@ -41,7 +41,20 @@ class UserNotifications extends Widget
             ]));
 
             // Перевод с числом
-            $countMessagesTranslate = Yii::t('main', 'новое сообщение|новых сообщения|новых сообщений|новых сообщения', $count);
+            if (Yii::$app->language === 'en') {
+                $messageKey = $count === 1 ? 'новое сообщение' : 'новых сообщений';
+            } else {
+                $lastTwoDigits = $count % 100;
+                if ($lastTwoDigits >= 11 && $lastTwoDigits <= 14) {
+                    $messageKey = 'новых сообщений';
+                } else {
+                    $lastDigit = $count % 10;
+                    $messageKey = $lastDigit === 1
+                        ? 'новое сообщение'
+                        : ($lastDigit >= 2 && $lastDigit <= 4 ? 'новых сообщения' : 'новых сообщений');
+                }
+            }
+            $countMessagesTranslate = Yii::t('main', $messageKey);
 
             return Html::tag('div',
                 Html::a(

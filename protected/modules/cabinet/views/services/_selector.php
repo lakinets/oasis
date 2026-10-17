@@ -17,9 +17,9 @@ $currentRoute = '/' . Yii::$app->controller->route;
         <form method="get" action="<?= Url::to([$currentRoute]) ?>" class="form-inline" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
 
             <div class="form-group" style="margin-right: 15px;">
-                <label class="control-label" style="margin-right: 5px; color: #ccc;">Сервер:</label>
+                <label class="control-label" style="margin-right: 5px; color: #ccc;"><?= Yii::t('views', 'Сервер:') ?></label>
                 <select name="gs_id" class="form-control" onchange="this.form.submit()" style="background: #222; color: #fff; border: 1px solid #555;">
-                    <option value="">— Выберите сервер —</option>
+                    <option value=""><?= Yii::t('views', '— Выберите сервер —') ?></option>
                     <?php foreach ($servers as $s): ?>
                         <option value="<?= (int)$s->id ?>" <?= (int)$gs_id === (int)$s->id ? 'selected' : '' ?>>
                             <?= Html::encode($s->name) ?>
@@ -29,9 +29,9 @@ $currentRoute = '/' . Yii::$app->controller->route;
             </div>
 
             <div class="form-group" style="margin-right: 15px;">
-                <label class="control-label" style="margin-right: 5px; color: #ccc;">Персонаж:</label>
+                <label class="control-label" style="margin-right: 5px; color: #ccc;"><?= Yii::t('views', 'Персонаж:') ?></label>
                 <select name="char_id" class="form-control" <?= (!$gs_id || empty($characters)) ? 'disabled' : '' ?> onchange="this.form.submit()" style="background: #222; color: #fff; border: 1px solid #555;">
-                    <option value="">— Выберите персонажа —</option>
+                    <option value=""><?= Yii::t('views', '— Выберите персонажа —') ?></option>
                     <?php if (!empty($characters)): ?>
                         <?php foreach ($characters as $ch): ?>
                             <option value="<?= (int)$ch['char_id'] ?>" <?= (int)($char_id ?? 0) === (int)$ch['char_id'] ? 'selected' : '' ?>>
@@ -43,7 +43,7 @@ $currentRoute = '/' . Yii::$app->controller->route;
             </div>
 
             <div class="form-group">
-                <span class="text-muted">Баланс:</span>
+                <span class="text-muted"><?= Yii::t('views', 'Баланс:') ?></span>
                 <span style="color: #cda45e; font-weight: bold; font-size: 16px;"><?= (int)$balance ?> Web Aden</span>
             </div>
 

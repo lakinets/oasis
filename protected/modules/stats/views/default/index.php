@@ -13,7 +13,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 
-<h1>Статистика</h1>
+<h1><?= Yii::t('views', 'Статистика') ?></h1>
 
 <!-- Кнопки серверов -->
 <div class="stats-server-buttons" style="margin-bottom:16px;">
@@ -30,12 +30,12 @@ use yii\helpers\Url;
             </a>
         <?php endforeach; ?>
     <?php else: ?>
-        <em>Нет доступных серверов</em>
+        <em><?= Yii::t('views', 'Нет доступных серверов') ?></em>
     <?php endif; ?>
 </div>
 
 <?php if ($serverDown || !$current): ?>
-    <p><strong>Нет данных от сервера.</strong></p>
+    <p><strong><?= Yii::t('views', 'Нет данных от сервера.') ?></strong></p>
     <?php return; ?>
 <?php endif; ?>
 
@@ -45,7 +45,7 @@ use yii\helpers\Url;
 <div style="display:grid; grid-template-columns: 1fr; gap:24px;">
 
     <section>
-        <h2 style="margin:0 0 8px;">Общая статистика</h2>
+        <h2 style="margin:0 0 8px;"><?= Yii::t('views', 'Общая статистика') ?></h2>
         <?php
         // используем существующий макет @app/views/stats/total.php
         echo $this->renderFile(
@@ -56,7 +56,7 @@ use yii\helpers\Url;
     </section>
 
     <section>
-        <h2 style="margin:0 0 8px;">Замки</h2>
+        <h2 style="margin:0 0 8px;"><?= Yii::t('views', 'Замки') ?></h2>
         <?php
         echo $this->renderFile(
             Yii::getAlias('@app/views/stats/castles.php'),
@@ -66,7 +66,7 @@ use yii\helpers\Url;
     </section>
 
     <section>
-        <h2 style="margin:0 0 8px;">Кланы (топ)</h2>
+        <h2 style="margin:0 0 8px;"><?= Yii::t('views', 'Кланы (топ)') ?></h2>
         <?php
         echo $this->renderFile(
             Yii::getAlias('@app/views/stats/clans.php'),

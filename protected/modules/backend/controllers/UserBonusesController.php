@@ -25,7 +25,7 @@ class UserBonusesController extends Controller
         $model = $id ? $this->findModel($id) : new UserBonuses();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Сохранено');
+            Yii::$app->session->setFlash('success', Yii::t('backend', 'Сохранено'));
             return $this->redirect(['index']);
         }
 
@@ -51,6 +51,7 @@ class UserBonusesController extends Controller
         if (($model = UserBonuses::findOne($id)) !== null) {
             return $model;
         }
-        throw new NotFoundHttpException('Не найдено');
+        throw new NotFoundHttpException(Yii::t('backend', 'Не найдено'));
     }
 }
+

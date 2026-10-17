@@ -6,7 +6,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $info array */
 
-$this->title = 'Админ-панель';
+$this->title = Yii::t('backend', 'Админ-панель');
 ?>
 <div class="backend-default-index">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -22,7 +22,7 @@ $this->title = 'Админ-панель';
             <!-- Кнопка «Очистить кеш» -->
             <div class="well">
                 <?= Html::a(
-                    'Очистить кеш',
+                    Yii::t('backend', 'Очистить кеш'),
                     ['clear-cache'],
                     ['class' => 'btn btn-danger btn-block']
                 ) ?>
@@ -33,7 +33,7 @@ $this->title = 'Админ-панель';
             <!-- Таблица «Информация о проекте» -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Информация о проекте</h3>
+                    <h3 class="box-title"><?= Yii::t('backend', 'Информация о проекте') ?></h3>
                 </div>
                 <div class="box-body no-padding">
                     <table class="table table-striped">

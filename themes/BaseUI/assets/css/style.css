@@ -397,3 +397,41 @@ table tr:hover td { background: #fcfdff; }
     margin-top: 6px;
 }
 
+/* =========================================================
+   Переключатель языка в сайдбаре (под логотипом)
+   ========================================================= */
+.sidebar .lang-switch {
+    display: flex;                 /* сам блок — flex */
+    justify-content: center;       /* центрируем контент по горизонтали */
+    align-items: center;
+    width: 100%;                   /* обязательно: занять всю ширину сайдбара */
+    box-sizing: border-box;
+    padding: 12px 20px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 12px;
+}
+
+.sidebar .lang-switch .language-switcher {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar .lang-switch .language-switcher a {
+    display: inline-block;
+    line-height: 1;
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+}
+
+.sidebar .lang-switch .language-switcher a:hover,
+.sidebar .lang-switch .language-switcher a.active {
+    opacity: 1;
+}
+
+.sidebar .lang-switch .language-switcher img {
+    display: block;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}

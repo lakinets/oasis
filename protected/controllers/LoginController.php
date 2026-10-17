@@ -17,7 +17,7 @@ class LoginController extends Controller
         return [
             'captcha' => [
                 'class'           => CaptchaAction::class,
-				 'id'              => 'login',
+                'id'              => 'login',
                 'height'          => 40,
                 'width'           => 100,
                 'minLength'       => 4,
@@ -45,14 +45,19 @@ class LoginController extends Controller
             return $this->redirect(['/cabinet/default/index']);
         }
 
-        $model  = new LoginForm();
-        $cache  = Yii::$app->cache;
-        $ip     = Yii::$app->request->userIP;
-        $failed = (int)$cache->get("login_failed_$ip");
+        $model   = new LoginForm();
+        $cache   = Yii::$app->cache;
+        $ip      = Yii::$app->request->userIP;
+        $failed  = (int)$cache->get("login_failed_$ip");
         $blocked = ($failed >= self::MAX_FAILED_ATTEMPTS);
 
         if ($blocked) {
-            Yii::$app->session->setFlash('error', "Вы временно заблокированы на " . self::BLOCK_MINUTES . " минут.");
+            Yii::$app->session->setFlash(
+                'error',
+                Yii::t('controllers', 'Вы временно заблокированы на {minutes} минут.', [
+                    'minutes' => self::BLOCK_MINUTES,
+                ])
+            );
         }
 
         if (Yii::$app->request->isPost && !$blocked) {
@@ -63,7 +68,10 @@ class LoginController extends Controller
 
             $failed++;
             $cache->set("login_failed_$ip", $failed, self::BLOCK_MINUTES * 60);
-            Yii::$app->session->setFlash('error', "Неверный логин, пароль или код с картинки.");
+            Yii::$app->session->setFlash(
+                'error',
+                Yii::t('controllers', 'Неверный логин, пароль или код с картинки.')
+            );
         }
 
         return $this->render('index', [

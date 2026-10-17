@@ -9,15 +9,15 @@ use app\modules\backend\models\Bonuses;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $bonus_id int|null */
 
-$this->title = 'Коды бонусов';
-$this->params['breadcrumbs'][] = ['label' => 'Бонусы', 'url' => ['index']];
+$this->title = Yii::t('backend', 'Коды бонусов');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Бонусы'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bonus-codes-index">
 
     <p>
-        <?= Html::a('Создать код', ['code-form', 'bonus_id' => $bonus_id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Назад к бонусам', ['index'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('backend', 'Создать код'), ['code-form', 'bonus_id' => $bonus_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('backend', 'Назад к бонусам'), ['index'], ['class' => 'btn btn-default']) ?>
     </p>
 
     <?= GridView::widget([
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'     => function ($m) {
                     return $m->getStatusName();
                 },
-                'filter'    => [1 => 'Активирован', 0 => 'Выключен'],
+                'filter'    => [1 => Yii::t('backend', 'Активирован'), 0 => Yii::t('backend', 'Выключен')],
             ],
 
             /* ------------- ССЫЛКИ ДЕЙСТВИЙ ------------- */
@@ -49,26 +49,26 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons'  => [
                     'update' => function ($url, $model) use ($bonus_id) {
                         return Html::a(
-                            'Редактировать',
+                            Yii::t('backend', 'Редактировать'),
                             ['code-form', 'id' => $model->id, 'bonus_id' => $bonus_id]
                         );
                     },
                     'toggle' => function ($url, $model) use ($bonus_id) {
                         return Html::a(
-                            $model->status ? 'Деактивировать' : 'Активировать',
+                            $model->status ? Yii::t('backend', 'Деактивировать') : Yii::t('backend', 'Активировать'),
                             ['code-toggle', 'id' => $model->id, 'bonus_id' => $bonus_id],
                             [
-                                'data-confirm' => 'Изменить статус кода?',
+                                'data-confirm' => Yii::t('backend', 'Изменить статус кода?'),
                                 'data-method'  => 'post',
                             ]
                         );
                     },
                     'delete' => function ($url, $model) use ($bonus_id) {
                         return Html::a(
-                            'Удалить',
+                            Yii::t('backend', 'Удалить'),
                             ['code-delete', 'id' => $model->id, 'bonus_id' => $bonus_id],
                             [
-                                'data-confirm' => 'Удалить этот код?',
+                                'data-confirm' => Yii::t('backend', 'Удалить этот код?'),
                                 'data-method'  => 'post',
                             ]
                         );

@@ -4,28 +4,30 @@ use yii\helpers\Html;
 /* @var bool $removed */
 /* @var string|null $error */
 ?>
-<h1>Шаг 5: Завершение</h1>
+<h1><?= Yii::t('install', 'Шаг 5: Завершение') ?></h1>
 
 <?php if ($removed): ?>
-    <p class="alert alert-success">
-        Установка завершена. Папка <code>/protected/modules/install</code> удалена автоматически.
+    <p class="alert alert-success mt-3">
+        <?= Yii::t('install', 'Установка завершена. Папка {folder} удалена автоматически.', ['folder' => '<code>/protected/modules/install</code>']) ?>
     </p>
 <?php elseif ($error): ?>
-    <p class="alert alert-warning">
-        Установка завершена, но не удалось удалить папку <code>/protected/modules/install</code>.<br>
-        Ошибка: <?= Html::encode($error) ?><br>
-        Пожалуйста, удалите папку вручную.
+    <p class="alert alert-warning mt-3">
+        <?= Yii::t('install', 'Установка завершена, но не удалось удалить папку {folder}.', ['folder' => '<code>/protected/modules/install</code>']) ?><br>
+        <?= Yii::t('install', 'Ошибка:') ?> <?= Html::encode($error) ?><br>
+        <?= Yii::t('install', 'Пожалуйста, удалите папку вручную.') ?>
     </p>
 <?php else: ?>
-    <p class="alert alert-warning">
-        Установка завершена, но папка <code>/protected/modules/install</code> всё ещё существует.<br>
-        Удалите её вручную для безопасности.
+    <p class="alert alert-warning mt-3">
+        <?= Yii::t('install', 'Установка завершена, но папка {folder} всё ещё существует.', ['folder' => '<code>/protected/modules/install</code>']) ?><br>
+        <?= Yii::t('install', 'Удалите её вручную для безопасности.') ?>
     </p>
 <?php endif; ?>
 
-<ul>
-    <li>Если нужны изображения на сайте всех предметов — смотрите папку <code>Все предметы</code>.</li>
-    <li>Удачного вам открытия!</li>
+<ul class="mt-3">
+    <li><?= Yii::t('install', 'Если нужны изображения на сайте всех предметов — смотрите папку {folder}.', ['folder' => '<code>Все предметы</code>']) ?></li>
+    <li><?= Yii::t('install', 'Удачного вам открытия!') ?></li>
 </ul>
 
-<?= Html::a('На сайт', Yii::$app->homeUrl, ['class' => 'btn btn-primary']) ?>
+<div class="mt-4">
+    <?= Html::a(Yii::t('install', 'На сайт'), Yii::$app->homeUrl, ['class' => 'btn btn-primary']) ?>
+</div>

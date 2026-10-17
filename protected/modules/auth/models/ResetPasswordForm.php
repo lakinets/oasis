@@ -23,15 +23,15 @@ class ResetPasswordForm extends Model
             [['password', 'passwordRepeat'], 'required'],
             ['password', 'string', 'min' => 6],
             ['passwordRepeat', 'compare', 'compareAttribute' => 'password',
-             'message' => 'Пароли не совпадают.'],
+             'message' => Yii::t('views', 'Пароли не совпадают.')],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'password' => 'Новый пароль',
-            'passwordRepeat' => 'Повтор пароля',
+            'password' => Yii::t('views', 'Новый пароль'),
+            'passwordRepeat' => Yii::t('views', 'Повтор пароля'),
         ];
     }
 

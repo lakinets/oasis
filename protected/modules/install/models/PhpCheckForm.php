@@ -17,8 +17,12 @@ class PhpCheckForm extends Model
 
     public function checkLogWritable(): bool
     {
-        $log = Yii::getAlias('@app/runtime/logs/app.log');
-        return is_writable(dirname($log)) && (!is_file($log) || is_writable($log));
+        $dir = Yii::getAlias('@app/runtime/logs');
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true); // Автосоздание папки логов
+        }
+        $log = $dir . '/app.log';
+        return is_writable($dir) && (!is_file($log) || is_writable($log));
     }
 
     public function checkOnlineTxtWritable(): bool
@@ -35,12 +39,27 @@ class PhpCheckForm extends Model
 
     public function checkInstallDirWritable(): ?bool
     {
-        // На Windows не проверяем — всегда true
         if (stripos(PHP_OS, 'WIN') === 0) {
-            return null; // спец. значение для "пропустить проверку"
+            return null;
         }
-
-        $dir = Yii::getAlias('@app/protected/modules/install');
+        $dir = Yii::getAlias('@app/modules/install');
         return is_dir($dir) && is_writable($dir);
+    }
+
+    // Считаем количество невыполненных требований
+    public function getFailedCount(): int
+    {
+        $failed = 0;
+        $failed += $this->checkPhp() ? 0 : 1;
+        $failed += $this->checkPdo() ? 0 : 1;
+        $failed += $this->checkGd() ? 0 : 1;
+        $failed += $this->checkModRewrite() ? 0 : 1;
+        $failed += $this->checkLogWritable() ? 0 : 1;
+        $failed += $this->checkOnlineTxtWritable() ? 0 : 1;
+        $failed += $this->checkRobotsTxtWritable() ? 0 : 1;
+        if ($this->checkInstallDirWritable() !== null) {
+            $failed += $this->checkInstallDirWritable() ? 0 : 1;
+        }
+        return $failed;
     }
 }

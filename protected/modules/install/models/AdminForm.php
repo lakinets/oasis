@@ -21,23 +21,32 @@ class AdminForm extends Model
         ];
     }
 
-	public function createAdmin(): void
-	{
-		$user = new User();
-		$user->login = $this->login;
-		$user->email = $this->email;
-		$user->setPassword($this->password);
-		$user->activated = 1;          // активен
-		$user->role = 'admin';         // администратор
-		$user->ls_id = 1;              // можно привязать к первому логин-серверу
-		$user->created_at = date('Y-m-d H:i:s');
-		$user->save();
+    public function attributeLabels()
+    {
+        return [
+            'login'    => Yii::t('install', 'Login'),
+            'password' => Yii::t('install', 'Password'),
+            'email'    => Yii::t('install', 'Email'),
+        ];
+    }
 
-		$auth = Yii::$app->authManager;
-		if ($auth && !$auth->getRole('admin')) {
-			$role = $auth->createRole('admin');
-			$auth->add($role);
-		}
-		if ($auth) $auth->assign('admin', $user->id);
-	}
+    public function createAdmin(): void
+    {
+        $user = new User();
+        $user->login = $this->login;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->activated = 1;          // активен
+        $user->role = 'admin';         // администратор
+        $user->ls_id = 1;              // можно привязать к первому логин-серверу
+        $user->created_at = date('Y-m-d H:i:s');
+        $user->save();
+
+        $auth = Yii::$app->authManager;
+        if ($auth && !$auth->getRole('admin')) {
+            $role = $auth->createRole('admin');
+            $auth->add($role);
+        }
+        if ($auth) $auth->assign('admin', $user->id);
+    }
 }

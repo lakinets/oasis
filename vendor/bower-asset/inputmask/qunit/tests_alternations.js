@@ -64,7 +64,7 @@ export default function (qunit, Inputmask) {
       groupmarker: ["<", ">"]
     }).mask(testmask);
 
-    $("#testmask").Type("03411212");
+    $("#testmask").input("03411212");
 
     assert.equal(
       testmask.inputmask._valueGet(),
@@ -82,7 +82,7 @@ export default function (qunit, Inputmask) {
       groupmarker: ["<", ">"]
     }).mask(testmask);
 
-    $("#testmask").Type("03511212");
+    $("#testmask").input("03511212");
 
     assert.equal(
       testmask.inputmask._valueGet(),
@@ -100,7 +100,7 @@ export default function (qunit, Inputmask) {
       groupmarker: ["<", ">"]
     }).mask(testmask);
 
-    $("#testmask").Type("03611212");
+    $("#testmask").input("03611212");
 
     assert.equal(
       testmask.inputmask._valueGet(),
@@ -687,6 +687,35 @@ export default function (qunit, Inputmask) {
   );
 
   qunit.test(
+    "Problems with deleting static chars in alternator mask type b - #2648",
+    function (assert) {
+      var $fixture = $("#qunit-fixture");
+      $fixture.append('<input type="text" id="testmask" />');
+      var testmask = document.getElementById("testmask");
+
+      Inputmask({
+        mask: [
+          "DK9{2} 9{4} 9{4} 9{4} 9{2}",
+          "DE9{2} 9{4} 9{2}",
+          "\\AT9{2} 9{4} 9{4}"
+        ],
+        casing: "upper",
+        keepStatic: false
+      }).mask(testmask);
+      testmask.focus();
+      $("#testmask").Type("at1212341234");
+      $.caret(testmask, 2);
+      $("#testmask").SendKey(keys.Backspace);
+      $("#testmask").Type("dk");
+      assert.equal(
+        testmask.value,
+        "DK12 1234 1234 ____ __",
+        "Result " + testmask.value
+      );
+    }
+  );
+
+  qunit.test(
     "Problems with deleting static chars in alternator mask type a - #2648",
     function (assert) {
       var $fixture = $("#qunit-fixture");
@@ -778,6 +807,82 @@ export default function (qunit, Inputmask) {
       $("#testmask").Type("12345678");
       testmask.blur();
       assert.equal(testmask.value, "", "Result " + testmask.value);
+    }
+  );
+
+  qunit.test(
+    "Regex Input Mask - ^([0][1-6]5)|(([0][7-9]6)|(107))$ - #2845",
+    function (assert) {
+      const $fixture = $("#qunit-fixture");
+
+      function testInput(input, message, inputValue) {
+        const done = assert.async(),
+          testmask = document.createElement("input");
+        testmask.id = "testmask-" + Date.now(); // Unique ID
+        $fixture[0].appendChild(testmask); // Append to fixture
+
+        // Apply the regex input mask
+        Inputmask({
+          regex: "^([0][1-6]5)|(([0][7-9]6)|(107))$",
+          clearIncomplete: true
+        }).mask(testmask);
+
+        testmask.focus();
+        $(testmask).Type(input);
+        testmask.blur();
+
+        // **Create a new scope to preserve expectedValue**
+        (function (expected, inputmask) {
+          setTimeout(() => {
+            assert.equal(inputmask.value, expected, message);
+            $fixture[0].removeChild(inputmask); // Clean up fixture
+            done();
+          }, 0); // Increased timeout
+        })(inputValue !== undefined ? inputValue : input, testmask); // Pass in the current expectedValue
+      }
+
+      // // Test pattern [0][1-6]5
+      testInput("015", "Should accept 015");
+      testInput("025", "Should accept 025");
+      testInput("035", "Should accept 035");
+      testInput("045", "Should accept 045");
+      testInput("055", "Should accept 055");
+      testInput("065", "Should accept 065");
+
+      // // Test pattern [0][7-9]6
+      testInput("076", "Should accept 076");
+      testInput("086", "Should accept 086");
+      testInput("096", "Should accept 096");
+
+      // Test pattern 107
+      testInput("107", "Should accept 107");
+
+      // Invalid first digit
+      testInput("115", "Should enforce 107 - first digit 1", 107);
+
+      // // Invalid second digit for pattern [0][1-6]5
+      testInput(
+        "075",
+        "Should enforce 076 - second digit 7 doesn't match with last digit 5",
+        "076"
+      );
+      testInput(
+        "085",
+        "Should enforce 086 - second digit 8 doesn't match with last digit 5",
+        "086"
+      );
+
+      // // Invalid last digit for pattern [0][7-9]6
+      testInput("077", "Should reject 077 - last digit must be 6", "076");
+      testInput("087", "Should reject 087 - last digit must be 6", "086");
+
+      // // Invalid for 107 pattern
+      testInput("106", "Should reject 106 - not matching 107 pattern", "107");
+      testInput("108", "Should reject 108 - not matching 107 pattern", "107");
+
+      // // Too many/few digits
+      testInput("0155", "Should reject 0155 - too many digits", "015");
+      testInput("0", "Incomplete - too few digits", "");
     }
   );
 }

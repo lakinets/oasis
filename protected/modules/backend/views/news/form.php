@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\backend\models\News */
 
-$this->title = $model->isNewRecord ? 'Добавить новость' : 'Редактировать';
+$this->title = $model->isNewRecord ? Yii::t('backend', 'Добавить новость') : Yii::t('backend', 'Редактировать');
 ?>
 <div class="news-form">
     <?php $form = ActiveForm::begin(); ?>
@@ -19,7 +19,7 @@ $this->title = $model->isNewRecord ? 'Добавить новость' : 'Ред
     <?= $form->field($model, 'status')->checkbox() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('backend', 'Сохранить'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

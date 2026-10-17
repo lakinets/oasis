@@ -22,6 +22,12 @@
 <?= \app\widgets\ServerStatus\ServerStatusWidget::widget(['compact' => true]) ?>
 
 
+Переключатель языков
+<?= \app\widgets\LanguageSwitcher\LanguageSwitcher::widget([
+    'containerClass' => 'language-switcher d-none d-lg-flex',
+]) ?>
+
+
 -----------------------------------
 Создай:
 /web/uploads/gallery/

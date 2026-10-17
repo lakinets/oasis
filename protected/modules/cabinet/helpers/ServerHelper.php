@@ -15,13 +15,17 @@ class ServerHelper
             ->one();
 
         if (!$server) {
-            throw new Exception("Сервер с ID {$gs_id} не найден в таблице gs");
+            throw new Exception(Yii::t('views', 'Сервер с ID {id} не найден в таблице gs', [
+                'id' => $gs_id,
+            ]));
         }
 
         $configPath = Yii::getAlias("@app/../protected/l2j/{$server['version']}.php");
 
         if (!file_exists($configPath)) {
-            throw new Exception("Файл конфигурации {$server['version']}.php не найден");
+            throw new Exception(Yii::t('views', 'Файл конфигурации {version}.php не найден', [
+                'version' => $server['version'],
+            ]));
         }
 
         return [

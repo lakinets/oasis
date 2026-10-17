@@ -6,8 +6,8 @@ use app\modules\backend\models\Bonuses;
 /** @var $this yii\web\View */
 /** @var $model app\modules\backend\models\BonusCodes */
 
-$this->title = $model->isNewRecord ? 'Создать код' : 'Редактировать код';
-$this->params['breadcrumbs'][] = ['label'=>'Коды','url'=>['codes']];
+$this->title = $model->isNewRecord ? Yii::t('backend', 'Создать код') : Yii::t('backend', 'Редактировать код');
+$this->params['breadcrumbs'][] = ['label'=>Yii::t('backend', 'Коды'),'url'=>['codes']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bonus-codes-form">
@@ -16,13 +16,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model,'code')->textInput(['maxlength'=>128]) ?>
-    <?= $form->field($model,'bonus_id')->dropDownList(\yii\helpers\ArrayHelper::map(Bonuses::find()->all(),'id','title'), ['prompt'=>'Выбрать']) ?>
+    <?= $form->field($model,'bonus_id')->dropDownList(\yii\helpers\ArrayHelper::map(Bonuses::find()->all(),'id','title'), ['prompt'=>Yii::t('backend', 'Выбрать')]) ?>
     <?= $form->field($model,'limit')->input('number') ?>
-    <?= $form->field($model,'status')->dropDownList([1=>'Активирован',0=>'Выключен']) ?>
+    <?= $form->field($model,'status')->dropDownList([1=>Yii::t('backend', 'Активирован'),0=>Yii::t('backend', 'Выключен')]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', ['class'=>'btn btn-primary']) ?>
-        <?= Html::a('Отмена',['codes'],['class'=>'btn btn-default']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('backend', 'Создать') : Yii::t('backend', 'Сохранить'), ['class'=>'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('backend', 'Отмена'),['codes'],['class'=>'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -41,3 +41,4 @@ $this->params['breadcrumbs'][] = $this->title;
         });
     })();
 </script>
+

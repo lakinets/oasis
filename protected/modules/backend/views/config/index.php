@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <nav class="nav-anchor mb-4">
 <?php foreach ($groups as $group): ?>
     <?= Html::a(
-        Html::encode($group->name),
+        Html::encode(Yii::t('backend', $group->name)),
         '#group-' . $group->id,
         ['class' => 'btn btn-sm btn-outline-primary me-1', 'data-scroll' => '']
     ) ?>
@@ -22,18 +22,18 @@ use yii\widgets\ActiveForm;
 
 <?php foreach ($groups as $group): ?>
     <section id="group-<?= $group->id ?>" class="config-group mb-5">
-        <h4 class="border-bottom pb-1 mb-3"><?= Html::encode($group->name) ?></h4>
+        <h4 class="border-bottom pb-1 mb-3"><?= Html::encode(Yii::t('backend', $group->name)) ?></h4>
 
         <?php foreach ($group->configs as $config): ?>
             <div class="mb-3">
-                <label class="form-label fw-bold"><?= Html::encode($config->label) ?></label>
+                <label class="form-label fw-bold"><?= Html::encode(Yii::t('backend', $config->label)) ?></label>
                 <?= $config->getField() ?>
             </div>
         <?php endforeach; ?>
 
         <!-- Дублирующая кнопка «Сохранить» под каждой группой -->
         <div class="mt-3">
-            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'form' => 'config-form']) ?>
+            <?= Html::submitButton(Yii::t('backend', 'Сохранить'), ['class' => 'btn btn-primary', 'form' => 'config-form']) ?>
         </div>
     </section>
 <?php endforeach; ?>
@@ -43,7 +43,7 @@ use yii\widgets\ActiveForm;
 <!-- Кнопка «Начало» -->
 <button id="scroll-to-top" class="btn btn-primary rounded-circle shadow-lg"
         style="position:fixed; bottom:20px; right:20px; z-index:9999; display:none;"
-        title="В начало">
+        title="<?= Yii::t('backend', 'В начало') ?>">
     <i class="fas fa-arrow-up"></i>
 </button>
 

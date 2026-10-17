@@ -29,7 +29,7 @@ $this->params['breadcrumbs'] = [
     </div>
 <?php endif; ?>
 
-<h3>Информация о тикете</h3>
+<h3><?= Yii::t('backend', 'Информация о тикете') ?></h3>
 <table class="table table-bordered">
     <tbody>
     <tr>

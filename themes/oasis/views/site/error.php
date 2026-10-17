@@ -3,7 +3,7 @@ use yii\helpers\Html;
 
 /** @var $exception \Exception */
 
-$this->title = 'Ошибка';
+$this->title = Yii::t('main', 'Ошибка');
 ?>
 <div class="site-error">
     <h1><?= Html::encode($this->title) ?></h1>

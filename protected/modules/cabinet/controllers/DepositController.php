@@ -44,7 +44,7 @@ class DepositController extends Controller
 
         $allowed = array_keys(PaymentsManager::available());
         if ($amount <= 0 || !in_array($provider, $allowed, true)) {
-            Yii::$app->session->setFlash('error', 'Неверные данные.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Неверные данные.'));
             return $this->redirect(['index']);
         }
 
@@ -55,12 +55,12 @@ class DepositController extends Controller
             ->where(['user_id' => $userId])
             ->scalar();
         if (!$login) {
-            Yii::$app->session->setFlash('error', 'Не удалось определить логин пользователя.');
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Не удалось определить логин пользователя.'));
             return $this->redirect(['index']);
         }
 
         $tx   = PaymentTransaction::create($provider, $userId, $login, $amount, 'RUB');
-        $desc = 'Пополнение баланса';
+        $desc = Yii::t('views', 'Пополнение баланса');
         $url  = $this->getGateway($provider)
                      ->buildRedirectUrl($tx->order_id, $tx->login, $tx->amount, $tx->currency, $desc);
 

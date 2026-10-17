@@ -14,22 +14,24 @@ class IndexController extends Controller
     public function actionIndex()
     {
         if (!AppConfig::registerEnabled()) {
-            throw new NotFoundHttpException('Регистрация отключена.');
+            throw new NotFoundHttpException(Yii::t('views', 'Регистрация отключена.'));
         }
 
         $model = new RegisterForm();
 
         if (!$model->gs_list) {
-            throw new NotFoundHttpException('Регистрация невозможна из-за отсутствия серверов.');
+            throw new NotFoundHttpException(Yii::t('views', 'Регистрация невозможна из-за отсутствия серверов.'));
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             try {
                 $model->registerAccount();
-                Yii::$app->session->setFlash('success', 'Регистрация прошла успешно!');
+                Yii::$app->session->setFlash('success', Yii::t('views', 'Регистрация прошла успешно!'));
                 return $this->refresh();
             } catch (\Throwable $e) {
-                Yii::$app->session->setFlash('error', 'Ошибка регистрации: ' . $e->getMessage());
+                Yii::$app->session->setFlash('error', Yii::t('views', 'Ошибка регистрации: {error}', [
+                    'error' => $e->getMessage(),
+                ]));
             }
         }
 

@@ -32,11 +32,11 @@ class EditUserForm extends Model
     {
         return [
             'user_id'      => 'ID',
-            'role'         => 'Роль',
-            'activated'    => 'Активирован',
-            'balance'      => 'Баланс',
-            'phone'        => 'Телефон',
-            'protected_ip' => 'Разрешённые IP',
+            'role'         => Yii::t('backend', 'Роль'),
+            'activated'    => Yii::t('backend', 'Активирован'),
+            'balance'      => Yii::t('backend', 'Баланс'),
+            'phone'        => Yii::t('backend', 'Телефон'),
+            'protected_ip' => Yii::t('backend', 'Разрешённые IP'),
         ];
     }
 

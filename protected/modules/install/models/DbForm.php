@@ -23,6 +23,17 @@ class DbForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'host' => Yii::t('install', 'Host'),
+            'port' => Yii::t('install', 'Port'),
+            'db'   => Yii::t('install', 'Database'),
+            'user' => Yii::t('install', 'Username'),
+            'pass' => Yii::t('install', 'Password'),
+        ];
+    }
+
     public function validateConnect($attr)
     {
         $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->db}";

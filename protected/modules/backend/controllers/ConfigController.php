@@ -5,7 +5,7 @@ use Yii;
 use app\modules\backend\models\ConfigGroup;
 use app\modules\backend\models\Config;
 
-class ConfigController extends BackendController   // <-- Наследуемся от BackendController
+class ConfigController extends BackendController
 {
     public function actionIndex()
     {
@@ -20,7 +20,14 @@ class ConfigController extends BackendController   // <-- Наследуемся
                 foreach ($postData as $id => $row) {
                     $config = Config::findOne($id);
                     if ($config !== null && isset($row['value'])) {
-                        $config->value = $row['value'];
+                        $val = $row['value'];
+                        
+                        // Если это чекбоксы (массив) — сохраняем как JSON
+                        if (is_array($val)) {
+                            $val = json_encode($val);
+                        }
+
+                        $config->value = $val;
                         $config->save(false, ['value']);
                     }
                 }
@@ -33,6 +40,4 @@ class ConfigController extends BackendController   // <-- Наследуемся
             'groups' => $groups,
         ]);
     }
-
-    // Остальные методы (actionCreate, actionUpdate, ...) остаются без изменений.
 }

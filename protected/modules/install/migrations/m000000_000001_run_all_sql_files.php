@@ -22,7 +22,7 @@ class m000000_000001_run_all_sql_files extends Migration
         'servers_config.sql',
         'news.sql',
         'pages.sql',
-        'page_translations.sql', // <--- ДОБАВЛЕНО СЮДА
+        'page_translations.sql',
         'gallery.sql',
         'services.sql',
         'tickets_categories.sql',
@@ -44,6 +44,8 @@ class m000000_000001_run_all_sql_files extends Migration
         'all_items.sql',
         'gift_codes.sql',
         'gift_codes_attempts.sql',
+		'shop_topup_config.sql',
+		'shop_topup_tiers.sql',
     ];
 
     public function supportsTransaction(): bool

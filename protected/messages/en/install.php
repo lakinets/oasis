@@ -20,6 +20,7 @@ return [
     'Некоторые требования не выполнены ({count}). Установка может работать нестабильно.' => 'Some requirements are not met ({count}). The installation may work unstably.',
     'Продолжить несмотря на предупреждения?' => 'Continue despite warnings?',
     'Вы должны принять условия лицензии, чтобы продолжить установку.' => 'You must accept the license terms to continue installation.',
+	'У вас остались замечания, но вы можете продолжить установку. Нажимая далее вы соглашаетесь с тем что стабильная работа сайта не будет гарантирована и до устранения этих замечаний после установки сайта.' => 'You still have warnings, but you can proceed with the installation. By clicking Next, you agree that stable operation of the site is not guaranteed until these warnings are fixed after installation.',
 
     // =========================================================
     // === Step 2: Database ===

@@ -3,9 +3,18 @@
 namespace app\modules\cabinet\controllers;
 
 use app\models\Gs;
+use app\models\PaymentTransaction;
 use app\modules\cabinet\models\ShopCategories;
 use app\modules\cabinet\models\ShopItems;
 use app\modules\cabinet\models\ShopItemsPacks;
+use app\components\payments\PaymentsManager;
+use app\components\payments\RobokassaGateway;
+use app\components\payments\UnitpayGateway;
+use app\components\payments\NOWPaymentsGateway;
+use app\components\payments\PayOpGateway;
+use app\components\payments\CryptomusGateway;
+use app\components\payments\VoletGateway;
+use app\components\payments\InterkassaGateway;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
@@ -16,6 +25,12 @@ class ShopController extends CabinetBaseController
     /* ---------- главная: категории ---------- */
     public function actionIndex()
     {
+        // Если включен режим "Пополнение", сразу редиректим туда, не показывая магазин
+        $topupServer = Gs::find()->where(['status' => 1, 'shop_mode' => 'topup'])->one();
+        if ($topupServer) {
+            return $this->redirect(['topup', 'gs_id' => $topupServer->id]);
+        }
+
         $balance = (float)(new \yii\db\Query())
             ->from('user_profiles')
             ->where(['user_id' => Yii::$app->user->id])
@@ -23,15 +38,156 @@ class ShopController extends CabinetBaseController
             ->scalar();
 
         return $this->render('index', [
-            'categories' => ShopCategories::find()
+            'categories'  => ShopCategories::find()
                 ->where(['status' => 1])
                 ->orderBy(['sort' => SORT_ASC])
                 ->all(),
-            'balance'    => $balance,
+            'balance'     => $balance,
         ]);
     }
 
-    /* ---------- категория → паки ---------- */
+    /* ==================== РЕЖИМ "ПОПОЛНЕНИЕ" ==================== */
+    
+    public function actionTopup()
+    {
+        $servers = Gs::find()->where(['status' => 1, 'shop_mode' => 'topup'])->orderBy('id')->all();
+        if (empty($servers)) {
+            throw new NotFoundHttpException(Yii::t('views', 'Режим пополнения отключен.'));
+        }
+
+        $gs_id   = (int)Yii::$app->request->get('gs_id', $servers[0]->id);
+        $char_id = (int)Yii::$app->request->get('char_id');
+
+        $gs = Gs::findOne(['id' => $gs_id, 'status' => 1, 'shop_mode' => 'topup']);
+        if (!$gs) {
+            throw new NotFoundHttpException(Yii::t('views', 'Сервер не найден или режим отключен.'));
+        }
+
+        $config = \app\modules\backend\models\ShopTopupConfig::findForServer($gs_id);
+        if (!$config || !$config->status) {
+            throw new NotFoundHttpException(Yii::t('views', 'Конфигурация пополнения не настроена.'));
+        }
+
+        $tiers = $config->tiers;
+
+        $characters = [];
+        $ownerOk = false;
+
+        [$gameDb, $driver] = $this->getGameDbAndDriver($gs_id);
+        $login = Yii::$app->user->identity->login;
+
+        $characters = $driver->charactersQuery()
+            ->where(['account_name' => $login])
+            ->orderBy(['char_name' => SORT_ASC])
+            ->all($gameDb);
+
+        if ($char_id) {
+            foreach ($characters as $c) {
+                if ((int)($c['char_id'] ?? $c['obj_Id'] ?? 0) === $char_id) {
+                    $ownerOk = true;
+                    break;
+                }
+            }
+        }
+
+        $providers = PaymentsManager::available();
+
+        return $this->render('topup', [
+            'servers'    => $servers,
+            'gs'         => $gs,
+            'gs_id'      => $gs_id,
+            'char_id'    => $char_id,
+            'characters' => $characters,
+            'ownerOk'    => $ownerOk,
+            'config'     => $config,
+            'tiers'      => $tiers,
+            'providers'  => $providers,
+        ]);
+    }
+
+    public function actionTopupPay()
+    {
+        $request = Yii::$app->request;
+        if (!$request->isPost) {
+            throw new BadRequestHttpException(Yii::t('views', 'Неверный метод.'));
+        }
+
+        $gs_id    = (int)$request->post('gs_id');
+        $char_id  = (int)$request->post('char_id');
+        $qty      = (int)$request->post('qty');
+        $provider = (string)$request->post('provider');
+
+        if (!$gs_id || !$char_id || $qty <= 0 || !$provider) {
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Не все поля заполнены.'));
+            return $this->redirect(['topup', 'gs_id' => $gs_id, 'char_id' => $char_id]);
+        }
+
+        $gs = Gs::findOne(['id' => $gs_id, 'status' => 1, 'shop_mode' => 'topup']);
+        if (!$gs) {
+            throw new NotFoundHttpException(Yii::t('views', 'Сервер не найден.'));
+        }
+
+        $config = \app\modules\backend\models\ShopTopupConfig::findForServer($gs_id);
+        if (!$config || !$config->status) {
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Конфигурация пополнения не настроена.'));
+            return $this->redirect(['topup', 'gs_id' => $gs_id]);
+        }
+
+        [$gameDb, $driver] = $this->getGameDbAndDriver($gs_id);
+        $login = Yii::$app->user->identity->login;
+
+        // Проверка владения персонажем
+        $ownerOk = false;
+        $chars = $driver->charactersQuery()->where(['account_name' => $login])->all($gameDb);
+        foreach ($chars as $c) {
+            if ((int)($c['char_id'] ?? $c['obj_Id'] ?? 0) === $char_id) {
+                $ownerOk = true;
+                break;
+            }
+        }
+        if (!$ownerOk) {
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Персонаж не ваш.'));
+            return $this->redirect(['topup', 'gs_id' => $gs_id]);
+        }
+
+        // Расчет бонуса
+        $bonusQty = 0;
+        foreach ($config->tiers as $tier) {
+            if ($qty >= $tier->min_qty && ($tier->max_qty == 0 || $qty <= $tier->max_qty)) {
+                $bonusQty = (int)$tier->bonus_qty;
+                break;
+            }
+        }
+
+        $totalQty = $qty + $bonusQty;
+        $amount   = $qty * (float)$config->price;
+
+        if ($amount <= 0) {
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Сумма к оплате должна быть больше нуля.'));
+            return $this->redirect(['topup', 'gs_id' => $gs_id, 'char_id' => $char_id]);
+        }
+
+        $userId = (int)Yii::$app->user->id;
+
+        $payload = [
+            'type'     => 'topup',
+            'gs_id'    => $gs_id,
+            'char_id'  => $char_id,
+            'item_id'  => (int)$config->item_id,
+            'total_qty'=> $totalQty,
+        ];
+
+        $tx = PaymentTransaction::create($provider, $userId, $login, $amount, $config->currency ?: 'RUB', $payload);
+
+        $desc = Yii::t('views', 'Пополнение баланса');
+        $url  = $this->getGateway($provider)
+                     ->buildRedirectUrl($tx->order_id, $tx->login, $tx->amount, $tx->currency, $desc);
+
+        return $this->redirect($url);
+    }
+
+    /* ==================== СТАНДАРТНЫЙ РЕЖИМ ==================== */
+
     public function actionCategory(string $category_link)
     {
         $category = ShopCategories::findOne(['link' => $category_link, 'status' => 1]);
@@ -65,7 +221,6 @@ class ShopController extends CabinetBaseController
         ]);
     }
 
-    /* ---------- пак → товары ---------- */
     public function actionPack(string $category_link)
     {
         $category = ShopCategories::findOne(['link' => $category_link, 'status' => 1]);
@@ -89,13 +244,11 @@ class ShopController extends CabinetBaseController
         [$gameDb, $driver] = $this->getGameDbAndDriver($gs_id);
         $login = Yii::$app->user->identity->login;
 
-        // Загружаем персонажей для селектора
         $characters = $driver->charactersQuery()
             ->where(['account_name' => $login])
             ->orderBy(['char_name' => SORT_ASC])
             ->all($gameDb);
 
-        // Проверка владения персонажем
         $ownerOk = false;
         foreach ($characters as $c) {
             if ((int)($c['char_id'] ?? $c['obj_Id'] ?? 0) === $char_id) {
@@ -127,7 +280,6 @@ class ShopController extends CabinetBaseController
         ]);
     }
 
-    /* ---------- покупка одного товара ---------- */
     public function actionBuyItem()
     {
         $request = Yii::$app->request;
@@ -209,7 +361,6 @@ class ShopController extends CabinetBaseController
         ]);
     }
 
-    /* ---------- покупка пака ---------- */
     public function actionBuy()
     {
         $request = Yii::$app->request;
@@ -305,7 +456,8 @@ class ShopController extends CabinetBaseController
         ]);
     }
 
-    /* ---------- универсальный метод подключения ---------- */
+    /* ---------- helpers ---------- */
+    
     private function getGameDbAndDriver(int $gs_id): array
     {
         $gs = Gs::findOne(['id' => $gs_id, 'status' => 1]);
@@ -330,5 +482,19 @@ class ShopController extends CabinetBaseController
 
         $driver = new $className($gameDb, $gs->db_name);
         return [$gameDb, $driver];
+    }
+
+    private function getGateway(string $provider)
+    {
+        return match ($provider) {
+            'robokassa'   => new RobokassaGateway(),
+            'unitpay'     => new UnitpayGateway(),
+            'nowpayments' => new NOWPaymentsGateway(),
+            'payop'       => new PayOpGateway(),
+            'cryptomus'   => new CryptomusGateway(),
+            'volet'       => new VoletGateway(),
+            'interkassa'  => new InterkassaGateway(),
+            default       => throw new \RuntimeException('Unknown provider'),
+        };
     }
 }

@@ -38,6 +38,14 @@ class Config extends ActiveRecord
         return ['0' => Yii::t('backend', 'Нет'), '1' => Yii::t('backend', 'Да')];
     }
 
+    protected function languageOptions(): array
+    {
+        return [
+            'ru' => 'Русский (RU)',
+            'en' => 'English (EN)',
+        ];
+    }
+
     public function getThemes(): array
     {
         $candidates = [];
@@ -103,6 +111,26 @@ class Config extends ActiveRecord
         $value = (string)$this->value;
 
         switch ($this->param) {
+
+            /* ---- Языки ---- */
+            case 'language.default':
+                return Html::dropDownList($name, $value, $this->languageOptions(), ['class' => 'form-select']);
+
+            case 'language.available':
+                $selected = json_decode($value, true);
+                if (!is_array($selected)) {
+                    $selected = [];
+                }
+                return Html::checkboxList($name, $selected, $this->languageOptions(), [
+                    'item' => function ($index, $label, $name, $checked, $value) {
+                        $checkedStr = $checked ? 'checked' : '';
+                        $id = 'lang_' . $value;
+                        return "<div class='form-check form-check-inline'>" .
+                               "<input class='form-check-input' type='checkbox' name='{$name}' value='{$value}' id='{$id}' {$checkedStr}>" .
+                               "<label class='form-check-label' for='{$id}'>{$label}</label>" .
+                               "</div>";
+                    }
+                ]);
 
             /* ---- Основное ---- */
             case 'theme':

@@ -25,7 +25,7 @@ class PaymentTransaction extends ActiveRecord
         return 'payment_transactions';
     }
 
-    public static function create(string $provider, int $userId, string $login, float $amount, string $currency = 'RUB'): self
+    public static function create(string $provider, int $userId, string $login, float $amount, string $currency = 'RUB', array $payload = []): self
     {
         $m = new self();
         $m->order_id  = self::genOrderId();
@@ -36,6 +36,9 @@ class PaymentTransaction extends ActiveRecord
         $m->currency  = $currency;
         $m->status    = 'new';
         $m->created_at= date('Y-m-d H:i:s');
+        if (!empty($payload)) {
+            $m->payload = json_encode($payload, JSON_UNESCAPED_UNICODE);
+        }
         if (!$m->save(false)) {
             throw new \RuntimeException('Cannot save payment transaction');
         }

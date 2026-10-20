@@ -14,21 +14,18 @@ class Gs extends ActiveRecord
     public function rules()
     {
         return [
-            // обязательные
             [['name', 'ip', 'port', 'login_id', 'version', 'db_host', 'db_port', 'db_user', 'db_name'], 'required'],
 
-            // типы
             [['port', 'db_port', 'login_id', 'status'], 'integer'],
-
-            // строки
             [['name', 'ip', 'db_host', 'db_user', 'db_pass', 'db_name', 'version', 'currency_name', 'currency_symbol'], 'string', 'max' => 255],
+            [['shop_mode'], 'string', 'max' => 10],
+            [['shop_mode'], 'in', 'range' => ['shop', 'topup']],
 
-            // безопасные (чтобы AR про них точно знал)
             [['services_premium_cost', 'deposit_desc', 'stats_items_list'], 'safe'],
 
-            // дефолты
             [['status'], 'default', 'value' => 1],
             [['port'], 'default', 'value' => 3306],
+            [['shop_mode'], 'default', 'value' => 'shop'],
         ];
     }
 
@@ -47,11 +44,10 @@ class Gs extends ActiveRecord
             'db_pass'     => Yii::t('backend', 'Пароль БД'),
             'db_name'     => Yii::t('backend', 'Название БД'),
             'status'      => Yii::t('backend', 'Статус'),
+            'shop_mode'   => Yii::t('backend', 'Режим магазина'),
             'services_premium_cost' => Yii::t('backend', 'Стоимость премиума'),
         ];
     }
-
-    /* ---------- helpers ---------- */
 
     public function isStatusOn(): bool
     {
@@ -71,6 +67,14 @@ class Gs extends ActiveRecord
         ];
     }
 
+    public static function getShopModeList(): array
+    {
+        return [
+            'shop'  => Yii::t('backend', 'Магазин'),
+            'topup' => Yii::t('backend', 'Пополнение'),
+        ];
+    }
+
     public static function getVersionList(): array
     {
         $path = Yii::getAlias('@app/../protected/modules/backend/components/versions');
@@ -87,8 +91,6 @@ class Gs extends ActiveRecord
         return $versions;
     }
 
-    /* ---------- (де)сериализация services_premium_cost ---------- */
-
     public function afterFind()
     {
         parent::afterFind();
@@ -98,20 +100,16 @@ class Gs extends ActiveRecord
             return;
         }
 
-        // безопасно раскодируем
         $decoded = @unserialize($raw);
         if ($decoded !== false || $raw === 'b:0;') {
-            // сохраняем в атрибут МАССИВ (в runtime)
             $this->setAttribute('services_premium_cost', $decoded);
         } else {
-            // если мусор — приводим к пустому массиву, чтобы не падали виджеты
             $this->setAttribute('services_premium_cost', []);
         }
     }
 
     public function beforeSave($insert)
     {
-        // если в runtime в атрибут положили массив — сериализуем перед сохранением
         $val = $this->getAttribute('services_premium_cost');
         if (is_array($val)) {
             $this->setAttribute('services_premium_cost', serialize($val));
@@ -119,7 +117,6 @@ class Gs extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    // удобный геттер
     public function getServicesPremiumCost(): array
     {
         $val = $this->getAttribute('services_premium_cost');

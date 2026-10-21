@@ -4,6 +4,7 @@ defined('YII_ENV')   or define('YII_ENV', 'dev');
 
 // ---------- Тема и конфиги серверов ----------
 $themeName = 'oasis';   // дефолт
+$adminUrl  = 'backend'; // дефолт для админки
 $dbConfig  = [];
 $servers   = [];
 
@@ -14,9 +15,17 @@ if (is_file(__DIR__ . '/db.php')) {
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: 'oasis';
-        $servers   = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // Читаем кастомный URL админки
+        $customAdminUrl = $pdo->query('SELECT value FROM config WHERE param="admin.url" LIMIT 1')->fetchColumn();
+        if ($customAdminUrl && preg_match('/^[a-zA-Z0-9_-]+$/', $customAdminUrl)) {
+            $adminUrl = $customAdminUrl;
+        }
+        
+        $servers = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {
         $themeName = 'oasis';
+        $adminUrl  = 'backend';
         $servers   = [];
     }
 }
@@ -93,9 +102,11 @@ return [
 
                 'language/<lang:[a-z]{2}>' => 'site/language',
 
-                'backend' => 'backend/default/index',
-                'backend/<controller:\w+>' => 'backend/<controller>/index',
-                'backend/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
+                // --- ДИНАМИЧЕСКИЙ РОУТИНГ АДМИНКИ ---
+                $adminUrl => 'backend/default/index',
+                $adminUrl . '/<controller:\w+>' => 'backend/<controller>/index',
+                $adminUrl . '/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
+                // -------------------------------------
 
                 'login'    => 'auth/default/login',
                 'logout'   => 'auth/default/logout',
@@ -207,7 +218,6 @@ return [
                     'fileMap'         => ['page' => 'page.php'],
                 ],
 
-                /* --- auth (формы входа, регистрации, сброса пароля) --- */
                 'auth*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -216,7 +226,6 @@ return [
                     'fileMap'         => ['auth' => 'auth.php'],
                 ],
 
-                /* --- НОВОЕ: install (шаги установщика) --- */
                 'install*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',

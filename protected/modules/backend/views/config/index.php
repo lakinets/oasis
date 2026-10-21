@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
     <?= Html::a(
         Html::encode(Yii::t('backend', $group->name)),
         '#group-' . $group->id,
-        ['class' => 'btn btn-sm btn-outline-primary me-1', 'data-scroll' => '']
+        ['class' => 'btn btn-sm btn-outline-primary me-1 mb-1', 'data-scroll' => '']
     ) ?>
 <?php endforeach; ?>
 </nav>
@@ -48,7 +48,6 @@ use yii\widgets\ActiveForm;
 </button>
 
 <?php
-// JS и CSS
 $this->registerJs(<<<JS
 const btn = document.getElementById('scroll-to-top');
 window.addEventListener('scroll', () => {
@@ -57,7 +56,6 @@ window.addEventListener('scroll', () => {
 btn.addEventListener('click', () => {
     window.scrollTo({top: 0, behavior: 'smooth'});
 });
-// плавная прокрутка к якорям
 document.querySelectorAll('[data-scroll]').forEach(a=>{
     a.addEventListener('click', e=>{
         e.preventDefault();

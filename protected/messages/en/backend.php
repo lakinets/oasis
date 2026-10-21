@@ -571,4 +571,6 @@ return [
 	'Доступные языки' => 'Available languages',
 	'ru' => 'Русский (RU)',
     'en' => 'English (EN)',
+	'Безопасность' => 'Security',
+    'URL админ-панели' => 'Admin URL',
 ];

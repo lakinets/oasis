@@ -31,8 +31,6 @@ class Config extends ActiveRecord
         ];
     }
 
-    /* ===================== Select options helpers ===================== */
-
     protected function yesNoOptions(): array
     {
         return ['0' => Yii::t('backend', 'Нет'), '1' => Yii::t('backend', 'Да')];
@@ -103,14 +101,16 @@ class Config extends ActiveRecord
         ];
     }
 
-    /* ===================== Поле формы для одного параметра ===================== */
-
     public function getField(): string
     {
         $name  = "Config[{$this->id}][value]";
         $value = (string)$this->value;
 
         switch ($this->param) {
+
+            /* ---- Безопасность ---- */
+            case 'admin.url':
+                return Html::textInput($name, $value, ['class' => 'form-control', 'placeholder' => 'backend']);
 
             /* ---- Языки ---- */
             case 'language.default':

@@ -11,7 +11,7 @@
  Target Server Version : 260700 (26.7.0)
  File Encoding         : 65001
 
- Date: 20/10/2026 20:08:51
+ Date: 21/10/2026 18:43:48
 */
 
 SET NAMES utf8mb4;
@@ -27,7 +27,7 @@ CREATE TABLE `config_group`  (
   `order` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT 'Сортировка',
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config_group
@@ -54,5 +54,6 @@ INSERT INTO `config_group` VALUES (19, 'Виджет: Статус сервер�
 INSERT INTO `config_group` VALUES (20, 'Платежная система: Volet', 10, 1);
 INSERT INTO `config_group` VALUES (21, 'Платежная система: Interkassa ', 10, 1);
 INSERT INTO `config_group` VALUES (52, 'Язык', 5, 1);
+INSERT INTO `config_group` VALUES (103, 'Безопасность', 6, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

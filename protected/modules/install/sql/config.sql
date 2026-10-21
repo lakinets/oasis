@@ -11,7 +11,7 @@
  Target Server Version : 260700 (26.7.0)
  File Encoding         : 65001
 
- Date: 20/10/2026 20:08:39
+ Date: 21/10/2026 18:43:39
 */
 
 SET NAMES utf8mb4;
@@ -35,7 +35,7 @@ CREATE TABLE `config`  (
   `updated_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `param`(`param`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 173 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 174 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config
@@ -144,7 +144,8 @@ INSERT INTO `config` VALUES (167, 'payment.interkassa.enabled', '0', '0', '1 В�
 INSERT INTO `config` VALUES (168, 'payment.interkassa.checkout_id', '', '', 'Interkassa Checkout ID', 21, 1, NULL, 'textField', '2025-08-26 13:12:23', NULL);
 INSERT INTO `config` VALUES (169, 'payment.interkassa.secret_key', '', '', 'Interkassa Secret Key', 21, 2, NULL, 'passwordField', '2025-08-26 13:12:23', NULL);
 INSERT INTO `config` VALUES (170, 'payment.interkassa.test_key', '', '', 'Interkassa Test Key (опц.)', 21, 3, NULL, 'passwordField', '2025-08-26 13:12:23', NULL);
-INSERT INTO `config` VALUES (171, 'language.default', 'ru', 'ru', 'Язык по умолчанию', 52, 1, NULL, 'select', '2026-10-20 20:07:20', '2026-10-20 20:07:20');
+INSERT INTO `config` VALUES (171, 'language.default', 'en', 'ru', 'Язык по умолчанию', 52, 1, NULL, 'select', '2026-10-20 20:07:20', '2026-10-20 20:07:20');
 INSERT INTO `config` VALUES (172, 'language.available', '[\"ru\",\"en\"]', '[\"ru\",\"en\"]', 'Доступные языки', 52, 2, NULL, 'checkbox', '2026-10-20 20:07:20', '2026-10-20 20:07:20');
+INSERT INTO `config` VALUES (173, 'admin.url', 'backend', 'backend', 'URL админ-панели', 103, 1, NULL, 'text', '2026-10-21 18:43:24', '2026-10-21 18:43:24');
 
 SET FOREIGN_KEY_CHECKS = 1;

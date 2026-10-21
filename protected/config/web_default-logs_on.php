@@ -4,6 +4,7 @@ defined('YII_ENV')   or define('YII_ENV', 'dev');
 
 // ---------- Тема и конфиги серверов ----------
 $themeName = 'oasis';   // дефолт
+$adminUrl  = 'backend'; // дефолт для админки
 $dbConfig  = [];
 $servers   = [];
 
@@ -14,10 +15,18 @@ if (is_file(__DIR__ . '/db.php')) {
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: 'oasis';
-        $servers   = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // Читаем кастомный URL админки
+        $customAdminUrl = $pdo->query('SELECT value FROM config WHERE param="admin.url" LIMIT 1')->fetchColumn();
+        if ($customAdminUrl && preg_match('/^[a-zA-Z0-9_-]+$/', $customAdminUrl)) {
+            $adminUrl = $customAdminUrl;
+        }
+        
+        $servers = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {
         // БД ещё не установлена – оставляем дефолты
         $themeName = 'oasis';
+        $adminUrl  = 'backend';
         $servers   = [];
     }
 }
@@ -96,10 +105,10 @@ return [
                 /* -------- LANGUAGE SWITCH -------- */
                 'language/<lang:[a-z]{2}>' => 'site/language',
 
-                /* -------- BACKEND -------- */
-                'backend' => 'backend/default/index',
-                'backend/<controller:\w+>' => 'backend/<controller>/index',
-                'backend/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
+                /* -------- BACKEND (ДИНАМИЧЕСКИЙ URL) -------- */
+                $adminUrl => 'backend/default/index',
+                $adminUrl . '/<controller:\w+>' => 'backend/<controller>/index',
+                $adminUrl . '/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
 
                 /* -------- AUTH / LOGIN -------- */
                 'login'    => 'auth/default/login',

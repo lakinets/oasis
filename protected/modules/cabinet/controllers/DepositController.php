@@ -32,6 +32,17 @@ class DepositController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+        // Блокируем только просмотр страниц, не трогая callbacks (вебхуки)
+        $blockedActions = ['index', 'create', 'success', 'fail'];
+        if (in_array($action->id, $blockedActions, true) && Gs::isTopupMode()) {
+            Yii::$app->session->setFlash('error', Yii::t('views', 'Пополнение баланса отключено.'));
+            return $this->redirect(['/cabinet']);
+        }
+        return parent::beforeAction($action);
+    }
+
     public function actionIndex()
     {
         $providers = PaymentsManager::available();

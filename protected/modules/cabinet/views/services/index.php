@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-use yii\helpers\Url;   // ← эту строку добавили
+use yii\helpers\Url;
 use app\models\Services;
 
 $this->title = Yii::t('views', 'Услуги');
@@ -13,11 +13,18 @@ $this->title = Yii::t('views', 'Услуги');
     <li><a href="/cabinet/bonuses"><?= Yii::t('views', 'Бонусы') ?></a></li>
     <li><a href="/cabinet/security"><?= Yii::t('views', 'Безопасность') ?></a></li>
     <li><a href="/cabinet/messages"><?= Yii::t('views', 'Сообщения') ?></a></li>
-    <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    
+    <?php if (!\app\models\Gs::isTopupMode()): ?>
+        <li><a href="/cabinet/deposit"><?= Yii::t('views', 'Пополнение') ?></a></li>
+    <?php endif; ?>
+    
     <li><a href="/cabinet/transaction-history"><?= Yii::t('views', 'История транзакций') ?></a></li>
     <li><a href="/cabinet/auth-history"><?= Yii::t('views', 'История входов') ?></a></li>
     <li><a href="/cabinet/referals"><?= Yii::t('views', 'Рефералы') ?></a></li>
-    <li><a href="/cabinet/services" class="active"><?= Yii::t('views', 'Услуги') ?></a></li>
+    
+    <?php if (!\app\models\Gs::isTopupMode()): ?>
+        <li><a href="/cabinet/services" class="active"><?= Yii::t('views', 'Услуги') ?></a></li>
+    <?php endif; ?>
 </ul>
 
 <h1><?= Yii::t('views', 'Игровые услуги') ?></h1>

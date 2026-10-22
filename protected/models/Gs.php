@@ -93,4 +93,17 @@ class Gs extends ActiveRecord
             'updated_at' => Yii::t('models', 'Обновлено'),
         ];
     }
+
+    /**
+     * Проверяет, включен ли режим прямого пополнения инвентаря
+     * хотя бы на одном активном сервере.
+     */
+    public static function isTopupMode(): bool
+    {
+        static $cache = null;
+        if ($cache === null) {
+            $cache = self::find()->where(['status' => 1, 'shop_mode' => 'topup'])->exists();
+        }
+        return $cache;
+    }
 }

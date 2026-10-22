@@ -1,9 +1,15 @@
 <?php
 
+namespace app\models;
+
+use Yii;
+use yii\db\ActiveRecord;
+use yii\helpers\Html;
+use yii\helpers\StringHelper;
+
 /**
  * This is the model class for table "{{user_messages}}".
  *
- * The followings are the available columns in table '{{user_messages}}':
  * @property string $id
  * @property string $user_id
  * @property string $message
@@ -14,50 +20,38 @@
  */
 class UserMessages extends ActiveRecord
 {
-    const STATUS_READ     = 1; // Прочитано
-    const STATUS_NOT_READ = 0; // Не прочитано
+    const STATUS_READ     = 1;
+    const STATUS_NOT_READ = 0;
 
+    public static function tableName()
+    {
+        return '{{%user_messages}}';
+    }
 
+    public function rules()
+    {
+        return [
+            [['user_id', 'message'], 'filter', 'filter' => 'trim'],
+            [['user_id', 'message'], 'required'],
+            [['read', 'status'], 'integer'],
+            [['message'], 'string', 'min' => 5],
+            [['user_id'], 'string', 'max' => 10],
+            [['id', 'user_id', 'message', 'read', 'status', 'created_at', 'updated_at'], 'safe', 'on' => 'search'],
+        ];
+    }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{user_messages}}';
-	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		return array(
-			array('user_id, message', 'filter', 'filter' => 'trim'),
-			array('user_id, message', 'required'),
-			array('read, status', 'numerical', 'integerOnly'=>true),
-			array('message', 'length', 'min' => 5),
-			array('user_id', 'length', 'max' => 10),
-
-			array('id, user_id, message, read, status, created_at, updated_at', 'safe', 'on' => 'search'),
-		);
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id'            => 'ID',
-			'user_id'       => Yii::t('main', 'Автор'),
-			'message'       => Yii::t('main', 'Сообщение'),
-			'read'          => Yii::t('main', 'Прочитано'),
-			'status'        => Yii::t('main', 'Статус'),
-			'created_at'    => Yii::t('main', 'Дата создания'),
-			'updated_at'    => Yii::t('main', 'Дата обновления'),
-		);
-	}
+    public function attributeLabels()
+    {
+        return [
+            'id'            => 'ID',
+            'user_id'       => Yii::t('main', 'Автор'),
+            'message'       => Yii::t('main', 'Сообщение'),
+            'read'          => Yii::t('main', 'Прочитано'),
+            'status'        => Yii::t('main', 'Статус'),
+            'created_at'    => Yii::t('main', 'Дата создания'),
+            'updated_at'    => Yii::t('main', 'Дата обновления'),
+        ];
+    }
 
     /**
      * Возвращает небольшую часть сообщения
@@ -68,6 +62,7 @@ class UserMessages extends ActiveRecord
      */
     public function getShortMessage($count_word = 10)
     {
-        return wordLimiter(e(strip_tags($this->message)), $count_word, ' ...');
+        // Аналог Yii1 wordLimiter + e()
+        return StringHelper::truncateWords(Html::encode(strip_tags($this->message)), $count_word, ' ...');
     }
 }

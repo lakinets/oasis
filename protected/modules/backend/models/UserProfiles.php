@@ -2,6 +2,7 @@
 
 namespace app\modules\backend\models;
 
+use Yii; // <--- ДОБАВЛЕНО
 use yii\db\ActiveRecord;
 
 /**

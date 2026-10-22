@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\backend\models;
 
+use Yii; // <--- ДОБАВЛЕНО
 use yii\db\ActiveRecord;
 
 class UserBonuses extends ActiveRecord
@@ -26,8 +27,7 @@ class UserBonuses extends ActiveRecord
 
     public function getUser()
     {
-        // твоя таблица users и модель Users есть в модуле
-        return $this->hasOne(\app\modules\backend\models\Users::class, ['user_id'=>'user_id']);
+        return $this->hasOne(Users::class, ['user_id'=>'user_id']);
     }
 
     public function getStatusName()
@@ -35,4 +35,3 @@ class UserBonuses extends ActiveRecord
         return $this->status ? Yii::t('backend', 'Активирован') : Yii::t('backend', 'Не активирован');
     }
 }
-

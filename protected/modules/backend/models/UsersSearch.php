@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\backend\models;
 
+use Yii; // <--- ДОБАВЛЕНО
 use yii\data\ActiveDataProvider;
 
 class UsersSearch extends Users

@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap5\ActiveForm;
 use app\modules\backend\models\Pages;
 
@@ -11,11 +12,40 @@ use app\modules\backend\models\Pages;
 // 1. Подключаем CSS редактора
 $this->registerCssFile('https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/ui/trumbowyg.min.css');
 
-// 2. Подключаем JS редактора и русский язык (зависит от jQuery, который уже есть в Yii)
+// 2. Подключаем JS редактора, русский язык и плагин загрузки файлов
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/trumbowyg.min.js', ['depends' => [\yii\web\JqueryAsset::class]]);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/langs/ru.min.js', ['depends' => [\yii\web\JqueryAsset::class]]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/plugins/upload/trumbowyg.upload.min.js', ['depends' => [\yii\web\JqueryAsset::class]]);
 
-// 3. Инициализируем редактор для всех полей с классом .wysiwyg-editor
+// 3. Генерируем URL для загрузки
+$uploadUrl = Url::to(['upload-image']);
+$csrfToken = Yii::$app->request->getCsrfToken();
+
+// 4. CSS-трюк: прячем облачко и показываем иконку картинки
+$this->registerCss("
+    /* Скрываем стандартную иконку загрузки (облачко) */
+    .trumbowyg-upload-button .trumbowyg-icons { display: none !important; }
+    
+    /* Рисуем иконку картинки на месте кнопки */
+    .trumbowyg-upload-button::before {
+        content: '';
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background-color: currentColor;
+        -webkit-mask-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E\");
+        mask-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E\");
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        vertical-align: middle;
+    }
+");
+
+// 5. Инициализируем редактор
 $this->registerJs(<<<JS
     $(document).ready(function(){
         $('.wysiwyg-editor').each(function(){
@@ -28,13 +58,24 @@ $this->registerJs(<<<JS
                     ['strong', 'em', 'del'],
                     ['superscript', 'subscript'],
                     ['link'],
-                    ['insertImage'],
+                    ['upload'], // Кнопка выбора файла с жесткого диска
                     ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
                     ['unorderedList', 'orderedList'],
                     ['horizontalRule'],
                     ['removeformat'],
                     ['fullscreen']
-                ]
+                ],
+                plugins: {
+                    upload: {
+                        serverPath: '{$uploadUrl}',
+                        fileFieldName: 'file',
+                        urlPropertyName: 'file',
+                        statusPropertyName: 'success',
+                        headers: {
+                            'X-CSRF-Token': '{$csrfToken}'
+                        }
+                    }
+                }
             });
         });
     });

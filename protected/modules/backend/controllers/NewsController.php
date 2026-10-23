@@ -31,12 +31,23 @@ class NewsController extends BackendController
     {
         $model = $id ? $this->findModel($id) : new News();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', $id
-                ? Yii::t('backend', 'Новость сохранена.')
-                : Yii::t('backend', 'Новость добавлена.')
-            );
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            
+            // Если это новая запись, подставляем ID текущего админа
+            if ($model->isNewRecord) {
+                $model->user_id = Yii::$app->user->id;
+                $model->created_at = date('Y-m-d H:i:s');
+            } else {
+                $model->updated_at = date('Y-m-d H:i:s');
+            }
+
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', $id
+                    ? Yii::t('backend', 'Новость сохранена.')
+                    : Yii::t('backend', 'Новость добавлена.')
+                );
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('form', ['model' => $model]);
@@ -74,5 +85,50 @@ class NewsController extends BackendController
             throw new NotFoundHttpException(Yii::t('backend', 'Новость не найдена.'));
         }
         return $model;
+    }
+
+    /* ---------- 6. Загрузка картинок для WYSIWYG ---------- */
+    public function actionUploadImage()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isPost) {
+            return ['success' => false, 'message' => 'Неверный метод запроса.'];
+        }
+
+        /** @var \yii\web\UploadedFile $file */
+        $file = \yii\web\UploadedFile::getInstanceByName('file');
+
+        if ($file) {
+            $ext = strtolower($file->extension);
+            
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                return ['success' => false, 'message' => 'Неподдерживаемый формат.'];
+            }
+
+            if ($file->size > 5 * 1024 * 1024) {
+                return ['success' => false, 'message' => 'Файл слишком большой (максимум 5 МБ).'];
+            }
+
+            $dir = Yii::getAlias('@webroot/uploads/images/news/');
+            
+            if (!is_dir($dir)) {
+                \yii\helpers\FileHelper::createDirectory($dir, 0775, true);
+            }
+            
+            $name = uniqid('news_') . '.' . $ext;
+            
+            if ($file->saveAs($dir . $name)) {
+                return [
+                    'success' => true, 
+                    'file' => '/uploads/images/news/' . $name
+                ];
+            }
+        }
+        
+        return [
+            'success' => false, 
+            'message' => 'Ошибка сервера при сохранении файла.'
+        ];
     }
 }

@@ -1,40 +1,47 @@
 /*
-Navicat MySQL Data Transfer
+ Navicat Premium Dump SQL
 
-Source Server         : l2
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : l2
+ Source Server         : Test
+ Source Server Type    : MySQL
+ Source Server Version : 260700 (26.7.0)
+ Source Host           : localhost:3306
+ Source Schema         : test
 
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
+ Target Server Type    : MySQL
+ Target Server Version : 260700 (26.7.0)
+ File Encoding         : 65001
 
-Date: 2025-09-07 10:17:09
+ Date: 22/10/2026 21:23:48
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for `news`
+-- Table structure for news
 -- ----------------------------
 DROP TABLE IF EXISTS `news`;
-CREATE TABLE `news` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL COMMENT 'ID автора',
-  `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `text` text NOT NULL,
-  `seo_title` varchar(255) DEFAULT NULL,
-  `seo_keywords` varchar(255) DEFAULT NULL,
-  `seo_description` varchar(255) DEFAULT NULL,
+CREATE TABLE `news`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int UNSIGNED NOT NULL COMMENT 'ID автора',
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `title_en` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `description_en` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL,
+  `text` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `text_en` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL,
+  `seo_title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `seo_keywords` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `seo_description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `ix_id` (`id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of news
 -- ----------------------------
+
+SET FOREIGN_KEY_CHECKS = 1;

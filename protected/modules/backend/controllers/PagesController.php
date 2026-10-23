@@ -4,8 +4,8 @@ namespace app\modules\backend\controllers;
 use Yii;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
-use yii\data\ActiveDataProvider;
-
+use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 use app\modules\backend\models\Pages;
 use app\modules\backend\models\PagesSearch;
 use app\models\PageTranslation;
@@ -53,7 +53,7 @@ class PagesController extends BackendController
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
 
-            // ✅ КЛЮЧЕВАЯ СТРОКА — Yii сам разложит PageTranslation[ru][...] и [en][...] по моделям
+            // Yii сам разложит PageTranslation[ru][...] и [en][...] по моделям
             Model::loadMultiple($translations, Yii::$app->request->post());
 
             if ($model->validate() && Model::validateMultiple($translations)) {
@@ -164,5 +164,54 @@ class PagesController extends BackendController
             throw new NotFoundHttpException(Yii::t('backend', 'Страница не найдена.'));
         }
         return $model;
+    }
+
+    /* ---------- 6. Загрузка картинок с жесткого диска ---------- */
+    public function actionUploadImage()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isPost) {
+            return ['success' => false, 'message' => 'Неверный метод запроса.'];
+        }
+
+        /** @var UploadedFile $file */
+        $file = UploadedFile::getInstanceByName('file');
+
+        if ($file) {
+            $ext = strtolower($file->extension);
+            
+            // 1. Проверка расширения
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                return ['success' => false, 'message' => 'Неподдерживаемый формат (разрешены: jpg, png, gif, webp).'];
+            }
+
+            // 2. Проверка размера (макс 5 МБ)
+            if ($file->size > 5 * 1024 * 1024) {
+                return ['success' => false, 'message' => 'Файл слишком большой (максимум 5 МБ).'];
+            }
+
+            $dir = Yii::getAlias('@webroot/uploads/images/gallery/');
+            
+            // Создаем папку, если её нет
+            if (!is_dir($dir)) {
+                FileHelper::createDirectory($dir, 0775, true);
+            }
+            
+            // Генерируем уникальное имя
+            $name = uniqid('img_') . '.' . $ext;
+            
+            if ($file->saveAs($dir . $name)) {
+                return [
+                    'success' => true, 
+                    'file' => '/uploads/images/gallery/' . $name
+                ];
+            }
+        }
+        
+        return [
+            'success' => false, 
+            'message' => 'Ошибка сервера при сохранении файла.'
+        ];
     }
 }

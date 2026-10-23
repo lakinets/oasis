@@ -345,4 +345,20 @@ return [
     'Ваши предложения, пожелания'       => 'Suggestions & Feedback',
     'Другие проблемы'                   => 'Other Issues',
     'Услуги'                            => 'Services',
+	
+	    // --- Магазин: Пополнение ---
+    'Количество в пакете' => 'Quantity in pack',
+    'Цена за 1 шт.' => 'Price per 1 pc.',
+    'Количество' => 'Quantity',
+    'Минимум 1.' => 'Minimum 1.',
+    'Базовое количество:' => 'Base quantity:',
+    'Бонус:' => 'Bonus:',
+    'Итого получите:' => 'Total you get:',
+    'К оплате:' => 'Total to pay:',
+    'Способ оплаты' => 'Payment method',
+    'Пополнить' => 'Top-Up',
+    'Выберите персонажа для покупки.' => 'Select a character to purchase.',
+    'Прямое пополнение предметов' => 'Direct items top-up',
+    'Доступна покупка монет напрямую в инвентарь без использования баланса сайта.' => 'Coins purchase directly to inventory without using site balance is available.',
+    'Перейти к покупке' => 'Go to purchase',
 ];

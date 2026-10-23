@@ -259,9 +259,9 @@ return [
         'backend'  => ['class' => \app\modules\backend\Module::class],
         'cabinet'  => ['class' => \app\modules\cabinet\Module::class],
         'register' => ['class' => \app\modules\register\RegisterModule::class],
-        'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class],
+        // 'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class], // УДАЛЕНО
         'stats'    => ['class' => \app\modules\stats\StatsModule::class],
-        'news'     => ['class' => \app\modules\news\NewsModule::class],
+        // 'news'     => ['class' => \app\modules\news\NewsModule::class],       // УДАЛЕНО
         'forgottenPassword' => ['class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class],
         'deposit'  => ['class' => \app\modules\deposit\DepositModule::class],
         'auth'     => ['class' => \app\modules\auth\Module::class],

@@ -1,0 +1,13 @@
+# Запрещаем выполнение любых скриптов
+php_flag engine off
+Options -ExecCGI -Indexes
+
+# Удаляем обработчики PHP
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .pht .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .pht .phar
+
+# Если сервер не понимает php_flag, он может выдать 500 ошибку.
+# В таком случае используйте только блок ниже:
+<FilesMatch "\.(?i:php|phtml|php3|php4|php5|php7|pht|phar)$">
+    Require all denied
+</FilesMatch>

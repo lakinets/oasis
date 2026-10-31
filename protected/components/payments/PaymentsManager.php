@@ -9,6 +9,7 @@ final class PaymentsManager
     {
         $list = [];
 
+        if (self::isOn('payment.stripe.enabled'))      $list['stripe']      = 'Stripe (карты, Apple/Google Pay)';
         if (self::isOn('payment.robokassa.enabled'))   $list['robokassa']   = 'Robokassa';
         if (self::isOn('payment.unitpay.enabled'))     $list['unitpay']     = 'Unitpay';
         if (self::isOn('payment.nowpayments.enabled')) $list['nowpayments'] = 'NOWPayments (crypto)';

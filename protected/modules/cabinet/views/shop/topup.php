@@ -29,6 +29,9 @@ foreach ($tiers as $t) {
 $tiersJson = Json::encode($tiersData);
 $price = (float)$config->price;
 $isReady = ($char_id && $ownerOk);
+
+// Логика отображения платёжных систем
+$providerCount = count($providers);
 ?>
 
 <!-- Добавляем стили, чтобы принудительно выровнять селекты по левому краю -->
@@ -160,17 +163,32 @@ $isReady = ($char_id && $ownerOk);
 
                 <div class="mb-4">
                     <label class="form-label text-muted small topup-label"><?= Yii::t('views', 'Способ оплаты') ?></label>
-                    <select name="provider" class="form-select topup-select" required>
-                        <?php foreach ($providers as $key => $label): ?>
-                            <option value="<?= Html::encode($key) ?>"><?= Html::encode($label) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <?php if (empty($providers)): ?>
+                    
+                    <?php if ($providerCount === 0): ?>
+                        <!-- 1. Ничего не включено -->
                         <div class="text-danger small mt-1"><?= Yii::t('views', 'Приём платежей временно недоступен.') ?></div>
+                    
+                    <?php elseif ($providerCount === 1): ?>
+                        <!-- 2. Одна платежная система (прячем селектор) -->
+                        <?php 
+                            $keys = array_keys($providers);
+                            $singleKey = $keys[0];
+                            $singleLabel = $providers[$singleKey];
+                        ?>
+                        <input type="text" class="form-control topup-select" value="<?= Html::encode($singleLabel) ?>" readonly style="background-color: transparent; color: inherit; cursor: not-allowed;">
+                        <input type="hidden" name="provider" value="<?= Html::encode($singleKey) ?>">
+                    
+                    <?php else: ?>
+                        <!-- 3. Две и более систем (показываем селектор) -->
+                        <select name="provider" class="form-select topup-select" required>
+                            <?php foreach ($providers as $key => $label): ?>
+                                <option value="<?= Html::encode($key) ?>"><?= Html::encode($label) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     <?php endif; ?>
                 </div>
 
-                <button type="submit" class="btn btn-warning w-100 py-2 fw-bold" <?= (!$isReady || empty($providers)) ? 'disabled' : '' ?>>
+                <button type="submit" class="btn btn-warning w-100 py-2 fw-bold" <?= (!$isReady || $providerCount === 0) ? 'disabled' : '' ?>>
                     <?= Yii::t('views', 'Пополнить') ?>
                 </button>
                 <?php if (!$char_id): ?>

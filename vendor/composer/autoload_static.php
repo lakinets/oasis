@@ -84,11 +84,15 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         ),
         'M' =>
         array (
+            'MaxMind\\WebService\\' => 19,
+            'MaxMind\\Exception\\' => 18,
+            'MaxMind\\Db\\' => 11,
             'Masterminds\\' => 12,
         ),
         'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
+            'GeoIp2\\' => 7,
         ),
         'F' =>
         array (
@@ -106,6 +110,7 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         ),
         'C' =>
         array (
+            'Composer\\CaBundle\\' => 18,
             'Codeception\\Extension\\' => 22,
             'Codeception\\' => 12,
         ),
@@ -265,6 +270,18 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'MaxMind\\WebService\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
+        ),
+        'MaxMind\\Exception\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception',
+        ),
+        'MaxMind\\Db\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
         'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
@@ -272,6 +289,10 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GeoIp2\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
         ),
         'Faker\\' =>
         array (
@@ -292,6 +313,10 @@ class ComposerStaticInitb4d9270f08e0d143c52d5310f09017d7
         'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Composer\\CaBundle\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
         ),
         'Codeception\\Extension\\' =>
         array (

@@ -7,6 +7,38 @@ use app\modules\backend\models\Config;
 
 class ConfigController extends BackendController
 {
+    /**
+     * Префиксы параметров, которые управляются в отдельной вкладке
+     * «Платёжные системы» (/backend/payments).
+     */
+    private const PAYMENT_PREFIXES = [
+        'robokassa.',
+        'unitpay.',
+        'nowpayments.',
+        'payop.',
+        'cryptomus.',
+        'volet.',
+        'interkassa.',
+        'stripe.',
+        'payment.robokassa.',
+        'payment.unitpay.',
+        'payment.nowpayments.',
+        'payment.payop.',
+        'payment.cryptomus.',
+        'payment.volet.',
+        'payment.interkassa.',
+        'payment.stripe.',
+    ];
+
+    /**
+     * Префиксы параметров, которые управляются в других вкладках админки.
+     * Такие параметры не должны появляться в общих настройках,
+     * чтобы не редактировать одно и то же в двух местах.
+     */
+    private const EXCLUDED_PREFIXES = [
+        'asn_filter.', // -> /backend/asn-whitelist
+    ];
+
     public function actionIndex()
     {
         $groups = ConfigGroup::findOpened()
@@ -24,13 +56,11 @@ class ConfigController extends BackendController
                     $config = Config::findOne($id);
                     if ($config !== null && isset($row['value'])) {
                         $val = $row['value'];
-                        
-                        // Если это чекбоксы (массив) — сохраняем как JSON
+
                         if (is_array($val)) {
                             $val = json_encode($val);
                         }
 
-                        // Спец-обработка для URL админки
                         if ($config->param === 'admin.url') {
                             $val = trim($val);
                             if (!preg_match('/^[a-zA-Z0-9_-]+$/', $val)) {
@@ -50,10 +80,9 @@ class ConfigController extends BackendController
                         $config->save(false, ['value']);
                     }
                 }
-                
+
                 Yii::$app->session->setFlash('success', Yii::t('backend', 'Настройки успешно сохранены.'));
 
-                // Если админ сменил URL, перекидываем его на новый адрес
                 if ($newAdminUrl !== null) {
                     Yii::$app->session->setFlash('info', 'URL админ-панели изменен. Новый адрес: /' . $newAdminUrl);
                     return $this->redirect('/' . $newAdminUrl . '/config');
@@ -61,6 +90,32 @@ class ConfigController extends BackendController
             }
             return $this->refresh();
         }
+
+        // Исключаем параметры, которыми управляют другие вкладки
+        $isExcluded = function ($param) {
+            foreach (self::PAYMENT_PREFIXES as $prefix) {
+                if (strpos($param, $prefix) === 0) {
+                    return true;
+                }
+            }
+            foreach (self::EXCLUDED_PREFIXES as $prefix) {
+                if (strpos($param, $prefix) === 0) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        foreach ($groups as $group) {
+            $filtered = array_values(array_filter(
+                $group->configs,
+                fn($c) => !$isExcluded($c->param)
+            ));
+            $group->populateRelation('configs', $filtered);
+        }
+
+        // Убираем группы, оставшиеся без конфигов
+        $groups = array_values(array_filter($groups, fn($g) => !empty($g->configs)));
 
         return $this->render('index', [
             'groups' => $groups,

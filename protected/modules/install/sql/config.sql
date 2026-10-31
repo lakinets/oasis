@@ -11,7 +11,7 @@
  Target Server Version : 260700 (26.7.0)
  File Encoding         : 65001
 
- Date: 21/10/2026 18:43:39
+ Date: 31/10/2026 15:47:58
 */
 
 SET NAMES utf8mb4;
@@ -35,7 +35,7 @@ CREATE TABLE `config`  (
   `updated_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `param`(`param`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 174 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 198 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of config
@@ -84,13 +84,13 @@ INSERT INTO `config` VALUES (41, 'forum_threads.prefix', 'new_', '', 'Префи
 INSERT INTO `config` VALUES (42, 'forum_threads.date_format', 'Y-m-d H:i', 'Y:m:d H:i', 'Формат даты', 7, 11, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (43, 'forum_threads.link', '', 'http://forum.ghtweb.ru', 'Ссылка на форум', 7, 12, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (44, 'forum_threads.id_deny', '', '14, 28, 13', 'ID форумов которые запрещены к выводу, через запятую', 7, 13, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES (45, 'robokassa.test', '1', '1', 'Робокасса в тестовом режиме', 8, 1, '', 'dropDownList', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES (45, 'robokassa.test', '0', '1', 'Робокасса в тестовом режиме', 8, 1, '', 'dropDownList', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (46, 'robokassa.login', '', '', 'Ваш логин', 8, 2, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (47, 'robokassa.password', '', '', 'Пароль1', 8, 3, '', 'passwordField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (48, 'robokassa.password2', '', '', 'Пароль2', 8, 4, '', 'passwordField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES (49, 'unitpay.secret_key', 'jdvhksvuhkvnv qvqev54e4v', '', 'Секретный ключ', 9, 1, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES (50, 'unitpay.project_id', 'ertgh', '', 'ID проекта', 9, 4, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
-INSERT INTO `config` VALUES (51, 'unitpay.public_key', 'rvgqergrth35r', '', 'Публичный ключ', 9, 3, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES (49, 'unitpay.secret_key', '', '', 'Секретный ключ', 9, 1, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES (50, 'unitpay.project_id', '', '', 'ID проекта', 9, 4, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
+INSERT INTO `config` VALUES (51, 'unitpay.public_key', '', '', 'Публичный ключ', 9, 3, '', 'textField', '2015-03-31 18:11:47', '2015-04-05 21:52:22');
 INSERT INTO `config` VALUES (97, 'nowpayments.ipn_secret', '', '', 'NOWPayments IPN Secret', 11, 2, NULL, 'passwordField', '2025-08-25 20:07:00', NULL);
 INSERT INTO `config` VALUES (98, 'nowpayments.currency', 'USD', 'USD', 'Валюта по умолчанию', 11, 3, NULL, 'textField', '2025-08-25 20:07:00', NULL);
 INSERT INTO `config` VALUES (96, 'nowpayments.api_key', '', '', 'NOWPayments API Key', 11, 1, NULL, 'textField', '2025-08-25 20:07:00', NULL);
@@ -135,7 +135,7 @@ INSERT INTO `config` VALUES (93, 'payop.public_key', '', '', 'PayOp Public Key',
 INSERT INTO `config` VALUES (161, 'payment.robokassa.enabled', '0', '0', '1 Включена платежная система 0 Отключена Robokassa', 8, 7, NULL, 'dropDownList', '2025-08-25 21:57:20', NULL);
 INSERT INTO `config` VALUES (159, 'payment.payop.enabled', '0', '0', '1 Включена платежная система 0 Отключена PayOp', 10, 7, NULL, 'dropDownList', '2025-08-25 21:47:41', NULL);
 INSERT INTO `config` VALUES (160, 'payment.payop.project_id', '', '', 'PayOp Project ID', 10, 6, NULL, 'textField', '2025-08-25 21:47:41', NULL);
-INSERT INTO `config` VALUES (162, 'payment.unitpay.enabled', '1', '0', '1 Включена платежная система 0 Отключена Unitpay', 9, 7, NULL, 'dropDownList', '2025-08-25 21:57:20', NULL);
+INSERT INTO `config` VALUES (162, 'payment.unitpay.enabled', '0', '0', '1 Включена платежная система 0 Отключена Unitpay', 9, 7, NULL, 'dropDownList', '2025-08-25 21:57:20', NULL);
 INSERT INTO `config` VALUES (163, 'payment.nowpayments.enabled', '0', '0', ' Включена платежная система 0 Отключена nowpayments', 11, 7, NULL, 'dropDownList', '2025-08-25 23:26:23', NULL);
 INSERT INTO `config` VALUES (164, 'payment.volet.enabled', '0', '0', '1 Включена платежная система 0 Отключена Volet', 20, 3, NULL, 'dropDownList', '2025-08-26 12:14:00', NULL);
 INSERT INTO `config` VALUES (165, 'payment.volet.api_id', '', '', 'Volet API ID', 20, 2, NULL, 'textField', '2025-08-26 12:14:00', NULL);
@@ -147,5 +147,29 @@ INSERT INTO `config` VALUES (170, 'payment.interkassa.test_key', '', '', 'Interk
 INSERT INTO `config` VALUES (171, 'language.default', 'en', 'ru', 'Язык по умолчанию', 52, 1, NULL, 'select', '2026-10-20 20:07:20', '2026-10-20 20:07:20');
 INSERT INTO `config` VALUES (172, 'language.available', '[\"ru\",\"en\"]', '[\"ru\",\"en\"]', 'Доступные языки', 52, 2, NULL, 'checkbox', '2026-10-20 20:07:20', '2026-10-20 20:07:20');
 INSERT INTO `config` VALUES (173, 'admin.url', 'backend', 'backend', 'URL админ-панели', 103, 1, NULL, 'text', '2026-10-21 18:43:24', '2026-10-21 18:43:24');
+INSERT INTO `config` VALUES (174, 'payment.cryptomus.enabled', '0', '0', '1 Включена платежная система 0 Отключена Cryptomus', 155, 1, NULL, 'dropDownList', '2026-10-25 18:29:14', NULL);
+INSERT INTO `config` VALUES (175, 'payment.stripe.enabled', '0', '0', '1 Включена платежная система 0 Отключена Stripe', 156, 1, NULL, 'dropDownList', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (176, 'stripe.test', '0', '1', 'Stripe в тестовом режиме', 156, 2, NULL, 'dropDownList', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (177, 'stripe.secret_key_test', '', '', 'Stripe Secret Key (test) — sk_test_...', 156, 3, NULL, 'passwordField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (178, 'stripe.webhook_secret_test', '', '', 'Stripe Webhook Secret (test) — whsec_...', 156, 4, NULL, 'passwordField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (179, 'stripe.secret_key_live', '', '', 'Stripe Secret Key (live) — sk_live_...', 156, 5, NULL, 'passwordField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (180, 'stripe.webhook_secret_live', '', '', 'Stripe Webhook Secret (live) — whsec_...', 156, 6, NULL, 'passwordField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (181, 'stripe.currency', 'usd', 'usd', 'Валюта Stripe (usd, eur, gbp…)', 156, 7, NULL, 'textField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (182, 'stripe.exchange_rate', '0.011', '0.011', 'Курс: 1 RUB → валюта Stripe (0.011 = ~$0.011 за ₽1)', 156, 8, NULL, 'textField', '2026-10-25 19:06:46', NULL);
+INSERT INTO `config` VALUES (183, 'payment.cryptomus.merchant_id', '', '', 'Cryptomus Merchant ID (UUID)', 155, 2, NULL, 'textField', '2026-10-25 20:06:50', NULL);
+INSERT INTO `config` VALUES (184, 'payment.cryptomus.payment_api_key', '', '', 'Cryptomus Payment API Key', 155, 3, NULL, 'passwordField', '2026-10-25 20:06:50', NULL);
+INSERT INTO `config` VALUES (185, 'unitpay.test', '0', '0', 'Unitpay в тестовом режиме', 9, 5, NULL, 'dropDownList', '2026-10-25 20:31:52', NULL);
+INSERT INTO `config` VALUES (186, 'nowpayments.test', '0', '0', 'NOWPayments в тестовом режиме (Sandbox)', 11, 4, NULL, 'dropDownList', '2026-10-25 20:31:52', NULL);
+INSERT INTO `config` VALUES (187, 'payment.volet.test', '0', '0', 'Volet в тестовом режиме (Sandbox)', 20, 4, NULL, 'dropDownList', '2026-10-25 20:31:52', NULL);
+INSERT INTO `config` VALUES (188, 'payment.interkassa.test', '0', '0', 'Interkassa в тестовом режиме', 21, 4, NULL, 'dropDownList', '2026-10-25 20:31:52', NULL);
+INSERT INTO `config` VALUES (189, 'asn_filter.enabled', '1', '0', 'ASN-фильтр включён', 0, 0, NULL, 'string', '0000-00-00 00:00:00', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (190, 'asn_filter.error_code', '500', '500', 'Код ошибки', 0, 1, NULL, 'string', '0000-00-00 00:00:00', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (191, 'asn_filter.random_error', '0', '0', 'Случайный код ошибки', 0, 2, NULL, 'string', '0000-00-00 00:00:00', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (192, 'asn_filter.search_bots_enabled', '0', '1', 'SEO: Разрешить доступ', 0, 0, '', 'string', '2026-10-31 15:56:44', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (193, 'asn_filter.search_bots_cabinet', '0', '1', 'SEO: Ботам разрешен /cabinet', 0, 0, '', 'string', '2026-10-31 15:56:48', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (194, 'asn_filter.search_bots_stats', '0', '1', 'SEO: Ботам разрешен /stats', 0, 0, '', 'string', '2026-10-31 15:56:50', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (195, 'asn_filter.search_bots_page', '0', '0', 'SEO: Ботам разрешен /page/*', 0, 0, '', 'string', '2026-10-31 15:47:01', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (196, 'asn_filter.search_bots_register', '0', '0', 'SEO: Ботам разрешен /register', 0, 0, '', 'string', '2026-10-31 15:47:01', '2026-10-31 15:47:44');
+INSERT INTO `config` VALUES (197, 'asn_filter.search_bots_login', '0', '0', 'SEO: Ботам разрешен /login', 0, 0, '', 'string', '2026-10-31 15:47:01', '2026-10-31 15:47:44');
 
 SET FOREIGN_KEY_CHECKS = 1;

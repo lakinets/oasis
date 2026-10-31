@@ -46,6 +46,9 @@ class m000000_000001_run_all_sql_files extends Migration
         'gift_codes_attempts.sql',
 		'shop_topup_config.sql',
 		'shop_topup_tiers.sql',
+		'asn_block_rules.sql',
+		'asn_whitelist.sql',
+		'bot_whitelist.sql',
     ];
 
     public function supportsTransaction(): bool

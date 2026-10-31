@@ -5,45 +5,23 @@ namespace app\models;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use yii\db\Query;
-use yii\data\ActiveDataProvider;
 
 /**
- * This is the model class for table "{{%ls}}".
- *
- * @property int $id
- * @property string $name
- * @property string $ip
- * @property string $port
- * @property string $db_host
- * @property string $db_port
- * @property string $db_user
- * @property string $db_pass
- * @property string $db_name
- * @property string $version
- * @property int $status
- * @property string $password_type
- * @property string $created_at
- * @property string $updated_at
- *
- * @property Gs[] $servers
+ * Модель Login-сервера (таблица `ls`)
  */
 class Ls extends ActiveRecord
 {
     const PASSWORD_TYPE_SHA1     = 'sha1';
     const PASSWORD_TYPE_WIRLPOOL = 'wirlpool';
 
-    /**
-     * @inheritdoc
-     */
+    const STATUS_ON  = 1;
+    const STATUS_OFF = 0;
+
     public static function tableName()
     {
         return '{{%ls}}';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -58,9 +36,6 @@ class Ls extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
@@ -73,17 +48,48 @@ class Ls extends ActiveRecord
         ];
     }
 
-    /**
-     * Связь с серверами
-     */
+    // =========================================================
+    // === Шифрование пароля БД ===
+    // =========================================================
+    public function setDbPass($value)
+    {
+        if (empty($value)) {
+            return;
+        }
+        
+        $key = \Yii::$app->request->cookieValidationKey;
+        
+        // Проверяем, не зашифрован ли пароль уже
+        try {
+            \Yii::$app->security->decryptByKey($value, $key);
+            $this->db_pass = $value; // Уже зашифрован
+        } catch (\Exception $e) {
+            // Если не удалось расшифровать, значит он в открытом виде — шифруем
+            $this->db_pass = \Yii::$app->security->encryptByKey($value, $key);
+        }
+    }
+
+    public function getDbPassDecrypted()
+    {
+        if (empty($this->db_pass)) {
+            return '';
+        }
+        
+        $key = \Yii::$app->request->cookieValidationKey;
+        
+        try {
+            return \Yii::$app->security->decryptByKey($this->db_pass, $key);
+        } catch (\Exception $e) {
+            // Если не удалось расшифровать, возвращаем как есть (для старых записей)
+            return $this->db_pass; 
+        }
+    }
+
     public function getServers()
     {
         return $this->hasMany(Gs::class, ['login_id' => 'id']);
     }
 
-    /**
-     * Список типов пароля
-     */
     public function getPasswordTypeList()
     {
         return [
@@ -92,18 +98,12 @@ class Ls extends ActiveRecord
         ];
     }
 
-    /**
-     * Получить текстовое название типа пароля
-     */
     public function getPasswordType()
     {
         $data = $this->getPasswordTypeList();
         return $data[$this->password_type] ?? \Yii::t('backend', '*Unknown*');
     }
 
-    /**
-     * Список статусов
-     */
     public function getStatusList()
     {
         return [
@@ -112,17 +112,11 @@ class Ls extends ActiveRecord
         ];
     }
 
-    /**
-     * Scope: только активные
-     */
     public static function findOpened()
     {
         return self::find()->where(['status' => self::STATUS_ON]);
     }
 
-    /**
-     * Список открытых логинов (с кэшем)
-     */
     public static function getOpenLoginServers()
     {
         return \Yii::$app->cache->getOrSet('open_login_servers', function () {
@@ -130,16 +124,12 @@ class Ls extends ActiveRecord
         }, 3600 * 24);
     }
 
-    /**
-     * Поиск (для GridView)
-     */
     public function search()
     {
         $query = self::find()->where(['status' => [self::STATUS_ON, self::STATUS_OFF]]);
-
         $query->orderBy(['created_at' => SORT_DESC]);
 
-        return new ActiveDataProvider([
+        return new \yii\data\ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => 20,
@@ -148,17 +138,13 @@ class Ls extends ActiveRecord
         ]);
     }
 
-    /* Геттеры для удобства */
     public function getName()   { return $this->name; }
     public function getIp()     { return $this->ip; }
     public function getPort()   { return $this->port; }
     public function getDbHost() { return $this->db_host; }
     public function getDbPort() { return $this->db_port; }
     public function getDbUser() { return $this->db_user; }
-    public function getDbPass() { return $this->db_pass; }
+    public function getDbPass() { return $this->db_pass; } // Осторожно: возвращает зашифрованную строку!
     public function getDbName() { return $this->db_name; }
     public function getVersion() { return $this->version; }
-
-    const STATUS_ON  = 1;
-    const STATUS_OFF = 0;
 }

@@ -68,4 +68,55 @@ class RobokassaGateway implements PaymentGatewayInterface
     {
         return Yii::$app->urlManager->createAbsoluteUrl(['/cabinet/deposit/fail', 'orderId' => $orderId, 'provider' => 'robokassa']);
     }
+
+    /**
+     * Проверка ключей Robokassa.
+     * @return array ['ok' => bool, 'message' => string]
+     */
+    public function validateCredentials(): array
+    {
+        $merchantLogin = AppConfig::get('robokassa.login', '');
+        $password2     = AppConfig::get('robokassa.password2', '');
+
+        if ($merchantLogin === '' || $password2 === '') {
+            return ['ok' => false, 'message' => 'Логин или Пароль2 не заполнены'];
+        }
+
+        // Используем OpStateExt для проверки статуса несуществующего заказа.
+        // Если подпись неверна, сервер вернёт ошибку.
+        $testInvId = 999999999; // Заведомо несуществующий ID
+        $signature = md5("{$merchantLogin}:{$testInvId}:{$password2}");
+
+        $url = 'https://auth.robokassa.ru/Merchant/WebService/Service.asmx/OpStateExt?' . http_build_query([
+            'MerchantLogin' => $merchantLogin,
+            'InvoiceID'     => $testInvId,
+            'Signature'     => $signature,
+        ]);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            return ['ok' => false, 'message' => 'Ошибка сети: ' . $err];
+        }
+
+        // Если подпись верна, сервер вернёт XML с результатом (даже если заказ не найден).
+        // Если подпись неверна, ответ будет содержать ошибку.
+        if ($code === 200) {
+            // Проверяем, нет ли в ответе явной ошибки подписи.
+            if (stripos($resp, 'signature') !== false || stripos($resp, 'error') !== false) {
+                return ['ok' => false, 'message' => 'Robokassa: Неверная подпись (Проверьте Пароль2)'];
+            }
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        return ['ok' => false, 'message' => 'Robokassa: Ошибка API (HTTP ' . $code . ')'];
+    }
 }

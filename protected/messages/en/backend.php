@@ -129,11 +129,9 @@ return [
     'Просмотр страницы: {page}'             => 'Viewing page: {page}',
     'Это страница: '                        => 'This is the page: ',
 
-    // === Новости ===
+    // === Новости / Галерея ===
     'Добавить новость'       => 'Add news',
     'Новость не найдена.'    => 'News not found.',
-
-    // === Галерея ===
     'Галерея'                => 'Gallery',
     'Добавить картинку'      => 'Add image',
     'Удалить?'               => 'Delete?',
@@ -202,7 +200,7 @@ return [
     'Дата окончания'                        => 'Expiry date',
     'Код активирован'                       => 'Code activated',
     'Бонус активирован'                     => 'Bonus activated',
-	'Статус'                 			    => 'Status',
+    'Статус'                                => 'Status',
 
     // === Сервисы ===
     'Список сервисов'                       => 'Services list',
@@ -267,7 +265,7 @@ return [
     'Открыть'                               => 'Open',
     'Нет данных.'                           => 'No data.',
 
-    // === Настройки ===
+    // === Настройки / Система ===
     'Информация о проекте'                  => 'Project information',
     'Настройки успешно сохранены.'          => 'Settings saved successfully.',
     'Сохранено.'                            => 'Saved.',
@@ -276,17 +274,11 @@ return [
     'Ошибка сохранения'                     => 'Save error',
     'Изменения сохранены.'                  => 'Changes saved.',
     'Не найдено'                            => 'Not found',
-
-    // === Кеш / система ===
     'Кеш успешно очищен.'                   => 'Cache cleared successfully.',
     'Обновление выполнено.'                 => 'Update completed.',
     'История транзакций'                    => 'Transaction history',
-	
-	    // =========================================================
-    // === Tickets: категории (дефолтные из tickets_categories) ===
-    // Если админ добавит свою категорию, её названия здесь не будет
-    // и Yii покажет то, что ввёл админ.
-    // =========================================================
+
+    // === Tickets: категории ===
     'Учетная запись (аккаунт)'          => 'Account',
     'Нарушение правил'                  => 'Rule Violation',
     'Пожертвования (донат)'             => 'Donations',
@@ -295,14 +287,14 @@ return [
     'Ваши предложения, пожелания'       => 'Suggestions & Feedback',
     'Другие проблемы'                   => 'Other Issues',
     'Услуги'                            => 'Services',
-	
-	    // =========================================================
-    // === Config: группы настроек (config_group.name) ===
-    // =========================================================
+
+    // === Config: группы настроек ===
     'Основное'              => 'General',
+    'Основные'              => 'General',
     'Регистрация'           => 'Registration',
     'Новости'               => 'News',
     'Почта'                 => 'Mail',
+    'Email'                 => 'Email',
     'Восстановление пароля' => 'Password recovery',
     'Капча'                 => 'Captcha',
     'Форум'                 => 'Forum',
@@ -315,15 +307,25 @@ return [
     'Авторизация'           => 'Login',
     'Реферальная программа' => 'Referral program',
     'Кабинет'               => 'Account',
+    'Личный кабинет'        => 'Account',
     'Галерея'               => 'Gallery',
     'Префиксы'              => 'Prefixes',
     'Статус серверов'       => 'Server status',
     'Volet'                 => 'Volet',
     'Interkassa'            => 'Interkassa',
+    'Виджет: Темы с форума' => 'Widget: Forum threads',
+    'Платежная система: Robokassa' => 'Payment system: Robokassa',
+    'Платежная система: Unitpay' => 'Payment system: Unitpay',
+    'Платежная система: PayOp' => 'Payment system: PayOp',
+    'Платежная система: NOWPayments' => 'Payment system: NOWPayments',
+    'Платежная система: Volet' => 'Payment system: Volet',
+    'Платежная система: Interkassa ' => 'Payment system: Interkassa ',
+    'Виджет: Топ ПК'        => 'Widget: Top PK',
+    'Виджет: Топ ПВП'       => 'Widget: Top PvP',
+    'Виджет: Статус сервера' => 'Widget: Server status',
+    'Магазин'               => 'Shop',
 
-    // =========================================================
     // === Config: настройки — Основное ===
-    // =========================================================
     'Тема сайта'                                                              => 'Site theme',
     'Название сайта, используется в <title> и письмах'                        => 'Site name, used in <title> and emails',
     'Описание сайта, используется в <meta name="description">'               => 'Site description, used in <meta name="description">',
@@ -336,25 +338,15 @@ return [
     'RSS новости: Через сколько минут обновлять кэш'                          => 'RSS news: Cache refresh interval (minutes)',
     'RSS новости: Записей на страницу'                                        => 'RSS news: Items per page',
 
-    // =========================================================
-    // === Config: настройки — Регистрация ===
-    // =========================================================
+    // === Config: настройки — Регистрация / Новости / Почта ===
     'Включить капчу'                                    => 'Enable captcha',
     'Разрешить регистрацию новых пользователей'         => 'Allow new user registration',
     'Подтверждение регистрации по Email'                => 'Email confirmation on registration',
     'Время жизни ключа для активации аккаунта (в минутах)' => 'Activation key TTL (minutes)',
     'Разрешить регистрировать на один Email много аккаунтов' => 'Allow multiple accounts per email',
-
-    // =========================================================
-    // === Config: настройки — Новости ===
-    // =========================================================
     'Новостей на странице'                                                    => 'News per page',
     'Формат даты когда была создана новость, инфа - http://php.net/manual/ru/function.date.php' => 'News creation date format, see http://php.net/manual/en/function.date.php',
     'Включить виджет социальных иконок при просмотре новости, инфа - http://share42.com/' => 'Enable social sharing widget on news detail, see http://share42.com/',
-
-    // =========================================================
-    // === Config: настройки — Почта ===
-    // =========================================================
     'Использовать SMTP'                                              => 'Use SMTP',
     'SMTP: логин'                                                    => 'SMTP: Login',
     'SMTP: пароль'                                                   => 'SMTP: Password',
@@ -363,24 +355,14 @@ return [
     'Имя Администратора (подставляется в поле "От кого")'            => 'Administrator name (used in "From" field)',
     'SMTP: порт'                                                     => 'SMTP: Port',
 
-    // =========================================================
-    // === Config: настройки — Восстановление пароля ===
-    // =========================================================
+    // === Config: настройки — Восстановление пароля / Капча / Форум ===
     'Время жизни ключа для восстановления пароля, в минутах' => 'Password reset key TTL (minutes)',
-
-    // =========================================================
-    // === Config: настройки — Капча ===
-    // =========================================================
     'Мин. кол-во символов'  => 'Min. characters',
     'Макс. кол-во символов' => 'Max. characters',
     'Ширина капчи'          => 'Captcha width',
     'Высота капчи'          => 'Captcha height',
     'Цвет текста'           => 'Text color',
     'Задний фон капчи'      => 'Captcha background',
-
-    // =========================================================
-    // === Config: настройки — Форум ===
-    // =========================================================
     'Включить вывод тем с форума'                               => 'Enable forum threads output',
     'Время кэширования, в минутах. 0 - не кэшировать'           => 'Cache time (minutes). 0 - no cache',
     'Сколько тем выводить'                                       => 'Threads to display',
@@ -395,78 +377,42 @@ return [
     'Ссылка на форум'                                            => 'Forum URL',
     'ID форумов которые запрещены к выводу, через запятую'      => 'Forum IDs to exclude (comma-separated)',
 
-    // =========================================================
-    // === Config: настройки — Robokassa ===
-    // =========================================================
+    // === Config: настройки — Платёжные системы (старые ключи) ===
     'Робокасса в тестовом режиме' => 'Robokassa in test mode',
     'Ваш логин'                   => 'Your login',
     'Пароль1'                     => 'Password 1',
     'Пароль2'                     => 'Password 2',
     '1 Включена платежная система 0 Отключена Robokassa' => '1 Enabled, 0 Disabled — Robokassa',
-
-    // =========================================================
-    // === Config: настройки — Unitpay ===
-    // =========================================================
     'Секретный ключ'              => 'Secret key',
     'ID проекта'                  => 'Project ID',
     'Публичный ключ'              => 'Public key',
     '1 Включена платежная система 0 Отключена Unitpay' => '1 Enabled, 0 Disabled — Unitpay',
-
-    // =========================================================
-    // === Config: настройки — PayOp ===
-    // =========================================================
     'PayOp Secret Key'                                 => 'PayOp Secret Key',
     'PayOp Public Key'                                 => 'PayOp Public Key',
     'PayOp Project ID'                                 => 'PayOp Project ID',
     'Валюта по умолчанию'                              => 'Default currency',
     '1 Включена платежная система 0 Отключена PayOp'   => '1 Enabled, 0 Disabled — PayOp',
-
-    // =========================================================
-    // === Config: настройки — NOWPayments ===
-    // =========================================================
     'NOWPayments API Key'         => 'NOWPayments API Key',
     'NOWPayments IPN Secret'      => 'NOWPayments IPN Secret',
     ' Включена платежная система 0 Отключена nowpayments' => '1 Enabled, 0 Disabled — NOWPayments',
-
-    // =========================================================
-    // === Config: настройки — Volet ===
-    // =========================================================
     'Volet API ID'                                  => 'Volet API ID',
     'Volet API Key'                                 => 'Volet API Key',
     '1 Включена платежная система 0 Отключена Volet' => '1 Enabled, 0 Disabled — Volet',
-
-    // =========================================================
-    // === Config: настройки — Interkassa ===
-    // =========================================================
     'Interkassa Checkout ID'                             => 'Interkassa Checkout ID',
     'Interkassa Secret Key'                              => 'Interkassa Secret Key',
     'Interkassa Test Key (опц.)'                         => 'Interkassa Test Key (optional)',
     '1 Включена платежная система 0 Отключена Interkassa' => '1 Enabled, 0 Disabled — Interkassa',
 
-    // =========================================================
-    // === Config: настройки — Top PK / Top PVP ===
-    // =========================================================
+    // === Config: настройки — Виджеты и прочее ===
     'Включить виджет топ пк'                      => 'Enable Top PK widget',
     'Включить виджет топ пвп'                     => 'Enable Top PvP widget',
     'Сервер с которого брать данные'              => 'Server to fetch data from',
     'Сколько игроков выводить'                    => 'Players to display',
     'Через сколько минут обновлять данные'        => 'Cache refresh interval (minutes)',
-
-    // =========================================================
-    // === Config: настройки — Авторизация ===
-    // =========================================================
     'Через сколько неудачных попыток авторизоваться юзер будет заблокирован' => 'Failed login attempts before blocking',
     'На сколько минут блокировать юзера'                                     => 'Block duration (minutes)',
-
-    // =========================================================
-    // === Config: настройки — Реферальная программа ===
-    // =========================================================
     'Вкл/Выкл программу пригласи друга (реферальная программа)' => 'Enable referral program',
     'Сколько % получит игрок от пожертвований за то что привел друга' => 'Referral percent from donations',
-
-    // =========================================================
-    // === Config: настройки — Кабинет ===
-    // =========================================================
     'Кол-во записей с рефералами на страницу'         => 'Referrals per page',
     'Кол-во записей на странице история пополнений'   => 'Transactions per page',
     'Кол-во записей на странице история авторизаций'  => 'Login history per page',
@@ -476,56 +422,17 @@ return [
     'Кол-во записей на странице бонусы'               => 'Bonuses per page',
     'Кол-во записей на странице ответы на тикеты'     => 'Ticket answers per page',
     'Сколько наборов выводить на страницу в магазине' => 'Shop packs per page',
-
-    // =========================================================
-    // === Config: настройки — Галерея ===
-    // =========================================================
     'Кол-во картинок на страницу' => 'Images per page',
     'Ширина большой фотки'        => 'Large image width',
     'Высота большой фотки'        => 'Large image height',
     'Ширина превьюшки'            => 'Thumbnail width',
     'Высота превьюшки'            => 'Thumbnail height',
-
-    // =========================================================
-    // === Config: настройки — Префиксы ===
-    // =========================================================
     'Вкл/Выкл префиксы'                                          => 'Enable prefixes',
     'Кол-во символов в префиксе'                                 => 'Prefix length (characters)',
     'Кол-во префиксов в выпадающем списке для выбора юзером'     => 'Prefixes in dropdown',
-
-    // =========================================================
-    // === Config: настройки — Статус серверов ===
-    // =========================================================
     'Включить показ статуса сервера(ов)' => 'Show server status',
-	
-	    // =========================================================
-    // === Config: группы настроек (config_group.name) ===
-    // ВАЖНО: ключи должны точно совпадать с БД, включая пробелы.
-    // =========================================================
-    'Основные'                              => 'General',
-    'Регистрация'                           => 'Registration',
-    'Новости'                               => 'News',
-    'Email'                                 => 'Email',
-    'Восстановление пароля'                 => 'Password recovery',
-    'Капча'                                 => 'Captcha',
-    'Виджет: Темы с форума'                 => 'Widget: Forum threads',
-    'Платежная система: Robokassa'          => 'Payment system: Robokassa',
-    'Платежная система: Unitpay'            => 'Payment system: Unitpay',
-    'Платежная система: PayOp'              => 'Payment system: PayOp',
-    'Платежная система: NOWPayments'        => 'Payment system: NOWPayments',
-    'Платежная система: Volet'              => 'Payment system: Volet',
-    'Платежная система: Interkassa '        => 'Payment system: Interkassa ', // ← пробел в конце важен
-    'Виджет: Топ ПК'                        => 'Widget: Top PK',
-    'Виджет: Топ ПВП'                       => 'Widget: Top PvP',
-    'Виджет: Статус сервера'                => 'Widget: Server status',
-    'Авторизация'                           => 'Login',
-    'Реферальная программа'                 => 'Referral program',
-    'Личный кабинет'                        => 'Account',
-    'Галерея'                               => 'Gallery',
-    'Префиксы'                              => 'Prefixes',
-	'Магазин'                               => 'Shop',
-	
-	    // === Серверы (форма) ===
+
+    // === Серверы (форма) ===
     'Добавить сервер' => 'Add server',
     'Редактировать сервер' => 'Edit server',
     'Разное' => 'General',
@@ -537,40 +444,164 @@ return [
     'Пароль БД' => 'DB Password',
     'Название БД' => 'DB Name',
     'Заполните все поля вашими данными' => 'Fill in all fields with your data',
-	'Включён'  => 'Enabled',
+    'Включён'  => 'Enabled',
     'Добавление игрового сервера' => 'Add Game Server',
     'Редактирование игрового сервера' => 'Edit Game Server',
-    'Заполните все поля вашими данными' => 'Fill in all fields with your data',
-	
-		'Режим магазина'          => 'Shop mode',
-	'Магазин'                 => 'Shop',
-	'Пополнение'              => 'Top-up', // или Refill / Deposit, в зависимости от контекста (обычно для пополнения счета/баланса используют Top-up)
-	'Режим магазина изменён.' => 'Shop mode has been changed.',
-	'Конфигурация пополнения' => 'Top-up configuration',
-	'Конфигурация ещё не создана.' => 'The configuration has not been created yet.',
-	'Настроить'               => 'Configure',
-	'Настройка пополнения'    => 'Top-up configuration', // Или Top-up settings
-	'Назад к магазину'        => 'Back to shop',
-	'Основной предмет'        => 'Main item',
-	'Название предмета'       => 'Item name',
-	'Описание (RU)'           => 'Description (RU)',
-	'Описание (EN)'           => 'Description (EN)',
-	'Цена'                    => 'Price',
-	'Валюта'                  => 'Currency',
-	'Активен'                 => 'Active',
-	'Неактивен'               => 'Inactive',
-	'Бонусные предметы (до 5)' => 'Bonus items (up to 5)',
-	'Заполните только нужные поля. Пустые ID игнорируются.' => 'Fill in only the required fields. Empty IDs are ignored.',
-	'Настройки пополнения сохранены.' => 'Top-up settings saved.',
-	'Ошибка сохранения: {err}' => 'Saving error: {err}',
-	'Бонусов'                 => 'Bonuses',
-	'Применить'               => 'Apply',
-	'Название'                => 'Name',
-	'Язык' => 'Language',
-	'Язык по умолчанию' => 'Default language',
-	'Доступные языки' => 'Available languages',
-	'ru' => 'Русский (RU)',
+
+    // === Магазин / Пополнение ===
+    'Режим магазина'          => 'Shop mode',
+    'Пополнение'              => 'Top-up',
+    'Режим магазина изменён.' => 'Shop mode has been changed.',
+    'Конфигурация пополнения' => 'Top-up configuration',
+    'Конфигурация ещё не создана.' => 'The configuration has not been created yet.',
+    'Настроить'               => 'Configure',
+    'Настройка пополнения'    => 'Top-up configuration',
+    'Назад к магазину'        => 'Back to shop',
+    'Основной предмет'        => 'Main item',
+    'Название предмета'       => 'Item name',
+    'Описание (RU)'           => 'Description (RU)',
+    'Описание (EN)'           => 'Description (EN)',
+    'Цена'                    => 'Price',
+    'Валюта'                  => 'Currency',
+    'Бонусные предметы (до 5)' => 'Bonus items (up to 5)',
+    'Заполните только нужные поля. Пустые ID игнорируются.' => 'Fill in only the required fields. Empty IDs are ignored.',
+    'Настройки пополнения сохранены.' => 'Top-up settings saved.',
+    'Ошибка сохранения: {err}' => 'Saving error: {err}',
+    'Бонусов'                 => 'Bonuses',
+    'Применить'               => 'Apply',
+    'Язык по умолчанию' => 'Default language',
+    'Доступные языки' => 'Available languages',
+    'ru' => 'Русский (RU)',
     'en' => 'English (EN)',
-	'Безопасность' => 'Security',
+    'Безопасность' => 'Security',
     'URL админ-панели' => 'Admin URL',
+
+    // === Stripe ===
+    'Карты (Visa, Mastercard, Amex), Apple Pay, Google Pay. Глобально.' => 'Cards (Visa, Mastercard, Amex), Apple Pay, Google Pay. Global.',
+    'Включить Stripe'                                                    => 'Enable Stripe',
+    'Stripe в тестовом режиме'                                           => 'Stripe in test mode',
+    'Stripe Secret Key (test) — sk_test_...'                             => 'Stripe Secret Key (test) — sk_test_...',
+    'Stripe Webhook Secret (test) — whsec_...'                           => 'Stripe Webhook Secret (test) — whsec_...',
+    'Stripe Secret Key (live) — sk_live_...'                             => 'Stripe Secret Key (live) — sk_live_...',
+    'Stripe Webhook Secret (live) — whsec_...'                           => 'Stripe Webhook Secret (live) — whsec_...',
+    'Валюта Stripe (usd, eur, gbp…)'                                     => 'Stripe currency (usd, eur, gbp…)',
+    'Курс: 1 RUB → валюта Stripe (0.011 = ~$0.011 за ₽1)'                => 'Rate: 1 RUB → Stripe currency (0.011 = ~$0.011 per ₽1)',
+    'Платёжная система не найдена.'                                      => 'Payment gateway not found.',
+    'Тестовый режим для этого шлюза не поддерживается.'                  => 'Test mode is not supported for this gateway.',
+
+    // === Платёжные системы (страница) ===
+    'Платёжные системы' => 'Payment Systems',
+    'Управление шлюзами, ключами и тестовым режимом. Значения хранятся в таблице config.' => 'Manage gateways, keys, and test modes. Values are stored in the config table.',
+    'СНГ' => 'CIS',
+    'Глобальный' => 'Global',
+    'Статус ключей:' => 'Key status:',
+    'заполнены' => 'configured',
+    'не заполнены' => 'not configured',
+    'Тестовый режим:' => 'Test mode:',
+    'вкл' => 'on',
+    'выкл' => 'off',
+    'сервис поддерживает, код — в Фазе 2' => 'service supports, code - in Phase 2',
+    'не поддерживается' => 'not supported',
+    'Проверить' => 'Check',
+    'Включить' => 'Enable',
+    'Выключить' => 'Disable',
+    'Вкл. тест' => 'Enable test',
+    'Откл. тест' => 'Disable test',
+    'Список шлюзов пуст. Проверьте config/payment_gateways.php.' => 'Gateway list is empty. Check config/payment_gateways.php.',
+
+    // === Описания платёжных систем ===
+    'Россия, СНГ: карты, кошельки, СБП' => 'Russia, CIS: cards, e-wallets, FPS',
+    'Россия, СНГ' => 'Russia, CIS',
+    'Криптовалюта, глобально' => 'Cryptocurrency, global',
+    'Агрегатор: карты, локальные методы ЕС/Азии/ЛатАм' => 'Aggregator: cards, local methods for EU/Asia/LatAm',
+    'Криптовалюта' => 'Cryptocurrency',
+    'Международные карты, электронные кошельки' => 'International cards, e-wallets',
+    'СНГ, карты, кошельки' => 'CIS, cards, e-wallets',
+
+    // === Платёжные системы (настройки) ===
+    '1 Включена платежная система 0 Отключена Stripe' => '1 Enabled, 0 Disabled — Stripe',
+    '1 Включена платежная система 0 Отключена Cryptomus' => '1 Enabled, 0 Disabled — Cryptomus',
+    'Настройка: {name}' => 'Settings: {name}',
+    'К списку шлюзов' => 'Back to gateway list',
+    'Настройки сохранены.' => 'Settings saved.',
+    'Unitpay в тестовом режиме' => 'Unitpay in test mode',
+    'NOWPayments в тестовом режиме (Sandbox)' => 'NOWPayments in test mode (Sandbox)',
+    'Volet в тестовом режиме (Sandbox)' => 'Volet in test mode (Sandbox)',
+    'Interkassa в тестовом режиме' => 'Interkassa in test mode',
+    'Default currency' => 'Default currency',
+    'Пороги бонусов' => 'Bonus thresholds',
+    'Добавить порог' => 'Add threshold',
+    'Если игрок покупает количество в указанном диапазоне, ему начисляется бонус. "До" = 0 означает без ограничений. Если таблица пуста — продажа без бонусов.' => 'If a player purchases an amount within the specified range, they receive a bonus. "To" = 0 means unlimited. If the table is empty — sale without bonuses.',
+    'От (кол-во)' => 'From (qty)',
+    'До (0 = ∞)' => 'To (0 = ∞)',
+    'Бонус (кол-во)' => 'Bonus (qty)',
+    'Top-up configuration' => 'Top-up configuration',
+    'Back to shop' => 'Back to shop',
+    'Main item' => 'Main item',
+    'Item ID' => 'Item ID',
+    'Active' => 'Active',
+    'Item name' => 'Item name',
+    'Description (RU)' => 'Description (RU)',
+    'Description (EN)' => 'Description (EN)',
+    'Price' => 'Price',
+    'Currency' => 'Currency',
+    'Save' => 'Save',
+    'Login-сервер' => 'Login server',
+    'Выключен' => 'Disabled',
+    'Поле обязательно для заполнения' => 'Field is required',
+    'Дата создания' => 'Created at',
+    'Дата изменения' => 'Updated at',
+    'Telnet хост' => 'Telnet host',
+    'Telnet порт' => 'Telnet port',
+    'Telnet пароль' => 'Telnet password',
+	
+	    // === ASN WhiteList ===
+    'ASN Белый список'                                    => 'ASN WhiteList',
+    'Глобальный рубильник'                                => 'Global switch',
+    'Активен (доступ только по белому списку)'            => 'Active (access only by whitelist)',
+    'Отключён (доступ разрешён всем)'                     => 'Disabled (access allowed to all)',
+    'При отключении — все ASN-правила игнорируются, сайт доступен всем.' => 'When disabled, all ASN rules are ignored, the site is accessible to everyone.',
+    'Фильтр: АКТИВЕН'                                     => 'Filter: ACTIVE',
+    'Фильтр: ОТКЛЮЧЁН'                                    => 'Filter: DISABLED',
+    // Остальные ключи из предыдущего шага оставляем без изменений...
+    'Код ошибки'                                          => 'Error code',
+    'Что увидит бот, если его ASN не в whitelist.'        => 'What the bot will see if its ASN is not in the whitelist.',
+    'Случайный код'                                       => 'Random code',
+    'Случайный 4xx/5xx'                                   => 'Random 4xx/5xx',
+    'Боту сложнее понять паттерн.'                        => 'Harder for the bot to understand the pattern.',
+    'Сводка'                                              => 'Summary',
+    'Всего ASN:'                                          => 'Total ASNs:',
+    'Включено в белый список:'                            => 'Allowed (whitelisted):',
+    'Заблокировано:'                                      => 'Blocked:',
+    'Все континенты'                                      => 'All continents',
+    'Все страны'                                          => 'All countries',
+    'Поиск: ASN, провайдер, страна, континент...'         => 'Search: ASN, provider, country, continent...',
+    'Показать страны'                                     => 'Show countries',
+    'Скрыть страны'                                       => 'Hide countries',
+    'Показать ASN'                                        => 'Show ASNs',
+    'Скрыть ASN'                                          => 'Hide ASNs',
+    'Результаты поиска'                                   => 'Search results',
+    'Ничего не найдено'                                   => 'Nothing found',
+    'Ошибка загрузки'                                     => 'Loading error',
+    'Нет записей'                                         => 'No records',
+    'Поиск...'                                            => 'Searching...',
+    'Загрузка...'                                         => 'Loading...',
+    'стран'                                               => 'countries',
+	'Заблокировано:'                                      => 'Blocked:',
+    'Заблокировано ASN'                                   => 'Blocked ASNs',
+	'Ваш ASN' => 'Your ASN',
+    'Он защищён от случайной блокировки.' => 'It is protected from accidental blocking.',
+    'Не удалось автоматически определить ваш ASN. Если вы заблокируете своего провайдера, вы потеряете доступ.' => 'Could not automatically determine your ASN. If you block your provider, you will lose access.',
+    'Ваш ASN защищён' => 'Your ASN is protected',
+    'Внимание этот модуль по умолчанию запрещает доступ всем серверам к сайту, кроме ваших игровых и логин серверов. Все остальные интернет провайдеры имеют доступ по умолчанию, при необходимости можно отключить полностью или на выбор.' => 'Attention: by default, this module denies access to the site for all servers except your game and login servers. All other ISPs have access by default; if necessary, you can disable them completely or selectively.',
+	'SEO и Поисковые боты' => 'SEO & Search Bots',
+    'Разрешить доступ' => 'Allow access',
+    'Главная страница (/) всегда открыта для поисковых ботов при включении этой опции. Ниже вы можете точечно разрешить доступ к другим разделам.' => 'The main page (/) is always open to search bots when this option is enabled. Below you can selectively allow access to other sections.',
+    'Внимание! Открытие форм регистрации (/register) и авторизации (/login) для поисковых ботов несет повышенный риск (спам-регистрации, брутфорс). Делайте это только в случае крайней необходимости.' => 'Warning! Opening registration (/register) and login (/login) forms to search bots carries an increased risk (spam registrations, brute-force). Do this only if absolutely necessary.',
+	'Ошибка сохранения' => 'Save error',
+	// Ключи из JS и кнопок, которые я добавил в последнем обновлении:
+	'Очистить'      => 'Clear',
+    'Ошибка'        => 'Error',
+    'tooltip_allow' => 'Allowed (whitelisted). Click to block',
+    'tooltip_block' => 'Blocked. Click to allow',
 ];

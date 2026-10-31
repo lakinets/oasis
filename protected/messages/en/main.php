@@ -23,9 +23,9 @@ return [
     'Выход'                  => 'Logout',
     'Вход'                   => 'Login',
     'Войти'                  => 'Sign In',
-	'Скачать' 				 => 'Download',
-	'Клиент'			     => 'Client',
-	'Патч' 				     => 'Patch',
+    'Скачать'                => 'Download',
+    'Клиент'                 => 'Client',
+    'Патч'                   => 'Patch',
 
     // =========================================================
     // === BaseUI / kronos — menu (UPPERCASE) ===
@@ -43,9 +43,9 @@ return [
     'СТАТИСТИКА'             => 'STATISTICS',
     'ИНФОРМАЦИЯ'             => 'INFORMATION',
     'ВОЙТИ'                  => 'LOG IN',
-	'СКАЧАТЬ' 				 => 'DOWNLOAD',
-	'КЛИЕНТ' 				 => 'CLIENT',
-	'ПАТЧ'   				 => 'PATCH',
+    'СКАЧАТЬ'                => 'DOWNLOAD',
+    'КЛИЕНТ'                 => 'CLIENT',
+    'ПАТЧ'                   => 'PATCH',
 
     // =========================================================
     // === kronos — buttons ===
@@ -80,13 +80,10 @@ return [
     'Только вперёд.'         => 'Only Forward.',
     'Автор'                  => 'Author',
     'Скопировать адрес кошелька и открыть обменник' => 'Copy the wallet address and open the exchanger',
-
     '"Это полностью открытый и бесплатный проект. Если вам понравилось — вы можете просто сказать «спасибо»… или кинуть пару монет на кофе в USDT (TRC-20), через мобильное приложение по QR коду, или же через обменник в браузере по ссылке ниже."'
         => '"This is a fully open and free project. If you enjoyed it — you can simply say "thank you"... or toss a few coins for a coffee in USDT (TRC-20), via a mobile app using the QR code, or through an exchanger in your browser using the link below."',
-
     '"Проделана огромная работа что бы это заработало, все для вас дорогие фанаты Lineage 2. Искрене надеюсь что смог вас порадовать, я и правда старался для вас."'
         => '"A huge amount of work has been done to make this work, all for you, dear Lineage 2 fans. I sincerely hope I could make you happy — I truly did my best for you."',
-
     '"Никаких устаревших решений, все самые свежие фишки уже здесь с Yii 2 + Bootstrap 5 на PHP 8.2"'
         => '"No outdated solutions — all the latest features are already here with Yii 2 + Bootstrap 5 on PHP 8.2"',
 
@@ -184,8 +181,8 @@ return [
     'Гномы'                  => 'Dwarves',
     'Камаэли'                => 'Kamael',
     'Рейты'                  => 'Rates',
-	
-	    // --- Новости ---
-    'Дата' => 'Date',
-    'Назад к новостям' => 'Back to news',
+
+    // --- Новости ---
+    'Дата'                   => 'Date',
+    'Назад к новостям'       => 'Back to news',
 ];

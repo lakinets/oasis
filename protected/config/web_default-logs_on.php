@@ -1,12 +1,22 @@
 <?php
-defined('YII_DEBUG') or define('YII_DEBUG', true);
-defined('YII_ENV')   or define('YII_ENV', 'dev');
+defined('YII_DEBUG') or define('YII_DEBUG', true); // ВНИМАНИЕ: Для боевого сервера поменяй на false!
+defined('YII_ENV')   or define('YII_ENV', 'dev');  // ВНИМАНИЕ: Для боевого сервера поменяй на 'prod'!
 
 // ---------- Тема и конфиги серверов ----------
 $themeName = 'oasis';   // дефолт
 $adminUrl  = 'backend'; // дефолт для админки
 $dbConfig  = [];
 $servers   = [];
+
+// ---------- Безопасный ключ куки ----------
+$cookieKeyFile = __DIR__ . '/cookie_validation_key.txt';
+if (file_exists($cookieKeyFile)) {
+    $cookieValidationKey = trim(file_get_contents($cookieKeyFile));
+} else {
+    // ИСПОЛЬЗУЕМ ЧИСТЫЙ PHP ВМЕСТО Yii::$app
+    $cookieValidationKey = bin2hex(random_bytes(32));
+    file_put_contents($cookieKeyFile, $cookieValidationKey);
+}
 
 if (is_file(__DIR__ . '/db.php')) {
     $dbConfig = require __DIR__ . '/db.php';
@@ -15,16 +25,15 @@ if (is_file(__DIR__ . '/db.php')) {
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: 'oasis';
-        
+
         // Читаем кастомный URL админки
         $customAdminUrl = $pdo->query('SELECT value FROM config WHERE param="admin.url" LIMIT 1')->fetchColumn();
         if ($customAdminUrl && preg_match('/^[a-zA-Z0-9_-]+$/', $customAdminUrl)) {
             $adminUrl = $customAdminUrl;
         }
-        
+
         $servers = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {
-        // БД ещё не установлена – оставляем дефолты
         $themeName = 'oasis';
         $adminUrl  = 'backend';
         $servers   = [];
@@ -57,12 +66,12 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
 
-    // Оставляем 'log' для подробного логирования
-    'bootstrap' => ['log', 'language-selector', 'profile-initializer'],
+    // ИЗМЕНЕНИЕ: Добавлен 'asn-guard' в конец (bootstrap запускает компоненты до обработки запроса)
+    'bootstrap' => ['log', 'language-selector', 'profile-initializer', 'asn-guard'],
 
     'components' => [
         'request' => [
-            'cookieValidationKey' => 'Qt0TUb2LME-ES9T5l5srJJh2n9QAbbwT',
+            'cookieValidationKey' => $cookieValidationKey,
             'enableCsrfValidation' => true,
         ],
 
@@ -72,6 +81,11 @@ return [
 
         'profile-initializer' => [
             'class' => \app\components\ProfileInitializer::class,
+        ],
+
+        // ИЗМЕНЕНИЕ: Добавлен компонент охранника ASN
+        'asn-guard' => [
+            'class' => \app\components\AsnGuard::class,
         ],
 
         'view' => [
@@ -98,20 +112,31 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName'  => false,
             'rules' => [
-                /* ===== INSTALL (в самый верх) ===== */
                 'install' => 'install/setup/index',
                 'install/<action:\w+>' => 'install/setup/<action>',
                 'install/<action:\w+>/' => 'install/setup/<action>',
 
-                /* -------- LANGUAGE SWITCH -------- */
                 'language/<lang:[a-z]{2}>' => 'site/language',
 
-                /* -------- BACKEND (ДИНАМИЧЕСКИЙ URL) -------- */
+                // --- ДИНАМИЧЕСКИЙ РОУТИНГ АДМИНКИ ---
+                $adminUrl . '/payments/toggle-test' => 'backend/payments/toggle-test',
+                // -------------------------------------
+
                 $adminUrl => 'backend/default/index',
                 $adminUrl . '/<controller:\w+>' => 'backend/<controller>/index',
                 $adminUrl . '/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
 
-                /* -------- AUTH / LOGIN -------- */
+                // --- CALLBACK-ЭНДПОИНТЫ ПЛАТЕЖНЫХ СИСТЕМ (POST-only) ---
+                'POST cabinet/deposit/stripe-callback'      => 'cabinet/deposit/stripe-callback',
+                'POST cabinet/deposit/robokassa-callback'   => 'cabinet/deposit/robokassa-callback',
+                'POST cabinet/deposit/unitpay-callback'     => 'cabinet/deposit/unitpay-callback',
+                'POST cabinet/deposit/nowpayments-callback' => 'cabinet/deposit/nowpayments-callback',
+                'POST cabinet/deposit/payop-callback'       => 'cabinet/deposit/payop-callback',
+                'POST cabinet/deposit/cryptomus-callback'   => 'cabinet/deposit/cryptomus-callback',
+                'POST cabinet/deposit/volet-callback'       => 'cabinet/deposit/volet-callback',
+                'POST cabinet/deposit/interkassa-callback'  => 'cabinet/deposit/interkassa-callback',
+                // ------------------------------------------------------
+
                 'login'    => 'auth/default/login',
                 'logout'   => 'auth/default/logout',
                 'register' => 'register/index',
@@ -119,20 +144,16 @@ return [
                 'request-password-reset' => 'auth/default/request-password-reset',
                 'reset-password'         => 'auth/default/reset-password',
 
-                /* -------- CABINET -------- */
                 'cabinet'  => 'cabinet/default/index',
                 'cabinet/<controller:\w+>/<action:\w+>' => 'cabinet/<controller>/<action>',
                 'cabinet/<controller:\w+>/<action:\w+>/<id:\d+>' => 'cabinet/<controller>/<action>/<id>',
 
-                /* -------- OTHER MODULES -------- */
                 'stats'    => 'stats/default/index',
                 'news'     => 'news/index',
                 'gallery'  => 'gallery/index',
 
-                /* -------- STATIC PAGE -------- */
                 'page/<page:\w+>' => 'site/view',
 
-                /* -------- DEFAULT RULES -------- */
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<slug:[\w\-]+>' => 'site/page',
             ],
@@ -162,94 +183,86 @@ return [
             ],
         ],
 
-        /* ================== ЛОГИРОВАНИЕ (сохранено) ================== */
+        /* ================== ЛОГИРОВАНИЕ ================== */
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
-                ['class' => \yii\log\FileTarget::class, 'levels' => ['error', 'warning', 'info']],
+                [
+                    'class' => \yii\log\FileTarget::class,
+                    'levels' => ['error', 'warning', 'info'],
+                    'logVars' => [], // Убираем лишний мусор из логов (GET/POST/SESSION)
+                    'maxFileSize' => 1024 * 1024, // 1 MB
+                    'maxLogFiles' => 5, // Храним 5 ротаций
+                ],
             ],
         ],
-        /* ============================================================ */
+        /* ================================================= */
 
-        /* ================== i18n ================== */
         'i18n' => [
             'translations' => [
-
                 'main*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['main' => 'main.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['main' => 'main.php'],
                 ],
-
                 'views*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['views' => 'views.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['views' => 'views.php'],
                 ],
-
                 'controllers*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['controllers' => 'controllers.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['controllers' => 'controllers.php'],
                 ],
-
                 'models*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['models' => 'models.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['models' => 'models.php'],
                 ],
-
                 'backend*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['backend' => 'backend.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['backend' => 'backend.php'],
                 ],
-
                 'mail*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['mail' => 'mail.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['mail' => 'mail.php'],
                 ],
-
                 'page*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['page' => 'page.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['page' => 'page.php'],
                 ],
-
-                /* --- auth (формы входа, регистрации, сброса пароля) --- */
                 'auth*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['auth' => 'auth.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['auth' => 'auth.php'],
                 ],
-
-                /* --- install (шаги установщика) --- */
                 'install*' => [
-                    'class'            => \yii\i18n\PhpMessageSource::class,
-                    'basePath'         => '@app/messages',
-                    'sourceLanguage'   => 'ru',
-                    'forceTranslation' => true,
-                    'fileMap'          => ['install' => 'install.php'],
+                    'class'           => \yii\i18n\PhpMessageSource::class,
+                    'basePath'        => '@app/messages',
+                    'sourceLanguage'  => 'ru',
+                    'forceTranslation'=> true,
+                    'fileMap'         => ['install' => 'install.php'],
                 ],
-
-                /* --- Встроенные сообщения Yii --- */
                 'yii' => [
                     'class'          => \yii\i18n\PhpMessageSource::class,
                     'basePath'       => '@vendor/yiisoft/yii2/messages',
@@ -257,7 +270,6 @@ return [
                 ],
             ],
         ],
-        /* ================ /i18n ================= */
 
         'assetManager' => [
             'basePath' => '@webroot/assets',
@@ -276,21 +288,15 @@ return [
         'backend'  => ['class' => \app\modules\backend\Module::class],
         'cabinet'  => ['class' => \app\modules\cabinet\Module::class],
         'register' => ['class' => \app\modules\register\RegisterModule::class],
-        // 'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class], // УДАЛЕНО
         'stats'    => ['class' => \app\modules\stats\StatsModule::class],
-        // 'news'     => ['class' => \app\modules\news\NewsModule::class],       // УДАЛЕНО
         'forgottenPassword' => ['class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class],
         'deposit'  => ['class' => \app\modules\deposit\DepositModule::class],
         'auth'     => ['class' => \app\modules\auth\Module::class],
-
-        /* ===== УСТАНОВЩИК (временный) ===== */
         'install'  => ['class' => 'app\modules\install\InstallModule'],
     ],
 
     'params' => array_merge(
         require __DIR__ . '/params.php',
-        [
-            'servers' => $servers,
-        ]
+        ['servers' => $servers]
     ),
 ];

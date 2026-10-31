@@ -99,4 +99,36 @@ class PayOpGateway implements PaymentGatewayInterface
     {
         return Url::to(['/cabinet/deposit/fail', 'provider' => 'payop', 'orderId' => $orderId], true);
     }
+
+    /**
+     * Проверка ключей PayOp.
+     * @return array ['ok' => bool, 'message' => string]
+     */
+    public function validateCredentials(): array
+    {
+        $publicKey = $this->cfg('public_key');
+        $projectId = $this->cfg('project_id');
+
+        if ($publicKey === '' || $projectId === '') {
+            return ['ok' => false, 'message' => 'Public Key или Project ID не заполнены'];
+        }
+
+        $client = new Client(['transport' => 'yii\httpclient\CurlTransport']);
+        
+        // Запрос списка доступных методов оплаты для проекта
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl("{$this->apiBase}/payment-methods")
+            ->setData(['projectId' => $projectId])
+            ->addHeaders(['Authorization' => 'Bearer ' . $publicKey])
+            ->send();
+
+        if ($response->isOk) {
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        $data = $response->getData();
+        $msg = $data['message'] ?? 'Ошибка API (HTTP ' . $response->statusCode . ')';
+        return ['ok' => false, 'message' => 'PayOp: ' . $msg];
+    }
 }

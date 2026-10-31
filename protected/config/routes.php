@@ -13,6 +13,10 @@ return [
     'backend/transactions' => 'backend/transactions/index',
     'backend/game-servers' => 'backend/game-servers/index',
     'backend/login-servers' => 'backend/login-servers/index',
+    'backend/payments' => 'backend/payments/index',
+    'backend/payments/form' => 'backend/payments/form',
+    'backend/payments/toggle' => 'backend/payments/toggle',
+    'backend/payments/toggle-test' => 'backend/payments/toggle-test',
 
     /* ---------- SERVICES MANAGER (GET) ---------- */
     'backend/services-manager' => 'backend/services-manager/index',
@@ -20,12 +24,14 @@ return [
     'backend/services-manager/toggle' => 'backend/services-manager/toggle',
 
     /* ---------- CALLBACK ЭНДПОИНТЫ ---------- */
+    'POST cabinet/deposit/stripe-callback'      => '/cabinet/deposit/stripe-callback',
     'POST cabinet/deposit/robokassa-callback'   => '/cabinet/deposit/robokassa-callback',
     'POST cabinet/deposit/unitpay-callback'     => '/cabinet/deposit/unitpay-callback',
     'POST cabinet/deposit/nowpayments-callback' => '/cabinet/deposit/nowpayments-callback',
     'POST cabinet/deposit/payop-callback'       => '/cabinet/deposit/payop-callback',
     'POST cabinet/deposit/cryptomus-callback'   => '/cabinet/deposit/cryptomus-callback',
     'POST cabinet/deposit/volet-callback'       => '/cabinet/deposit/volet-callback',
+    'POST cabinet/deposit/interkassa-callback'  => '/cabinet/deposit/interkassa-callback',
 
     /* ---------- CABINET (все контроллеры и экшены с дефисами) ---------- */
     'cabinet' => 'cabinet/default/index',
@@ -40,5 +46,5 @@ return [
     'page/<page:[\w\-]+>' => 'site/view',
     '<controller:[\w\-]+>/<action:[\w\-]+>' => '<controller>/<action>',
     '<slug:[\w\-]+>' => 'site/page',
-	'cabinet/services/gift-code' => 'cabinet/services/gift-code',
+    'cabinet/services/gift-code' => 'cabinet/services/gift-code',
 ];

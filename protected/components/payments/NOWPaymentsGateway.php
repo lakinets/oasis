@@ -5,25 +5,15 @@ use Yii;
 use yii\web\Request;
 use yii\helpers\Url;
 
-/**
- * Полная рабочая интеграция NOWPayments:
- * - создание платежа через API и получение payment_url
- * - редирект пользователя
- * - колбэк (IPN) с проверкой подписи X-NOWPayments-Sig (HMAC-SHA512 по "сырому" телу запроса с IPN secret)
- *
- * Настройки берём из таблицы config (см. миграцию):
- *  - payment.nowpayments.enabled      (0|1)
- *  - payment.nowpayments.api_key      (string)
- *  - payment.nowpayments.ipn_secret   (string)
- *  - payment.nowpayments.currency     (fiat, по умолчанию RUB)
- *  - payment.nowpayments.price_amount_multiplier (float, опционально, напр. 1.0)
- *
- * Примечание: NOWPayments работает с crypto, amount передаём в фиате price_amount, currency=RUB,
- * а провайдер сконвертирует и вернёт crypto_amount.
- */
 class NOWPaymentsGateway implements PaymentGatewayInterface
 {
     private string $apiBase = 'https://api.nowpayments.io/v1';
+    private string $apiSandboxBase = 'https://api.sandbox.nowpayments.io/v1';
+
+    private function getApiBase(): string
+    {
+        return AppConfig::get('nowpayments.test', '0') === '1' ? $this->apiSandboxBase : $this->apiBase;
+    }
 
     public function buildRedirectUrl(string $orderId, string $login, float $amount, string $currency, string $description): string
     {
@@ -41,7 +31,6 @@ class NOWPaymentsGateway implements PaymentGatewayInterface
         $payload = [
             'price_amount'   => $priceAmount,
             'price_currency' => $fiat,
-            // crypto_currency можно не указывать — пользователь выберет на виджете
             'order_id'       => $orderId,
             'order_description' => $description,
             'ipn_callback_url'  => Url::to(['/cabinet/deposit/nowpayments-callback'], true),
@@ -49,7 +38,7 @@ class NOWPaymentsGateway implements PaymentGatewayInterface
             'cancel_url'        => $this->failUrl($orderId),
         ];
 
-        $response = $this->httpPostJson("{$this->apiBase}/payment", $payload, [
+        $response = $this->httpPostJson($this->getApiBase() . "/payment", $payload, [
             'x-api-key: ' . $apiKey,
         ]);
 
@@ -62,7 +51,6 @@ class NOWPaymentsGateway implements PaymentGatewayInterface
 
     public function handleCallback(Request $request): array
     {
-        // NOWPayments шлёт JSON + заголовок x-nowpayments-sig с HMAC-SHA512(body, ipn_secret)
         $rawBody = file_get_contents('php://input') ?: '';
         $headers = function_exists('getallheaders') ? getallheaders() : [];
         $headerSig = '';
@@ -85,15 +73,14 @@ class NOWPaymentsGateway implements PaymentGatewayInterface
         }
 
         $data = json_decode($rawBody, true) ?: [];
-        // Примеры полей: payment_status, price_amount, price_currency, pay_amount, pay_currency, order_id, payment_id
         $status = strtolower((string)($data['payment_status'] ?? ''));
-        $okStatuses = ['finished', 'confirmed', 'partially_paid']; // на ваше усмотрение; обычно "finished"
+        $okStatuses = ['finished', 'confirmed', 'partially_paid'];
         $isOk = in_array($status, $okStatuses, true);
 
         return [
             'ok'             => $isOk,
             'orderId'        => (string)($data['order_id'] ?? ''),
-            'amount'         => (float)($data['price_amount'] ?? 0), // начисляем по price_amount в фиате
+            'amount'         => (float)($data['price_amount'] ?? 0),
             'externalId'     => (string)($data['payment_id'] ?? ''),
             'rawResponse'    => 'OK',
         ];
@@ -109,7 +96,42 @@ class NOWPaymentsGateway implements PaymentGatewayInterface
         return Url::to(['/cabinet/deposit/fail', 'provider' => 'nowpayments', 'orderId' => $orderId], true);
     }
 
-    // ===== helpers =====
+    public function validateCredentials(): array
+    {
+        $apiKey = (string)AppConfig::get('payment.nowpayments.api_key', '');
+        if ($apiKey === '') {
+            return ['ok' => false, 'message' => 'API Key не заполнен'];
+        }
+
+        $url = $this->getApiBase() . "/balance";
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => [
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            return ['ok' => false, 'message' => 'Ошибка сети: ' . $err];
+        }
+
+        if ($code === 200) {
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        $data = json_decode($resp, true);
+        $errorMsg = $data['message'] ?? 'Ошибка API (HTTP ' . $code . ')';
+        return ['ok' => false, 'message' => 'NOWPayments: ' . $errorMsg];
+    }
+
     private function httpPostJson(string $url, array $body, array $headers = []): array
     {
         $ch = curl_init($url);

@@ -11,9 +11,11 @@
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/news/index']) ?>"><?= Yii::t('backend', 'Новости') ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/users/index']) ?>"><?= Yii::t('backend', 'Пользователи') ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/config/index']) ?>"><?= Yii::t('backend', 'Настройки') ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/payments/index']) ?>"><?= Yii::t('backend', 'Платёжные системы') ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/asn-whitelist/index']) ?>"><?= Yii::t('backend', 'ASN Белый список') ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/game-servers/index']) ?>"><?= Yii::t('backend', 'Серверы') ?></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/bonuses/index']) ?>"><?= Yii::t('backend', 'Бонусы') ?></a></li>
-				<li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/services-manager/index']) ?>"><?= Yii::t('backend', 'Управление сервисами') ?></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= Url::to(['/backend/services-manager/index']) ?>"><?= Yii::t('backend', 'Управление сервисами') ?></a></li>
             </ul>
         </div>
     </div>

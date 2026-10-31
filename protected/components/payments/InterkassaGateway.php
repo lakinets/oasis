@@ -13,13 +13,23 @@ class InterkassaGateway implements PaymentGatewayInterface
         return trim((string)\app\components\payments\AppConfig::get("payment.interkassa.{$key}", ''));
     }
 
+    private function isTest(): bool
+    {
+        return $this->cfg('test') === '1';
+    }
+
     public function buildRedirectUrl(string $orderId, string $login, float $amount, string $currency, string $description): string
     {
         $checkoutId = $this->cfg('checkout_id');
-        $secretKey  = $this->cfg('secret_key');
+        $secretKey  = $this->isTest() ? $this->cfg('test_key') : $this->cfg('secret_key');
 
         if ($checkoutId === '' || $secretKey === '') {
             throw new \RuntimeException('Interkassa credentials not configured.');
+        }
+
+        // При тесте Interkassa требует валюту XTS
+        if ($this->isTest()) {
+            $currency = 'XTS';
         }
 
         $params = [
@@ -34,7 +44,6 @@ class InterkassaGateway implements PaymentGatewayInterface
             'ik_exp'       => 3600,
         ];
 
-        // подпись (ik_sign) по алгоритму Interkassa
         ksort($params, SORT_STRING);
         $signStr = implode(':', array_values($params)) . ':' . $secretKey;
         $params['ik_sign'] = base64_encode(hash('sha256', $signStr, true));
@@ -45,12 +54,12 @@ class InterkassaGateway implements PaymentGatewayInterface
     public function handleCallback(Request $request): array
     {
         $data = $request->post();
-        $secretKey = $this->cfg('secret_key');
+        $secretKey = $this->isTest() ? $this->cfg('test_key') : $this->cfg('secret_key');
+        
         if ($secretKey === '') {
             return ['ok' => false, 'rawResponse' => 'Secret not set'];
         }
 
-        // пересчитываем подпись
         $sign = $data['ik_sign'] ?? '';
         unset($data['ik_sign']);
         ksort($data, SORT_STRING);
@@ -81,5 +90,47 @@ class InterkassaGateway implements PaymentGatewayInterface
     public function failUrl(string $orderId): string
     {
         return Url::to(['/cabinet/deposit/fail', 'provider' => 'interkassa', 'orderId' => $orderId], true);
+    }
+
+    public function validateCredentials(): array
+    {
+        $checkoutId = $this->cfg('checkout_id');
+        $secretKey  = $this->isTest() ? $this->cfg('test_key') : $this->cfg('secret_key');
+
+        if ($checkoutId === '' || $secretKey === '') {
+            return ['ok' => false, 'message' => 'Checkout ID или Secret Key не заполнены'];
+        }
+
+        $url = 'https://api.interkassa.com/v1/payment/';
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => [
+                'Content-Type: application/json',
+                'Authorization: Basic ' . base64_encode($checkoutId . ':' . $secretKey),
+            ],
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            return ['ok' => false, 'message' => 'Ошибка сети: ' . $err];
+        }
+
+        if ($code === 200) {
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        if ($code === 401) {
+            return ['ok' => false, 'message' => 'Interkassa: Неверные ключи (401 Unauthorized)'];
+        }
+
+        $data = json_decode($resp, true);
+        $msg = $data['message'] ?? 'Ошибка API (HTTP ' . $code . ')';
+        return ['ok' => false, 'message' => 'Interkassa: ' . $msg];
     }
 }

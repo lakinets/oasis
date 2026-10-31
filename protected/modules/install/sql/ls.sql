@@ -1,46 +1,50 @@
 /*
-Navicat MySQL Data Transfer
+ Navicat Premium Dump SQL
 
-Source Server         : l2
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : l2
+ Source Server         : Test
+ Source Server Type    : MySQL
+ Source Server Version : 260700 (26.7.0)
+ Source Host           : localhost:3306
+ Source Schema         : test
 
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
+ Target Server Type    : MySQL
+ Target Server Version : 260700 (26.7.0)
+ File Encoding         : 65001
 
-Date: 2025-09-07 10:16:44
+ Date: 26/10/2026 18:10:29
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for `ls`
+-- Table structure for ls
 -- ----------------------------
 DROP TABLE IF EXISTS `ls`;
-CREATE TABLE `ls` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(54) NOT NULL,
-  `ip` varchar(54) NOT NULL,
-  `port` varchar(5) NOT NULL,
-  `db_host` varchar(54) NOT NULL,
-  `db_port` int(10) unsigned NOT NULL,
-  `db_user` varchar(54) NOT NULL,
-  `db_pass` varchar(54) DEFAULT NULL,
-  `db_name` varchar(54) NOT NULL,
-  `telnet_host` varchar(54) DEFAULT NULL,
-  `telnet_port` int(10) unsigned DEFAULT NULL,
-  `telnet_pass` varchar(54) DEFAULT NULL,
-  `version` varchar(20) NOT NULL,
-  `password_type` varchar(15) NOT NULL,
+CREATE TABLE `ls`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `ip` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `port` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `db_host` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `db_port` int UNSIGNED NOT NULL,
+  `db_user` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `db_pass` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `db_name` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `telnet_host` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `telnet_port` int UNSIGNED NULL DEFAULT NULL,
+  `telnet_pass` varchar(54) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `version` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `password_type` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `ix_id` (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ls
 -- ----------------------------
+
+SET FOREIGN_KEY_CHECKS = 1;

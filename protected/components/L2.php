@@ -21,7 +21,7 @@ class L2 extends Component
             $this->_connections[$key] = new Connection([
                 'dsn' => "mysql:host={$ls->db_host};port={$ls->db_port};dbname={$ls->db_name}",
                 'username' => $ls->db_user,
-                'password' => $ls->db_pass,
+                'password' => method_exists($ls, 'getDbPassDecrypted') ? $ls->getDbPassDecrypted() : $ls->db_pass, // Безопасное получение
                 'charset' => 'utf8mb4',
             ]);
         }

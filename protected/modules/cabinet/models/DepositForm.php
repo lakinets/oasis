@@ -2,6 +2,7 @@
 namespace app\modules\cabinet\models;
 
 use yii\base\Model;
+use app\components\payments\AppConfig;
 
 class DepositForm extends Model
 {
@@ -10,9 +11,13 @@ class DepositForm extends Model
 
     public function rules()
     {
+        // Читаем лимиты из базы (или ставим дефолтные)
+        $min = (float)AppConfig::get('payment.min_amount', 10);
+        $max = (float)AppConfig::get('payment.max_amount', 100000);
+
         return [
             [['amount', 'payment_system'], 'required'],
-            [['amount'], 'integer', 'min' => 1],
+            [['amount'], 'number', 'min' => $min, 'max' => $max],
             [['payment_system'], 'string'],
         ];
     }

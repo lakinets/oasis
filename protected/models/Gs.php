@@ -8,21 +8,6 @@ use yii\db\Expression;
 
 /**
  * Game-сервер (gs)
- *
- * @property int    $id
- * @property string $name
- * @property string $ip
- * @property int    $port
- * @property string $db_host
- * @property int    $db_port
- * @property string $db_user
- * @property string $db_pass
- * @property string $db_name
- * @property int    $login_id
- * @property string $version
- * @property int    $status
- * @property string $created_at
- * @property string $updated_at
  */
 class Gs extends ActiveRecord
 {
@@ -34,13 +19,11 @@ class Gs extends ActiveRecord
         return '{{%gs}}';
     }
 
-    /* ---------------- связи ---------------- */
     public function getLs()
     {
         return $this->hasOne(Ls::class, ['id' => 'login_id']);
     }
 
-    /* ---------------- поведения ---------------- */
     public function behaviors()
     {
         return [
@@ -53,7 +36,40 @@ class Gs extends ActiveRecord
         ];
     }
 
-    /* ---------------- запросы ---------------- */
+    // =========================================================
+    // === Шифрование пароля БД ===
+    // =========================================================
+    public function setDbPass($value)
+    {
+        if (empty($value)) {
+            return;
+        }
+        
+        $key = Yii::$app->request->cookieValidationKey;
+        
+        try {
+            Yii::$app->security->decryptByKey($value, $key);
+            $this->db_pass = $value;
+        } catch (\Exception $e) {
+            $this->db_pass = Yii::$app->security->encryptByKey($value, $key);
+        }
+    }
+
+    public function getDbPassDecrypted()
+    {
+        if (empty($this->db_pass)) {
+            return '';
+        }
+        
+        $key = Yii::$app->request->cookieValidationKey;
+        
+        try {
+            return Yii::$app->security->decryptByKey($this->db_pass, $key);
+        } catch (\Exception $e) {
+            return $this->db_pass;
+        }
+    }
+
     public static function findOpened()
     {
         return static::find()->where(['status' => self::STATUS_ON]);
@@ -68,7 +84,6 @@ class Gs extends ActiveRecord
         );
     }
 
-    /* ---------------- правила ---------------- */
     public function rules()
     {
         return [
@@ -79,7 +94,6 @@ class Gs extends ActiveRecord
         ];
     }
 
-    /* ---------------- подписи ---------------- */
     public function attributeLabels()
     {
         return [
@@ -94,10 +108,6 @@ class Gs extends ActiveRecord
         ];
     }
 
-    /**
-     * Проверяет, включен ли режим прямого пополнения инвентаря
-     * хотя бы на одном активном сервере.
-     */
     public static function isTopupMode(): bool
     {
         static $cache = null;

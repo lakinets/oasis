@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <legend><?= Yii::t('backend', 'Разное') ?></legend>
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'ip')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'port')->input('number') ?>
+    <?= $form->field($model, 'ip')->textInput(['maxlength' => true, 'placeholder' => '127.0.0.1']) ?>
+    <?= $form->field($model, 'port')->input('number', ['placeholder' => '2106']) ?>
 
     <?= $form->field($model, 'version')->dropDownList($versions ?? [], ['prompt' => '']) ?>
 
@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'status')->dropDownList($model->getStatusList()) ?>
 
     <legend><?= Yii::t('backend', 'Подключение к базе данных') ?></legend>
-    <?= $form->field($model, 'db_host')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'db_port')->input('number') ?>
-    <?= $form->field($model, 'db_user')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'db_host')->textInput(['maxlength' => true, 'placeholder' => '127.0.0.1']) ?>
+    <?= $form->field($model, 'db_port')->input('number', ['placeholder' => '3306']) ?>
+    <?= $form->field($model, 'db_user')->textInput(['maxlength' => true, 'placeholder' => 'root']) ?>
     <?= $form->field($model, 'db_pass')->passwordInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'db_name')->textInput(['maxlength' => true]) ?>
 

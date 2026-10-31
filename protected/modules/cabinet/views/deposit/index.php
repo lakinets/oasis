@@ -32,6 +32,9 @@ $balance = (float)(new \yii\db\Query())
     ->where(['user_id' => Yii::$app->user->id])
     ->select('balance')
     ->scalar();
+
+// Логика отображения платёжных систем
+$providerCount = count($providers);
 ?>
 
 <!-- Заголовок с балансом справа -->
@@ -61,19 +64,36 @@ $balance = (float)(new \yii\db\Query())
 
         <div class="form-group" style="min-width:250px;">
             <label><?= Yii::t('views', 'Платёжная система') ?></label>
-            <select name="provider" class="form-control" required>
-                <?php foreach ($providers as $key => $label): ?>
-                    <option value="<?= Html::encode($key) ?>"><?= Html::encode($label) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <?php if (empty($providers)): ?>
-                <div class="alert alert-warning text-center" style="margin-top:10px"><?= Yii::t('views', 'Приём платежей был отключён администратором.') ?></div>
+            
+            <?php if ($providerCount === 0): ?>
+                <!-- 1. Ничего не включено -->
+                <div class="alert alert-warning text-center" style="margin-top:10px">
+                    <?= Yii::t('views', 'Приём платежей временно недоступен.') ?>
+                </div>
+                
+            <?php elseif ($providerCount === 1): ?>
+                <!-- 2. Одна платежная система -->
+                <?php 
+                    $keys = array_keys($providers);
+                    $singleKey = $keys[0];
+                    $singleLabel = $providers[$singleKey];
+                ?>
+                <input type="text" class="form-control" value="<?= Html::encode($singleLabel) ?>" readonly style="background-color: transparent; color: inherit; cursor: not-allowed;">
+                <input type="hidden" name="provider" value="<?= Html::encode($singleKey) ?>">
+                
+            <?php else: ?>
+                <!-- 3. Две и более систем -->
+                <select name="provider" class="form-control" required>
+                    <?php foreach ($providers as $key => $label): ?>
+                        <option value="<?= Html::encode($key) ?>"><?= Html::encode($label) ?></option>
+                    <?php endforeach; ?>
+                </select>
             <?php endif; ?>
         </div>
     </div>
 
     <div style="margin-top:15px; text-align:center;">
-        <button class="btn btn-primary" <?= empty($providers) ? 'disabled' : '' ?>><?= Yii::t('views', 'Оплатить') ?></button>
+        <button class="btn btn-primary" <?= $providerCount === 0 ? 'disabled' : '' ?>><?= Yii::t('views', 'Оплатить') ?></button>
     </div>
 </form>
 

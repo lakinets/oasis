@@ -8,6 +8,15 @@ $adminUrl  = 'backend'; // дефолт для админки
 $dbConfig  = [];
 $servers   = [];
 
+// ---------- Безопасный ключ куки ----------
+$cookieKeyFile = __DIR__ . '/cookie_validation_key.txt';
+if (file_exists($cookieKeyFile)) {
+    $cookieValidationKey = trim(file_get_contents($cookieKeyFile));
+} else {
+    $cookieValidationKey = bin2hex(random_bytes(32));
+    file_put_contents($cookieKeyFile, $cookieValidationKey);
+}
+
 if (is_file(__DIR__ . '/db.php')) {
     $dbConfig = require __DIR__ . '/db.php';
     try {
@@ -15,13 +24,13 @@ if (is_file(__DIR__ . '/db.php')) {
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $themeName = $pdo->query('SELECT value FROM config WHERE param="theme" LIMIT 1')->fetchColumn() ?: 'oasis';
-        
+
         // Читаем кастомный URL админки
         $customAdminUrl = $pdo->query('SELECT value FROM config WHERE param="admin.url" LIMIT 1')->fetchColumn();
         if ($customAdminUrl && preg_match('/^[a-zA-Z0-9_-]+$/', $customAdminUrl)) {
             $adminUrl = $customAdminUrl;
         }
-        
+
         $servers = $pdo->query('SELECT * FROM servers_config')->fetchAll(\PDO::FETCH_ASSOC);
     } catch (\Throwable $e) {
         $themeName = 'oasis';
@@ -56,11 +65,12 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
 
-    'bootstrap' => ['language-selector', 'profile-initializer'],
+    // --- ДОБАВЛЕН asn-guard ---
+    'bootstrap' => ['language-selector', 'profile-initializer', 'asn-guard'],
 
     'components' => [
         'request' => [
-            'cookieValidationKey' => 'Qt0TUb2LME-ES9T5l5srJJh2n9QAbbwT',
+            'cookieValidationKey' => $cookieValidationKey, 
             'enableCsrfValidation' => true,
         ],
 
@@ -70,6 +80,11 @@ return [
 
         'profile-initializer' => [
             'class' => \app\components\ProfileInitializer::class,
+        ],
+
+        // --- ДОБАВЛЕН КОМПОНЕНТ ОХРАННИКА ---
+        'asn-guard' => [
+            'class' => \app\components\AsnGuard::class,
         ],
 
         'view' => [
@@ -103,10 +118,23 @@ return [
                 'language/<lang:[a-z]{2}>' => 'site/language',
 
                 // --- ДИНАМИЧЕСКИЙ РОУТИНГ АДМИНКИ ---
+                $adminUrl . '/payments/toggle-test' => 'backend/payments/toggle-test',
+                // -------------------------------------
+
                 $adminUrl => 'backend/default/index',
                 $adminUrl . '/<controller:\w+>' => 'backend/<controller>/index',
                 $adminUrl . '/<controller:\w+>/<action:\w+>' => 'backend/<controller>/<action>',
-                // -------------------------------------
+
+                // --- CALLBACK-ЭНДПОИНТЫ ПЛАТЕЖНЫХ СИСТЕМ (POST-only) ---
+                'POST cabinet/deposit/stripe-callback'      => 'cabinet/deposit/stripe-callback',
+                'POST cabinet/deposit/robokassa-callback'   => 'cabinet/deposit/robokassa-callback',
+                'POST cabinet/deposit/unitpay-callback'     => 'cabinet/deposit/unitpay-callback',
+                'POST cabinet/deposit/nowpayments-callback' => 'cabinet/deposit/nowpayments-callback',
+                'POST cabinet/deposit/payop-callback'       => 'cabinet/deposit/payop-callback',
+                'POST cabinet/deposit/cryptomus-callback'   => 'cabinet/deposit/cryptomus-callback',
+                'POST cabinet/deposit/volet-callback'       => 'cabinet/deposit/volet-callback',
+                'POST cabinet/deposit/interkassa-callback'  => 'cabinet/deposit/interkassa-callback',
+                // ------------------------------------------------------
 
                 'login'    => 'auth/default/login',
                 'logout'   => 'auth/default/logout',
@@ -161,7 +189,6 @@ return [
 
         'i18n' => [
             'translations' => [
-
                 'main*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -169,7 +196,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['main' => 'main.php'],
                 ],
-
                 'views*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -177,7 +203,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['views' => 'views.php'],
                 ],
-
                 'controllers*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -185,7 +210,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['controllers' => 'controllers.php'],
                 ],
-
                 'models*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -193,7 +217,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['models' => 'models.php'],
                 ],
-
                 'backend*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -201,7 +224,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['backend' => 'backend.php'],
                 ],
-
                 'mail*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -209,7 +231,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['mail' => 'mail.php'],
                 ],
-
                 'page*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -217,7 +238,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['page' => 'page.php'],
                 ],
-
                 'auth*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -225,7 +245,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['auth' => 'auth.php'],
                 ],
-
                 'install*' => [
                     'class'           => \yii\i18n\PhpMessageSource::class,
                     'basePath'        => '@app/messages',
@@ -233,7 +252,6 @@ return [
                     'forceTranslation'=> true,
                     'fileMap'         => ['install' => 'install.php'],
                 ],
-
                 'yii' => [
                     'class'          => \yii\i18n\PhpMessageSource::class,
                     'basePath'       => '@vendor/yiisoft/yii2/messages',
@@ -259,13 +277,10 @@ return [
         'backend'  => ['class' => \app\modules\backend\Module::class],
         'cabinet'  => ['class' => \app\modules\cabinet\Module::class],
         'register' => ['class' => \app\modules\register\RegisterModule::class],
-        // 'gallery'  => ['class' => \app\modules\gallery\GalleryModule::class], // УДАЛЕНО
         'stats'    => ['class' => \app\modules\stats\StatsModule::class],
-        // 'news'     => ['class' => \app\modules\news\NewsModule::class],       // УДАЛЕНО
         'forgottenPassword' => ['class' => \app\modules\forgottenPassword\ForgottenPasswordModule::class],
         'deposit'  => ['class' => \app\modules\deposit\DepositModule::class],
         'auth'     => ['class' => \app\modules\auth\Module::class],
-
         'install'  => ['class' => 'app\modules\install\InstallModule'],
     ],
 

@@ -11,6 +11,11 @@ class VoletGateway implements PaymentGatewayInterface
         return trim((string)\app\components\payments\AppConfig::get("payment.volet.{$key}", ''));
     }
 
+    private function isTest(): bool
+    {
+        return $this->cfg('test') === '1';
+    }
+
     public function buildRedirectUrl(string $orderId, string $login, float $amount, string $currency, string $description): string
     {
         $apiId  = $this->cfg('api_id');
@@ -31,8 +36,10 @@ class VoletGateway implements PaymentGatewayInterface
             'sign'        => hash('sha256', $apiId . $amount . $currency . $orderId . $apiKey),
         ];
 
-        /*  Замените на реальный endpoint Volet после регистрации мерчанта  */
-        return 'https://volet.com/invoice?' . http_build_query($data);
+        // Подмена URL для тестового режима (УТОЧНИТЕ В ДОКУМЕНТАЦИИ VOLet)
+        $url = $this->isTest() ? 'https://sandbox.volet.com/invoice' : 'https://volet.com/invoice';
+        
+        return $url . '?' . http_build_query($data);
     }
 
     public function handleCallback(Request $request): array
@@ -60,5 +67,45 @@ class VoletGateway implements PaymentGatewayInterface
     public function failUrl(string $orderId): string
     {
         return Url::to(['/cabinet/deposit/fail', 'provider' => 'volet', 'orderId' => $orderId], true);
+    }
+
+    public function validateCredentials(): array
+    {
+        $apiId  = $this->cfg('api_id');
+        $apiKey = $this->cfg('api_key');
+
+        if ($apiId === '' || $apiKey === '') {
+            return ['ok' => false, 'message' => 'API ID или API Key не заполнены'];
+        }
+
+        $url = $this->isTest() ? 'https://sandbox.volet.com/api/v1/balance' : 'https://api.volet.com/api/v1/balance';
+        $sign = hash('sha256', $apiId . $apiKey);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => [
+                'Content-Type: application/json',
+                'Api-Id: ' . $apiId,
+                'Api-Sign: ' . $sign,
+            ],
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            return ['ok' => false, 'message' => 'Ошибка сети: ' . $err];
+        }
+
+        if ($code === 200) {
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        $data = json_decode($resp, true);
+        $msg = $data['message'] ?? 'Ошибка API (HTTP ' . $code . ')';
+        return ['ok' => false, 'message' => 'Volet: ' . $msg];
     }
 }

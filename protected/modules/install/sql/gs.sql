@@ -11,7 +11,7 @@
  Target Server Version : 260700 (26.7.0)
  File Encoding         : 65001
 
- Date: 20/10/2026 13:10:51
+ Date: 26/10/2026 18:10:21
 */
 
 SET NAMES utf8mb4;
@@ -88,6 +88,5 @@ CREATE TABLE `gs`  (
 -- ----------------------------
 -- Records of gs
 -- ----------------------------
-INSERT INTO `gs` VALUES (2, 'Test server', '127.0.0.1', 2106, '127.0.0.1', 3306, 'root', 'root', 'l2', NULL, NULL, NULL, 2, 'Pwsoft_it', 0, 1, 20, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 20, '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', 1, NULL, 1, 1, 300, '', 1, 300, NULL, 1, 0, NULL, 1, 'RUR', 1, 'topup', NULL, NULL, 1, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

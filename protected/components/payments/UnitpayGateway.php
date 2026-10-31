@@ -16,19 +16,28 @@ class UnitpayGateway implements PaymentGatewayInterface
         return hash('sha256', $toHash);
     }
 
+    private function isTest(): bool
+    {
+        return AppConfig::get('unitpay.test', '0') === '1';
+    }
+
     public function buildRedirectUrl(string $orderId, string $login, float $amount, string $currency, string $description): string
     {
         $publicKey = AppConfig::get('unitpay.public_key', '');
         $projectId = AppConfig::get('unitpay.project_id', '');
-        // Редирект на форму оплаты по ключу проекта (подпись для редиректа не требуется)
+        
         $params = [
             'sum'       => number_format($amount, 2, '.', ''),
-            'account'   => $orderId,            // вернётся в колбэке и свяжет платёж
+            'account'   => $orderId,
             'desc'      => $description,
             'currency'  => $currency,
             'projectId' => $projectId,
-            // Можно добавить customerEmail/phone если хотите
         ];
+
+        if ($this->isTest()) {
+            $params['test'] = '1'; // Включаем тестовый режим Unitpay
+        }
+
         return 'https://unitpay.money/pay/' . rawurlencode($publicKey) . '?' . http_build_query($params);
     }
 
@@ -48,7 +57,6 @@ class UnitpayGateway implements PaymentGatewayInterface
             return ['ok' => false, 'rawResponse' => json_encode(['error' => ['message' => 'signature mismatch']])];
         }
 
-        // Обработка только события оплаты
         if ($method === 'pay') {
             $orderId = (string)($params['account'] ?? '');
             $amount  = (float)($params['orderSum'] ?? $params['sum'] ?? 0);
@@ -62,7 +70,6 @@ class UnitpayGateway implements PaymentGatewayInterface
             ];
         }
 
-        // На check/other — отвечаем OK, но без начисления
         return ['ok' => true, 'orderId' => (string)($params['account'] ?? ''), 'amount' => 0.0, 'externalId' => null,
             'rawResponse' => json_encode(['result' => ['message' => 'OK']])];
     }
@@ -75,5 +82,46 @@ class UnitpayGateway implements PaymentGatewayInterface
     public function failUrl(string $orderId): string
     {
         return Yii::$app->urlManager->createAbsoluteUrl(['/cabinet/deposit/fail', 'orderId' => $orderId, 'provider' => 'unitpay']);
+    }
+
+    public function validateCredentials(): array
+    {
+        $projectId = AppConfig::get('unitpay.project_id', '');
+        $secretKey = AppConfig::get('unitpay.secret_key', '');
+
+        if ($projectId === '' || $secretKey === '') {
+            return ['ok' => false, 'message' => 'Project ID или Secret Key не заполнены'];
+        }
+
+        $url = 'https://unitpay.ru/api?' . http_build_query([
+            'method'    => 'getMethodsAvailable',
+            'projectId' => $projectId,
+            'secretKey' => $secretKey,
+        ]);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 15,
+        ]);
+        $resp = curl_exec($ch);
+        $err  = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            return ['ok' => false, 'message' => 'Ошибка сети: ' . $err];
+        }
+
+        $data = json_decode($resp, true);
+        if (isset($data['error'])) {
+            return ['ok' => false, 'message' => 'Unitpay: ' . ($data['error']['message'] ?? 'Неизвестная ошибка')];
+        }
+
+        if ($code === 200 && isset($data['result'])) {
+            return ['ok' => true, 'message' => 'Ключи рабочие (API отвечает)'];
+        }
+
+        return ['ok' => false, 'message' => 'Неизвестный ответ API (HTTP ' . $code . ')'];
     }
 }

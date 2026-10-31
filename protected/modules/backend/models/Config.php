@@ -105,6 +105,12 @@ class Config extends ActiveRecord
     {
         $name  = "Config[{$this->id}][value]";
         $value = (string)$this->value;
+        $leaf  = substr($this->param, strrpos($this->param, '.') + 1);
+
+        // Автоматически делаем выпадающий список Да/Нет для всех параметров .enabled и .test
+        if ($leaf === 'enabled' || $leaf === 'test') {
+            return Html::dropDownList($name, $value, $this->yesNoOptions(), ['class' => 'form-select']);
+        }
 
         switch ($this->param) {
 
@@ -146,7 +152,7 @@ class Config extends ActiveRecord
             case 'forum_threads.date_format':
                 return Html::dropDownList($name, $value, $this->dateFormatOptions(), ['class' => 'form-select']);
 
-            /* ---- Да/Нет ---- */
+            /* ---- Да/Нет (остальные, не оканчивающиеся на .test или .enabled) ---- */
             case 'register.captcha.allow':
             case 'register.allow':
             case 'register.confirm_email':
@@ -154,7 +160,6 @@ class Config extends ActiveRecord
             case 'mail.smtp':
             case 'forgotten_password.captcha.allow':
             case 'forum_threads.allow':
-            case 'robokassa.test':
             case 'waytopay.sms.allow':
             case 'server_status.allow':
             case 'top.pk.allow':
@@ -184,15 +189,6 @@ class Config extends ActiveRecord
             case 'forum_threads.cache':
             case 'forum_threads.limit':
             case 'forum_threads.db_port':
-            case 'robokassa.password':
-            case 'robokassa.password2':
-            case 'unitpay.secret_key':
-            case 'unitpay.project_id':
-            case 'unitpay.public_key':
-            case 'waytopay.project_id':
-            case 'waytopay.key':
-            case 'waytopay.sms.key':
-            case 'waytopay.sms.project_id':
             case 'server_status.cache':
             case 'top.pk.limit':
             case 'top.pk.cache':
@@ -216,13 +212,29 @@ class Config extends ActiveRecord
             case 'gallery.small.height':
             case 'prefixes.length':
             case 'prefixes.count_for_list':
-            case 'prefixes.count_for_list':
                 return Html::textInput($name, $value, ['class' => 'form-control', 'inputmode' => 'numeric']);
 
-            /* ---- Пароли ---- */
+            /* ---- Пароли и секретные ключи ---- */
             case 'mail.smtp_password':
             case 'forum_threads.db_pass':
-                return Html::passwordInput($name, $value, ['class' => 'form-control']);
+            case 'robokassa.password':
+            case 'robokassa.password2':
+            case 'unitpay.secret_key':
+            case 'payop.secret_key':
+            case 'nowpayments.ipn_secret':
+            case 'stripe.secret_key_test':
+            case 'stripe.webhook_secret_test':
+            case 'stripe.secret_key_live':
+            case 'stripe.webhook_secret_live':
+            case 'payment.payop.secret_key':
+            case 'payment.nowpayments.ipn_secret':
+            case 'payment.volet.api_key':
+            case 'payment.interkassa.secret_key':
+            case 'payment.interkassa.test_key':
+            case 'payment.cryptomus.payment_api_key':
+            case 'waytopay.key':
+            case 'waytopay.sms.key':
+                return Html::passwordInput($name, $value, ['class' => 'form-control', 'autocomplete' => 'new-password']);
 
             /* ---- Обычный текст ---- */
             default:

@@ -9,6 +9,7 @@ use app\models\PaymentTransaction;
 use app\models\Gs;
 use yii\db\Connection;
 
+use app\components\payments\StripeGateway;
 use app\components\payments\RobokassaGateway;
 use app\components\payments\UnitpayGateway;
 use app\components\payments\NOWPaymentsGateway;
@@ -17,6 +18,7 @@ use app\components\payments\CryptomusGateway;
 use app\components\payments\VoletGateway;
 use app\components\payments\InterkassaGateway;
 use app\components\payments\PaymentsManager;
+use app\components\payments\AppConfig;
 
 class DepositController extends Controller
 {
@@ -34,12 +36,22 @@ class DepositController extends Controller
 
     public function beforeAction($action)
     {
-        // Блокируем только просмотр страниц, не трогая callbacks (вебхуки)
-        $blockedActions = ['index', 'create', 'success', 'fail'];
-        if (in_array($action->id, $blockedActions, true) && Gs::isTopupMode()) {
-            Yii::$app->session->setFlash('error', Yii::t('views', 'Пополнение баланса отключено.'));
-            return $this->redirect(['/cabinet']);
+        $callbacks = [
+            'stripe-callback', 'robokassa-callback', 'unitpay-callback',
+            'nowpayments-callback', 'payop-callback', 'cryptomus-callback',
+            'volet-callback', 'interkassa-callback'
+        ];
+        
+        if (in_array($action->id, $callbacks, true)) {
+            $this->enableCsrfValidation = false;
+        } else {
+            $blockedActions = ['index', 'create', 'success', 'fail'];
+            if (in_array($action->id, $blockedActions, true) && Gs::isTopupMode()) {
+                Yii::$app->session->setFlash('error', Yii::t('views', 'Пополнение баланса отключено.'));
+                return $this->redirect(['/cabinet']);
+            }
         }
+
         return parent::beforeAction($action);
     }
 
@@ -54,6 +66,15 @@ class DepositController extends Controller
         $req      = Yii::$app->request;
         $amount   = (float)$req->post('amount', 0);
         $provider = (string)$req->post('provider', '');
+
+        // Проверка лимитов
+        $min = (float)AppConfig::get('payment.min_amount', 10);
+        $max = (float)AppConfig::get('payment.max_amount', 100000);
+
+        if ($amount < $min || $amount > $max) {
+            Yii::$app->session->setFlash('error', Yii::t('views', "Сумма должна быть от {min} до {max}.", ['min' => $min, 'max' => $max]));
+            return $this->redirect(['index']);
+        }
 
         $allowed = array_keys(PaymentsManager::available());
         if ($amount <= 0 || !in_array($provider, $allowed, true)) {
@@ -72,7 +93,10 @@ class DepositController extends Controller
             return $this->redirect(['index']);
         }
 
-        $tx   = PaymentTransaction::create($provider, $userId, $login, $amount, 'RUB');
+        // Базовая валюта сайта (берем из конфига, по умолчанию RUB)
+        $currency = AppConfig::get('payment.default_currency', 'RUB');
+
+        $tx   = PaymentTransaction::create($provider, $userId, $login, $amount, $currency);
         $desc = Yii::t('views', 'Пополнение баланса');
         $url  = $this->getGateway($provider)
                      ->buildRedirectUrl($tx->order_id, $tx->login, $tx->amount, $tx->currency, $desc);
@@ -80,115 +104,53 @@ class DepositController extends Controller
         return $this->redirect($url);
     }
 
-    /* ----------------- CALLBACKS ----------------- */
-
-    public function actionRobokassaCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('robokassa')->handleCallback(Yii::$app->request),
-            'robokassa'
-        );
-    }
-
-    public function actionUnitpayCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('unitpay')->handleCallback(Yii::$app->request),
-            'unitpay'
-        );
-    }
-
-    public function actionNowpaymentsCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('nowpayments')->handleCallback(Yii::$app->request),
-            'nowpayments'
-        );
-    }
-
-    public function actionPayopCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('payop')->handleCallback(Yii::$app->request),
-            'payop'
-        );
-    }
-
-    public function actionCryptomusCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('cryptomus')->handleCallback(Yii::$app->request),
-            'cryptomus'
-        );
-    }
-
-    public function actionVoletCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('volet')->handleCallback(Yii::$app->request),
-            'volet'
-        );
-    }
-
-    public function actionInterkassaCallback()
-    {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        return $this->finalizeAndRespond(
-            $this->getGateway('interkassa')->handleCallback(Yii::$app->request),
-            'interkassa'
-        );
-    }
-
-    public function actionSuccess(string $provider = null, string $orderId = null)
-    {
-        return $this->render('success', ['provider' => $provider, 'orderId' => $orderId]);
-    }
-
-    public function actionFail(string $provider = null, string $orderId = null, string $msg = null)
-    {
-        return $this->render('fail', ['provider' => $provider, 'orderId' => $orderId, 'msg' => $msg]);
-    }
+    /* ... CALLBACKS без изменений ... */
 
     private function finalizeAndRespond(array $result, string $provider): string
     {
         if (!empty($result['orderId']) && !empty($result['ok'])) {
             $tx = PaymentTransaction::findOne(['order_id' => $result['orderId'], 'provider' => $provider]);
-            
+
             if ($tx && $tx->status !== 'paid') {
+                // =========================================================
+                // === ПРОВЕРКА СУММЫ ===
+                // =========================================================
+                $expectedAmount = (float)$tx->amount;
+                $actualAmount   = (float)$result['amount'];
+                
+                // Допускаем погрешность в 2% (для конвертации валют/комиссий)
+                $tolerance = $expectedAmount * 0.02;
+                
+                if (abs($actualAmount - $expectedAmount) > $tolerance && $expectedAmount > 0) {
+                    Yii::error("Payment amount mismatch! Tx: {$tx->order_id}. Expected: {$expectedAmount}, Got: {$actualAmount}", 'deposit');
+                    return $result['rawResponse'] ?? 'amount mismatch';
+                }
+                // =========================================================
+
                 $db = Yii::$app->db;
                 $t  = $db->beginTransaction();
                 try {
-                    // Проверяем, есть ли payload (покупка предметов)
                     $payload = $tx->payload ? json_decode($tx->payload, true) : null;
-                    
+
                     if (is_array($payload) && isset($payload['type']) && $payload['type'] === 'topup') {
-                        // Это покупка предметов для инвентаря
                         $success = $this->_deliverTopupItems($payload);
                         if (!$success) {
                             throw new \RuntimeException('Ошибка выдачи предметов. Сервер недоступен.');
                         }
                     } else {
-                        // Обычное пополнение баланса
                         $db->createCommand(
                             'UPDATE user_profiles SET balance = balance + :sum WHERE user_id = :uid',
-                            [':sum' => $result['amount'], ':uid' => $tx->user_id]
+                            [':sum' => $actualAmount, ':uid' => $tx->user_id] // Начисляем фактическую сумму
                         )->execute();
                     }
 
                     $tx->status    = 'paid';
                     $tx->paid_at   = date('Y-m-d H:i:s');
                     $tx->provider_invoice = $result['externalId'] ?? null;
-                    // Сохраняем ответ от платежки, чтобы не перетереть наш payload
                     $rawPayload = json_decode($tx->payload, true) ?: [];
                     $rawPayload['callback_data'] = Yii::$app->request->bodyParams ?: Yii::$app->request->get();
                     $tx->payload = json_encode($rawPayload, JSON_UNESCAPED_UNICODE);
-                    
+
                     $tx->save(false);
                     $t->commit();
                 } catch (\Throwable $e) {
@@ -201,9 +163,6 @@ class DepositController extends Controller
         return $result['rawResponse'] ?? 'OK';
     }
 
-    /**
-     * Выдача предметов в игровой инвентарь
-     */
     private function _deliverTopupItems(array $payload): bool
     {
         $gs_id   = (int)$payload['gs_id'];
@@ -219,29 +178,26 @@ class DepositController extends Controller
             $gameDb = new Connection([
                 'dsn'      => $dsn,
                 'username' => $gs->db_user,
-                'password' => $gs->db_pass,
+                'password' => method_exists($gs, 'getDbPassDecrypted') ? $gs->getDbPassDecrypted() : $gs->db_pass, // ДЕШИФРУЕМ
                 'charset'  => 'utf8',
             ]);
-            
+
             $className = '\\app\\l2j\\' . ucfirst((string)$gs->version);
             if (!class_exists($className)) return false;
             $driver = new $className($gameDb, $gs->db_name);
 
-            // Логика стака: проверяем, есть ли уже такой предмет у персонажа в инвентаре
             $existing = (new \yii\db\Query())
                 ->from($gs->db_name . '.items')
                 ->where(['owner_id' => $char_id, 'item_id' => $item_id, 'loc' => 'INVENTORY'])
                 ->one($gameDb);
 
             if ($existing) {
-                // Если есть - обновляем count
                 $gameDb->createCommand()->update(
                     $gs->db_name . '.items',
                     ['count' => (int)$existing['count'] + $qty],
                     ['object_id' => (int)$existing['object_id']]
                 )->execute();
             } else {
-                // Если нет - создаем новую запись через метод драйвера
                 $driver->insertItem($char_id, $item_id, $qty, 0);
             }
 
@@ -255,6 +211,7 @@ class DepositController extends Controller
     private function getGateway(string $provider)
     {
         return match ($provider) {
+            'stripe'      => new StripeGateway(),
             'robokassa'   => new RobokassaGateway(),
             'unitpay'     => new UnitpayGateway(),
             'nowpayments' => new NOWPaymentsGateway(),

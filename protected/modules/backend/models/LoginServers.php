@@ -4,7 +4,6 @@ namespace app\modules\backend\models;
 
 use Yii;
 use yii\db\ActiveRecord;
-use app\modules\backend\models\LoginServers;
 
 /**
  * Модель LoginServers (таблица `ls`)
@@ -61,6 +60,11 @@ class LoginServers extends ActiveRecord
 
             // числовые значения
             [['port', 'db_port', 'telnet_port', 'status'], 'integer'],
+
+            // Значения по умолчанию для новых записей
+            [['port'], 'default', 'value' => 2106],      // Стандартный порт LoginServer
+            [['db_port'], 'default', 'value' => 3306],   // Стандартный порт MySQL
+            [['db_host', 'db_user'], 'default', 'value' => '127.0.0.1'], // Хост и юзер по умолчанию
 
             // длина строк
             [

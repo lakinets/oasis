@@ -35,6 +35,8 @@ $this->beginPage();
                     ['label' => Yii::t('backend', 'Новости'), 'url' => ['/backend/news/index'], 'linkOptions' => ['class' => 'nav-link']],
                     ['label' => Yii::t('backend', 'Юзеры'), 'url' => ['/backend/users/index'], 'linkOptions' => ['class' => 'nav-link']],
                     ['label' => Yii::t('backend', 'Настройки'), 'url' => ['/backend/config/index'], 'linkOptions' => ['class' => 'nav-link']],
+                    ['label' => Yii::t('backend', 'Платёжные системы'), 'url' => ['/backend/payments/index'], 'linkOptions' => ['class' => 'nav-link']],
+                    ['label' => Yii::t('backend', 'ASN Белый список'), 'url' => ['/backend/asn-whitelist/index'], 'linkOptions' => ['class' => 'nav-link']],
                     [
                         'label' => 'Lineage',
                         'items' => [

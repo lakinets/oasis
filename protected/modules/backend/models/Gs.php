@@ -15,20 +15,60 @@ class Gs extends ActiveRecord
     {
         return [
             [['name', 'ip', 'port', 'login_id', 'version', 'db_host', 'db_port', 'db_user', 'db_name'], 'required'],
-
             [['port', 'db_port', 'login_id', 'status'], 'integer'],
             [['name', 'ip', 'db_host', 'db_user', 'db_pass', 'db_name', 'version', 'currency_name', 'currency_symbol'], 'string', 'max' => 255],
             [['shop_mode'], 'string', 'max' => 10],
             [['shop_mode'], 'in', 'range' => ['shop', 'topup']],
-
             [['services_premium_cost', 'deposit_desc', 'stats_items_list'], 'safe'],
-
             [['status'], 'default', 'value' => 1],
-            [['port'], 'default', 'value' => 3306],
+            [['port'], 'default', 'value' => 7777],
+            [['db_port'], 'default', 'value' => 3306],
+            [['db_host'], 'default', 'value' => '127.0.0.1'],
+            [['db_user'], 'default', 'value' => 'root'],
             [['shop_mode'], 'default', 'value' => 'shop'],
         ];
     }
 
+    // =========================================================
+    // === Шифрование пароля БД ===
+    // =========================================================
+    public function setDbPass($value)
+    {
+        if (empty($value)) {
+            return;
+        }
+        
+        $key = Yii::$app->request->cookieValidationKey;
+        
+        // Проверяем, не зашифрован ли пароль уже
+        try {
+            Yii::$app->security->decryptByKey($value, $key);
+            $this->db_pass = $value; // Уже зашифрован
+        } catch (\Exception $e) {
+            // Если не удалось расшифровать, значит, он в открытом виде — шифруем
+            $this->db_pass = Yii::$app->security->encryptByKey($value, $key);
+        }
+    }
+
+    public function getDbPassDecrypted()
+    {
+        if (empty($this->db_pass)) {
+            return '';
+        }
+        
+        $key = Yii::$app->request->cookieValidationKey;
+        
+        try {
+            return Yii::$app->security->decryptByKey($this->db_pass, $key);
+        } catch (\Exception $e) {
+            // Если не удалось расшифровать, возвращаем как есть (для старых записей)
+            return $this->db_pass; 
+        }
+    }
+
+    // =========================================================
+    // === Остальные методы ===
+    // =========================================================
     public function attributeLabels()
     {
         return [

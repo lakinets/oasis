@@ -49,6 +49,7 @@ class m000000_000001_run_all_sql_files extends Migration
 		'asn_block_rules.sql',
 		'asn_whitelist.sql',
 		'bot_whitelist.sql',
+		'asn_whitelist.sql'
     ];
 
     public function supportsTransaction(): bool

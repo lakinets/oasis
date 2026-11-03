@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'class' => 'btn btn-xs ' . ($row->isStatusOn() ? 'btn-danger' : 'btn-success'),
                                 'style' => 'padding:2px 6px;font-size:11px;line-height:1.2;',
                                 'data-confirm' => Yii::t('backend', 'Изменить статус?'),
-                                'data-method'  => 'post', // из кнопки — POST, по прямой ссылке GET тоже сработает
+                                'data-method'  => 'post',
                             ]
                         ) ?>
                     </td>
@@ -96,4 +96,3 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= LinkPager::widget(['pagination' => $dataProvider->pagination]) ?>
 </div>
-

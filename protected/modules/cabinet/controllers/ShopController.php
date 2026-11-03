@@ -4,10 +4,12 @@ namespace app\modules\cabinet\controllers;
 
 use app\models\Gs;
 use app\models\PaymentTransaction;
-use app\modules\cabinet\models\ShopCategories;
-use app\modules\cabinet\models\ShopItems;
-use app\modules\cabinet\models\ShopItemsPacks;
+use app\models\ShopCategories;
+use app\models\ShopItems;
+use app\models\ShopItemsPacks;
+use app\models\ShopTopupConfig; // Обновлено
 use app\components\payments\PaymentsManager;
+use app\components\payments\StripeGateway;
 use app\components\payments\RobokassaGateway;
 use app\components\payments\UnitpayGateway;
 use app\components\payments\NOWPaymentsGateway;
@@ -19,13 +21,13 @@ use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\db\Connection;
+use yii\db\Expression;
 
 class ShopController extends CabinetBaseController
 {
     /* ---------- главная: категории ---------- */
     public function actionIndex()
     {
-        // Если включен режим "Пополнение", сразу редиректим туда, не показывая магазин
         $topupServer = Gs::find()->where(['status' => 1, 'shop_mode' => 'topup'])->one();
         if ($topupServer) {
             return $this->redirect(['topup', 'gs_id' => $topupServer->id]);
@@ -63,7 +65,7 @@ class ShopController extends CabinetBaseController
             throw new NotFoundHttpException(Yii::t('views', 'Сервер не найден или режим отключен.'));
         }
 
-        $config = \app\modules\backend\models\ShopTopupConfig::findForServer($gs_id);
+        $config = ShopTopupConfig::findForServer($gs_id);
         if (!$config || !$config->status) {
             throw new NotFoundHttpException(Yii::t('views', 'Конфигурация пополнения не настроена.'));
         }
@@ -127,7 +129,7 @@ class ShopController extends CabinetBaseController
             throw new NotFoundHttpException(Yii::t('views', 'Сервер не найден.'));
         }
 
-        $config = \app\modules\backend\models\ShopTopupConfig::findForServer($gs_id);
+        $config = ShopTopupConfig::findForServer($gs_id);
         if (!$config || !$config->status) {
             Yii::$app->session->setFlash('error', Yii::t('views', 'Конфигурация пополнения не настроена.'));
             return $this->redirect(['topup', 'gs_id' => $gs_id]);
@@ -136,7 +138,6 @@ class ShopController extends CabinetBaseController
         [$gameDb, $driver] = $this->getGameDbAndDriver($gs_id);
         $login = Yii::$app->user->identity->login;
 
-        // Проверка владения персонажем
         $ownerOk = false;
         $chars = $driver->charactersQuery()->where(['account_name' => $login])->all($gameDb);
         foreach ($chars as $c) {
@@ -150,7 +151,6 @@ class ShopController extends CabinetBaseController
             return $this->redirect(['topup', 'gs_id' => $gs_id]);
         }
 
-        // Расчет бонуса
         $bonusQty = 0;
         foreach ($config->tiers as $tier) {
             if ($qty >= $tier->min_qty && ($tier->max_qty == 0 || $qty <= $tier->max_qty)) {
@@ -335,12 +335,33 @@ class ShopController extends CabinetBaseController
                 ':uid'   => Yii::$app->user->id,
             ])->execute();
 
-            $driver->insertItem(
-                $char_id,
-                (int)$item->item_id,
-                max(1, (int)$item->count),
-                max(0, (int)$item->enchant)
-            );
+            $itemId  = (int)$item->item_id;
+            $qty     = max(1, (int)$item->count);
+            $enchant = max(0, (int)$item->enchant);
+
+            $existing = (new \yii\db\Query())
+                ->from($gs->db_name . '.items')
+                ->where(['owner_id' => $char_id, 'item_id' => $itemId, 'loc' => 'INVENTORY'])
+                ->one($gameDb);
+
+            if ($existing && $enchant === 0) {
+                $gameDb->createCommand()->update(
+                    $gs->db_name . '.items',
+                    ['count' => new Expression('count + :qty', [':qty' => $qty])],
+                    ['object_id' => (int)$existing['object_id']]
+                )->execute();
+            } else {
+                $maxId = (new \yii\db\Query())->from($gs->db_name . '.items')->max('object_id', $gameDb);
+                $gameDb->createCommand()->insert($gs->db_name . '.items', [
+                    'object_id'     => (int)$maxId + 1,
+                    'owner_id'      => $char_id,
+                    'item_id'       => $itemId,
+                    'count'         => $qty,
+                    'enchant_level' => $enchant,
+                    'loc'           => 'INVENTORY',
+                    'loc_data'      => 0,
+                ])->execute();
+            }
 
             $tx->commit();
             Yii::$app->session->setFlash('success', Yii::t('views', 'Покупка завершена.'));
@@ -429,12 +450,33 @@ class ShopController extends CabinetBaseController
             ])->execute();
 
             foreach ($items as $it) {
-                $driver->insertItem(
-                    $char_id,
-                    (int)$it->item_id,
-                    max(1, (int)$it->count),
-                    max(0, (int)$it->enchant)
-                );
+                $itemId  = (int)$it->item_id;
+                $qty     = max(1, (int)$it->count);
+                $enchant = max(0, (int)$it->enchant);
+
+                $existing = (new \yii\db\Query())
+                    ->from($gs->db_name . '.items')
+                    ->where(['owner_id' => $char_id, 'item_id' => $itemId, 'loc' => 'INVENTORY'])
+                    ->one($gameDb);
+
+                if ($existing && $enchant === 0) {
+                    $gameDb->createCommand()->update(
+                        $gs->db_name . '.items',
+                        ['count' => new Expression('count + :qty', [':qty' => $qty])],
+                        ['object_id' => (int)$existing['object_id']]
+                    )->execute();
+                } else {
+                    $maxId = (new \yii\db\Query())->from($gs->db_name . '.items')->max('object_id', $gameDb);
+                    $gameDb->createCommand()->insert($gs->db_name . '.items', [
+                        'object_id'     => (int)$maxId + 1,
+                        'owner_id'      => $char_id,
+                        'item_id'       => $itemId,
+                        'count'         => $qty,
+                        'enchant_level' => $enchant,
+                        'loc'           => 'INVENTORY',
+                        'loc_data'      => 0,
+                    ])->execute();
+                }
             }
 
             $tx->commit();
@@ -487,6 +529,7 @@ class ShopController extends CabinetBaseController
     private function getGateway(string $provider)
     {
         return match ($provider) {
+            'stripe'      => new StripeGateway(),
             'robokassa'   => new RobokassaGateway(),
             'unitpay'     => new UnitpayGateway(),
             'nowpayments' => new NOWPaymentsGateway(),
@@ -494,7 +537,7 @@ class ShopController extends CabinetBaseController
             'cryptomus'   => new CryptomusGateway(),
             'volet'       => new VoletGateway(),
             'interkassa'  => new InterkassaGateway(),
-            default       => throw new \RuntimeException('Unknown provider'),
+            default       => throw new BadRequestHttpException('Неизвестная платёжная система: ' . $provider),
         };
     }
 }

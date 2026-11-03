@@ -6,25 +6,18 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\modules\backend\models\Gs;
 use app\modules\backend\models\GsSearch;
-use app\modules\backend\models\ShopCategories;
-use app\modules\backend\models\ShopItemsPacks;
-use app\modules\backend\models\ShopItems;
-use app\modules\backend\models\ShopTopupConfig;
-use app\modules\backend\models\ShopTopupTier;
+use app\models\ShopCategories;     // Обновлено
+use app\models\ShopItemsPacks;     // Обновлено
+use app\models\ShopItems;          // Обновлено
+use app\models\ShopTopupConfig;    // Обновлено
+use app\models\ShopTopupTier;      // Обновлено
 
-/**
- * Управление игровыми серверами и магазином.
- * Наследует BackendController => доступ только для admin.
- */
 class GameServersController extends BackendController
 {
-    /**
-     * Дополняем родительские поведения ограничением HTTP-методов
-     */
     public function behaviors()
     {
         return array_merge(
-            parent::behaviors(), // защита admin из BackendController
+            parent::behaviors(),
             [
                 'verbs' => [
                     'class'   => VerbFilter::class,
@@ -107,9 +100,6 @@ class GameServersController extends BackendController
         ]);
     }
 
-    /**
-     * Переключение режима магазина (shop | topup).
-     */
     public function actionShopModeToggle($gs_id)
     {
         $gs = $this->findModel($gs_id);
@@ -123,9 +113,6 @@ class GameServersController extends BackendController
         return $this->redirect(['shop', 'gs_id' => $gs_id]);
     }
 
-    /**
-     * Конфигурация режима "Пополнение" + сохранение порогов бонусов.
-     */
     public function actionShopTopup($gs_id)
     {
         $gs = $this->findModel($gs_id);
@@ -143,7 +130,6 @@ class GameServersController extends BackendController
                     throw new \RuntimeException(json_encode($config->getErrors(), JSON_UNESCAPED_UNICODE));
                 }
 
-                // Обновляем пороги: удаляем старые, пишем новые
                 ShopTopupTier::deleteAll(['topup_id' => $config->id]);
                 $tiersPost = (array)Yii::$app->request->post('tiers', []);
                 $sort = 0;
@@ -151,7 +137,7 @@ class GameServersController extends BackendController
                     $minQty   = (int)($t['min_qty'] ?? 0);
                     $bonusQty = (int)($t['bonus_qty'] ?? 0);
                     if ($minQty <= 0 || $bonusQty <= 0) {
-                        continue; // пропускаем пустые строки
+                        continue;
                     }
                     $tier = new ShopTopupTier([
                         'topup_id'  => $config->id,
@@ -369,7 +355,6 @@ class GameServersController extends BackendController
         if (is_array($files)) {
             foreach ($files as $file) {
                 $name = basename($file, '.php');
-                // Исключаем фабрику из списка выбора
                 if ($name === 'DriverFactory') {
                     continue;
                 }

@@ -1,5 +1,6 @@
 <?php
-namespace app\modules\backend\models;
+
+namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -29,7 +30,7 @@ class ShopTopupConfig extends ActiveRecord
     {
         return [
             [['gs_id'], 'required'],
-            [['gs_id', 'item_id', 'item_count', 'status'], 'integer'], // убран item_enchant
+            [['gs_id', 'item_id', 'item_count', 'status'], 'integer'],
             [['price'], 'number'],
             [['currency'], 'string', 'max' => 10],
             [['item_name'], 'string', 'max' => 255],
@@ -57,7 +58,6 @@ class ShopTopupConfig extends ActiveRecord
         ];
     }
 
-    // Связь с порогами (вместо старых бонусов)
     public function getTiers()
     {
         return $this->hasMany(ShopTopupTier::class, ['topup_id' => 'id'])

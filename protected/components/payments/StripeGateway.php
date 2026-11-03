@@ -7,22 +7,6 @@ use yii\helpers\Url;
 
 /**
  * Stripe — глобальный приём карт (Visa, Mastercard, Amex), Apple Pay, Google Pay.
- *
- * Использует Stripe Checkout Session (redirect-based) — без PCI DSS на вашей стороне.
- *
- * Конфиг в таблице `config`:
- *  - payment.stripe.enabled        (0|1)
- *  - stripe.test                   (0|1)  — переключатель test/live
- *  - stripe.secret_key_test        (sk_test_...)
- *  - stripe.webhook_secret_test    (whsec_...)
- *  - stripe.secret_key_live        (sk_live_...)
- *  - stripe.webhook_secret_live    (whsec_...)
- *  - stripe.currency               (usd|eur|gbp|...)
- *  - stripe.exchange_rate          (напр. 0.011 для RUB→USD)
- *
- * Webhook endpoint (указать в Stripe Dashboard):
- *   https://<домен>/cabinet/deposit/stripe-callback
- * События: checkout.session.completed
  */
 class StripeGateway implements PaymentGatewayInterface
 {
@@ -96,7 +80,10 @@ class StripeGateway implements PaymentGatewayInterface
 
         if (!is_array($response) || empty($response['url'])) {
             Yii::error(['Stripe create session failed', 'resp' => $response], __METHOD__);
-            throw new \RuntimeException('Stripe: не удалось создать сессию оплаты. Проверьте ключи и логи.');
+            
+            // ИЗВЛЕКАЕМ ТОЧНУЮ ОШИБКУ ИЗ ОТВЕТА STRIPE
+            $exactError = $response['error']['message'] ?? 'Неизвестная ошибка (проверьте логи)';
+            throw new \RuntimeException('Stripe Error: ' . $exactError);
         }
         return $response['url'];
     }
@@ -152,7 +139,6 @@ class StripeGateway implements PaymentGatewayInterface
         $event     = json_decode($rawBody, true) ?: [];
         $eventType = $event['type'] ?? '';
 
-        // Не наш тип — подтверждаем, чтобы Stripe не повторял
         if ($eventType !== 'checkout.session.completed') {
             return ['ok' => true, 'orderId' => '', 'amount' => 0.0, 'externalId' => null, 'rawResponse' => 'ignored'];
         }
@@ -171,10 +157,10 @@ class StripeGateway implements PaymentGatewayInterface
         }
 
         $amountTotalCents = (int)($session['amount_total'] ?? 0);
-        $rate = (float)$this->cfg('exchange_rate', '0.011');
-
-        // Обратная конвертация в RUB (базовая валюта проекта)
-        $amount = $rate > 0 ? ($amountTotalCents / 100) / $rate : ($amountTotalCents / 100);
+        
+        // ИСПРАВЛЕНИЕ: Берем ровно ту сумму, которую списал Stripe (в центах), 
+        // и переводим в единицы. Без деления на курс.
+        $amount = $amountTotalCents / 100;
 
         return [
             'ok'          => true,
@@ -195,10 +181,6 @@ class StripeGateway implements PaymentGatewayInterface
         return Url::to(['/cabinet/deposit/fail', 'provider' => 'stripe', 'orderId' => $orderId], true);
     }
 
-    /**
-     * Проверка валидности ключей. Делает реальный запрос к API.
-     * @return array ['ok' => bool, 'message' => string]
-     */
     public function validateCredentials(): array
     {
         $secretKey = $this->secretKey();
@@ -206,7 +188,6 @@ class StripeGateway implements PaymentGatewayInterface
             return ['ok' => false, 'message' => 'Ключ не заполнен'];
         }
 
-        // Запрос баланса — самый безопасный способ проверить ключ (не создаёт транзакций)
         $ch = curl_init(self::API_BASE . '/balance');
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -256,7 +237,10 @@ class StripeGateway implements PaymentGatewayInterface
 
         if ($err || $code >= 400) {
             Yii::error(['Stripe HTTP error', 'code' => $code, 'err' => $err, 'resp' => $resp], __METHOD__);
-            return [];
+            
+            // ВОЗВРАЩАЕМ ОТВЕТ, ЧТОБЫ ВЫШЕ МЫ МОГЛИ ПРОЧИТАТЬ ТЕКСТ ОШИБКИ
+            $data = json_decode($resp, true);
+            return is_array($data) ? $data : ['error' => ['message' => "HTTP $code: $err"]];
         }
         $data = json_decode($resp, true);
         return is_array($data) ? $data : [];

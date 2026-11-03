@@ -3,9 +3,9 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $gs app\modules\backend\models\Gs */
-/* @var $category app\modules\backend\models\ShopCategories */
-/* @var $pack app\modules\backend\models\ShopItemsPacks */
-/* @var $items app\modules\backend\models\ShopItems[] */
+/* @var $category app\models\ShopCategories */
+/* @var $pack app\models\ShopItemsPacks */
+/* @var $items app\models\ShopItems[] */
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">

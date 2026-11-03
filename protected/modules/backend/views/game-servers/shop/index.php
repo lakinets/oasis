@@ -4,8 +4,8 @@ use yii\helpers\Url;
 use app\modules\backend\models\Gs;
 
 /* @var $gs app\modules\backend\models\Gs */
-/* @var $categories app\modules\backend\models\ShopCategories[] */
-/* @var $topupConfig app\modules\backend\models\ShopTopupConfig */
+/* @var $categories app\models\ShopCategories[] */
+/* @var $topupConfig app\models\ShopTopupConfig */
 /* @var $mode string */
 
 $mode = $mode ?? 'shop';

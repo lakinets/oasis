@@ -3,10 +3,10 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\backend\models\ShopItems */
+/* @var $model app\models\ShopItems */
 /* @var $gs app\modules\backend\models\Gs */
-/* @var $category app\modules\backend\models\ShopCategories */
-/* @var $pack app\modules\backend\models\ShopItemsPacks */
+/* @var $category app\models\ShopCategories */
+/* @var $pack app\models\ShopItemsPacks */
 ?>
 
 <div class="container shop-item-form">

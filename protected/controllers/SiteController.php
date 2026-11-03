@@ -32,9 +32,16 @@ class SiteController extends Controller
     public function actionError()
     {
         $exception = Yii::$app->errorHandler->exception;
+        
         if ($exception !== null) {
+            // Если ошибка 404 (страница не найдена) и это попытка зайти в удаленный установщик
+            if ($exception instanceof \yii\web\NotFoundHttpException && strpos(Yii::$app->request->url, '/install') !== false) {
+                return $this->redirect(Yii::$app->homeUrl);
+            }
+
             return $this->render('error', ['exception' => $exception]);
         }
+        
         return $this->render('error', [
             'exception' => new NotFoundHttpException(Yii::t('controllers', 'Неизвестная ошибка.')),
         ]);

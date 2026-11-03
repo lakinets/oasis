@@ -1,5 +1,6 @@
 <?php
-namespace app\modules\backend\models;
+
+namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -8,7 +9,7 @@ class ShopItemsPacks extends ActiveRecord
 {
     public static function tableName()
     {
-        return 'shop_items_packs';
+        return '{{%shop_items_packs}}';
     }
 
     public function rules()
@@ -43,9 +44,6 @@ class ShopItemsPacks extends ActiveRecord
         return $this->hasOne(ShopCategories::class, ['id' => 'category_id']);
     }
 
-    /**
-     * Название пака с учётом языка. Fallback на RU.
-     */
     public function getTitle($lang = null): string
     {
         $lang = $lang ?: Yii::$app->language;
@@ -55,9 +53,6 @@ class ShopItemsPacks extends ActiveRecord
         return (string)$this->title;
     }
 
-    /**
-     * Описание пака с учётом языка. Fallback на RU.
-     */
     public function getDescription($lang = null): string
     {
         $lang = $lang ?: Yii::$app->language;

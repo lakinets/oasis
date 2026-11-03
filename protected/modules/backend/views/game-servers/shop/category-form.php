@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\backend\models\ShopCategories */
+/* @var $model app\models\ShopCategories */
 /* @var $gs    app\modules\backend\models\Gs */
 
 $this->title = $model->isNewRecord ? Yii::t('backend', 'Добавить категорию') : Yii::t('backend', 'Редактировать категорию');

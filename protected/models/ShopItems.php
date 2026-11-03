@@ -1,5 +1,6 @@
 <?php
-namespace app\modules\backend\models;
+
+namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -10,7 +11,7 @@ class ShopItems extends ActiveRecord
 {
     public static function tableName()
     {
-        return 'shop_items';
+        return '{{%shop_items}}';
     }
 
     public function behaviors()
@@ -56,7 +57,6 @@ class ShopItems extends ActiveRecord
         ];
     }
 
-    /* ---------- связи ---------- */
     public function getPack()
     {
         return $this->hasOne(ShopItemsPacks::class, ['id' => 'pack_id']);
@@ -67,52 +67,30 @@ class ShopItems extends ActiveRecord
         return $this->hasOne(AllItems::class, ['item_id' => 'item_id']);
     }
 
-    /* ---------- подготовка к сохранению ---------- */
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) {
             return false;
         }
 
-        if ($this->discount === null || $this->discount === '') {
-            $this->discount = 0;
-        }
-        if ($this->sort === null || $this->sort === '') {
-            $this->sort = 0;
-        }
-        if ($this->enchant === null || $this->enchant === '') {
-            $this->enchant = 0;
-        }
+        if ($this->discount === null || $this->discount === '') $this->discount = 0;
+        if ($this->sort === null || $this->sort === '') $this->sort = 0;
+        if ($this->enchant === null || $this->enchant === '') $this->enchant = 0;
 
-        // Описание: если у предмета пусто — берём из all_items (для каждого языка отдельно).
         $needRu = !$this->description;
         $needEn = !$this->description_en;
 
         if ($needRu || $needEn) {
             $ai = AllItems::findOne($this->item_id);
             if ($ai) {
-                if ($needRu && !empty($ai->description)) {
-                    $this->description = $ai->description;
-                }
-                if ($needEn && !empty($ai->description_en)) {
-                    $this->description_en = $ai->description_en;
-                }
+                if ($needRu && !empty($ai->description)) $this->description = $ai->description;
+                if ($needEn && !empty($ai->description_en)) $this->description_en = $ai->description_en;
             }
         }
 
         return true;
     }
 
-    /**
-     * Описание предмета с учётом языка.
-     *
-     * Приоритет:
-     *   1. shop_items.description_[lang]  — ручной override админа
-     *   2. all_items.description_[lang]   — из игровой базы
-     *   3. пусто (например, для Adena — нормально)
-     *
-     * @param string|null $lang 'ru' | 'en' | null (текущий язык приложения)
-     */
     public function getDescription($lang = null): string
     {
         $lang = $lang ?: Yii::$app->language;
@@ -132,13 +110,5 @@ class ShopItems extends ActiveRecord
         }
 
         return '';
-    }
-
-    /**
-     * @deprecated Оставлен для обратной совместимости. Используйте getDescription().
-     */
-    public function getFullDescription(): string
-    {
-        return $this->getDescription();
     }
 }

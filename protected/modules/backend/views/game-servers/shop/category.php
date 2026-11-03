@@ -4,8 +4,8 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $gs app\modules\backend\models\Gs */
-/* @var $category app\modules\backend\models\ShopCategories */
-/* @var $packs app\modules\backend\models\ShopItemsPacks[] */
+/* @var $category app\models\ShopCategories */
+/* @var $packs app\models\ShopItemsPacks[] */
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">

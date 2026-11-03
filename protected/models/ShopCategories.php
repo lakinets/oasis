@@ -1,20 +1,27 @@
 <?php
-namespace app\modules\backend\models;
+
+namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 class ShopCategories extends ActiveRecord
 {
     public static function tableName()
     {
-        return 'shop_categories';
+        return '{{%shop_categories}}';
     }
 
     public function behaviors()
     {
         return [
+            [
+                'class' => SluggableBehavior::class,
+                'attribute' => 'name',
+                'slugAttribute' => 'link',
+            ],
             [
                 'class' => TimestampBehavior::class,
                 'attributes' => [
@@ -31,6 +38,7 @@ class ShopCategories extends ActiveRecord
             [['name', 'link', 'sort', 'status', 'gs_id'], 'required'],
             [['sort', 'status', 'gs_id'], 'integer'],
             [['name', 'name_en', 'link'], 'string', 'max' => 255],
+            [['link'], 'unique', 'targetAttribute' => ['link', 'gs_id']],
             [['created_at'], 'safe'],
         ];
     }
@@ -51,10 +59,6 @@ class ShopCategories extends ActiveRecord
         return $this->hasMany(ShopItemsPacks::class, ['category_id' => 'id']);
     }
 
-    /**
-     * Название категории с учётом языка.
-     * Fallback: если EN пусто → показываем RU (для админки это удобнее, чем пустота).
-     */
     public function getName($lang = null): string
     {
         $lang = $lang ?: Yii::$app->language;

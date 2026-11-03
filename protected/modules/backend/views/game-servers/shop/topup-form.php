@@ -1,11 +1,12 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\modules\backend\models\ShopTopupConfig;
-use app\modules\backend\models\ShopTopupTier;
+// ИСПРАВЛЕНО: Теперь модели берутся из общей папки app\models
+use app\models\ShopTopupConfig;
+use app\models\ShopTopupTier;
 
 /* @var $gs app\modules\backend\models\Gs */
-/* @var $config app\modules\backend\models\ShopTopupConfig */
+/* @var $config app\models\ShopTopupConfig */
 
 $tiers = $config->isNewRecord ? [] : $config->tiers;
 $tiersArr = [];

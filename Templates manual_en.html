@@ -2,61 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Yii2 Template Creation Guide</title>
+    <title>Yii2 Template Creation Guide and Site Protection</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- Code Highlighting -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
     <style>
-        body { background-color: #f8f9fa; }
-        .section-card { border-left: 4px solid #0d6efd; }
+        /* Smooth scrolling for anchor links */
+        html { scroll-behavior: smooth; }
+        
+        /* Offset for headers so fixed navbar doesn't overlap them */
+        div[id] { scroll-margin-top: 80px; }
+
+        body { background-color: #f4f6f9; }
+        .section-card { border-left: 4px solid #0d6efd; transition: transform 0.2s; }
+        .section-card:hover { transform: translateY(-2px); box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08)!important; }
+        
         .code-toolbar { background:#282c34;color:#abb2bf;padding:.5rem 1rem;border-radius:.25rem .25rem 0 0;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px }
         pre { margin: 0 !important; border-radius: 0 0 .25rem .25rem; }
-        .toc { position: sticky; top: 1rem; }
-        .toc a { text-decoration: none; }
-        .toc ul { list-style: none; padding-left: 1rem; }
+        
+        /* --- Sidebar Navigation Styles --- */
+        .toc-container { position: sticky; top: 1rem; }
+        .toc { background: #ffffff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 1.5rem; }
+        .toc-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem; }
+        
+        .toc-link { display: flex; align-items: center; padding: 0.6rem 1rem; color: #495057; text-decoration: none; border-radius: 8px; font-size: 0.95rem; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .toc-link:hover { background-color: #f8f9fa; color: #0d6efd; border-left-color: #0d6efd; padding-left: 1.2rem; }
+        .toc-link i { width: 24px; text-align: center; margin-right: 8px; color: #adb5bd; transition: color 0.2s; }
+        .toc-link:hover i { color: #0d6efd; }
+        
+        /* Active state (managed by JS) */
+        .toc-link.active { background-color: #e9f0ff; color: #0d6efd !important; font-weight: 600; border-left-color: #0d6efd; }
+        .toc-link.active i { color: #0d6efd !important; }
+        
+        /* Special styles for important sections */
+        .toc-link.special { color: #198754; font-weight: 600; }
+        .toc-link.special i { color: #198754; }
+        .toc-link.special:hover { background-color: #d1e7dd; border-left-color: #198754; }
+        
+        .toc-link.special.active { background-color: #d1e7dd; color: #198754 !important; border-left-color: #198754; }
+        .toc-link.special.active i { color: #198754 !important; }
     </style>
 </head>
 <body class="p-0 m-0">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-file-code me-2"></i>Yii2 Template Structure</a>
+        <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-book-open me-2"></i>Project Knowledge Base</a>
     </div>
 </nav>
 
-<div class="container my-4">
+<div class="container my-5">
     <div class="row">
-        <!-- Table of Contents -->
+        
+        <!-- ================= TABLE OF CONTENTS ================= -->
         <div class="col-lg-3 d-none d-lg-block">
-            <div class="toc bg-white p-3 rounded shadow-sm">
-                <h6 class="fw-bold text-uppercase text-muted mb-3">Contents</h6>
-                <ul class="nav flex-column">
-                    <li><a href="#intro" class="nav-link px-0 py-1 text-dark">Introduction</a></li>
-                    <li><a href="#structure" class="nav-link px-0 py-1 text-dark">Folder Structure</a></li>
-                    <li><a href="#main" class="nav-link px-0 py-1 text-dark">main.php</a></li>
-                    <li><a href="#main-public" class="nav-link px-0 py-1 text-dark">main-public.php</a></li>
-                    <li><a href="#css" class="nav-link px-0 py-1 text-dark">CSS Conventions</a></li>
-                    <li><a href="#grid" class="nav-link px-0 py-1 text-dark">Grid & Utility</a></li>
-                    <li><a href="#alerts" class="nav-link px-0 py-1 text-dark">Alerts/Buttons</a></li>
-                </ul>
+            <div class="toc-container">
+                <div class="toc">
+                    <div class="toc-title">Contents</div>
+                    <nav class="nav flex-column" id="toc-nav">
+                        <a href="#intro" class="toc-link"><i class="fa-solid fa-circle-info"></i> Introduction</a>
+                        <a href="#how-it-works" class="toc-link"><i class="fa-solid fa-wand-magic-sparkles"></i> How Themes Work</a>
+                        <a href="#structure" class="toc-link"><i class="fa-solid fa-folder-tree"></i> Folder Structure</a>
+                        <a href="#layouts" class="toc-link"><i class="fa-solid fa-layer-group"></i> Layouts</a>
+                        
+                        <hr class="my-2 text-muted">
+                        <div class="small text-uppercase fw-bold text-muted px-3 mb-2 mt-1">Functionality</div>
+                        
+                        <a href="#payments" class="toc-link special"><i class="fa-solid fa-credit-card"></i> Payment Systems</a>
+                        <a href="#asn-filter" class="toc-link special"><i class="fa-solid fa-shield-halved"></i> ASN Filter (Protection)</a>
+                        
+                        <hr class="my-2 text-muted">
+                        <a href="#css" class="toc-link"><i class="fa-brands fa-css3-alt"></i> CSS Classes</a>
+                        <a href="#grid" class="toc-link"><i class="fa-solid fa-table-cells"></i> Grid & Utility</a>
+                    </nav>
+                </div>
             </div>
         </div>
 
-        <!-- Content -->
+        <!-- ================= CONTENT ================= -->
         <div class="col-lg-9">
+            
+            <!-- Introduction -->
             <div class="card shadow-sm section-card mb-4" id="intro">
                 <div class="card-body">
                     <h2 class="mb-3"><i class="fa-solid fa-circle-info text-primary me-2"></i>Introduction</h2>
-                    <p class="mb-0">Creating a custom template begins by creating a folder in the <code>themes</code> directory.
-                        The folder name (e.g., <code>test</code>) automatically becomes the template name in the admin settings; you don't need to configure anything else.</p>
+                    <p class="mb-0">Creating a custom template in Yii2 starts with a simple folder. 
+                        Just create a directory in <code>themes/</code> (e.g., <code>themes/mytheme</code>), 
+                        and the system will automatically find it. The folder name becomes the template name in the admin settings.</p>
                 </div>
             </div>
 
+            <!-- How Themes Work -->
+            <div class="card shadow-sm section-card mb-4" id="how-it-works">
+                <div class="card-body">
+                    <h4 class="mb-3"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i>How Theme Overrides Work</h4>
+                    <p>Yii2 uses a principle of <strong>cascading fallback</strong>. This means you can 
+                    override <em>only those parts of the site</em> you want to change, without copying the entire codebase.</p>
+                    
+                    <div class="alert alert-secondary">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>
+                        If Yii2 needs to render the page <code>site/index.php</code>, it searches for it in the following order:
+                    </div>
+
+                    <ol class="mb-0">
+                        <li class="mb-2">Checks the file <code>themes/YOUR_THEME/views/site/index.php</code>. If it exists, it uses it.</li>
+                        <li class="mb-2">If the file is missing, it checks <code>protected/views/site/index.php</code> (base system views).</li>
+                        <li>If it's not there either, it throws an error.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Folder Structure -->
             <div class="card shadow-sm section-card mb-4" id="structure">
                 <div class="card-body">
                     <h4 class="mb-3"><i class="fa-solid fa-folder-tree text-primary me-2"></i>Folder Structure</h4>
@@ -70,219 +131,205 @@
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <h6 class="text-muted">views/layouts/</h6>
+                            <h6 class="text-muted">views/</h6>
                             <ul class="list-unstyled ms-3">
-                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main.php — main
-                                    layout
-                                </li>
-                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> main-public.php —
-                                    public layout
-                                </li>
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> layouts/ — page skeletons</li>
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> site/ — home, info pages</li>
+                                <li><i class="fa-solid fa-file-code fa-fw text-secondary me-1"></i> cabinet/ — user dashboard</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm section-card mb-4" id="main">
+            <!-- Layouts -->
+            <div class="card shadow-sm section-card mb-4" id="layouts">
                 <div class="card-body">
-                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main.php</h4>
-                    <p>The main layout responsible for the overall site structure: <code>&lt;html&gt;</code>,
-                        <code>&lt;head&gt;</code>, header, footer, CSS/JS inclusion, and rendering the page content.</p>
+                    <h4 class="mb-3"><i class="fa-solid fa-layer-group text-primary me-2"></i>Layouts (main.php & main-public.php)</h4>
+                    <p>Layout is the "skeleton" of the site (HTML tags, header, footer). The project uses two main skeletons:</p>
+                    
+                    <h6 class="mt-3"><i class="fa-solid fa-file-code text-secondary me-1"></i> main.php</h6>
+                    <p class="small mb-2">Main layout. Loads heavy scripts, styles for the authorized zone (Cabinet, Shop, Admin) and outputs the <code>nav-mini</code> navigation menu.</p>
                     <div class="code-toolbar">PHP (Yii2)</div>
                     <pre><code class="language-php">&lt;?php
 $this->beginPage();
 $this->head();
 $this->beginBody();
-    /* Header, content, footer */
-    echo $content;
+    echo $this->render('//layouts/_header'); 
+    echo $content; // Page content is inserted here
 $this->endBody();
 $this->endPage();</code></pre>
-                    <ul class="list-unstyled mt-3">
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$this->title</code> —
-                            page title
-                        </li>
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>$content</code> —
-                            content of the specific view file
-                        </li>
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> <code>Url::base()</code> and
-                            <code>Url::to()</code> — safe URL generation
-                        </li>
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>
-                            <code>Yii::$app->user->isGuest</code> — conditional authorization logic
-                        </li>
-                    </ul>
+
+                    <h6 class="mt-4"><i class="fa-solid fa-file-code text-secondary me-1"></i> main-public.php</h6>
+                    <p class="small mb-0">Public layout for the homepage and landing pages. It does not contain the cabinet menu and uses lightweight markup.</p>
                 </div>
             </div>
 
-            <div class="card shadow-sm section-card mb-4" id="main-public">
+            <!-- PAYMENT SYSTEMS -->
+            <div class="card shadow-sm border-success mb-4" id="payments">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-credit-card me-2"></i>Payment Systems</h4>
+                    <span class="badge bg-light text-success">Critically Important</span>
+                </div>
                 <div class="card-body">
-                    <h4 class="mb-3"><i class="fa-solid fa-file-code text-primary me-2"></i>main-public.php</h4>
-                    <p>Layout for public pages (home, info, downloads) without personal account logic.</p>
-                    <div class="code-toolbar">PHP (Yii2)</div>
-                    <pre><code class="language-php">&lt;body class="layout-public" data-route="..."&gt;</code></pre>
-                    <ul class="list-unstyled mt-3">
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> The
-                            <code>layout-public</code> class allows applying different styles and JS logic
+                    <p class="lead">The project supports 8 payment gateways. The architecture is divided into two parts: admin management (for the owner) and the code core (for the developer).</p>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs mb-3" id="paymentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab"><i class="fa-solid fa-user-gear me-1"></i> For Administrator</button>
                         </li>
-                        <li><i class="fa-solid fa-check-circle text-success me-2"></i> The
-                            <code>data-route</code> attribute helps determine the current route on the frontend
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold" id="dev-tab" data-bs-toggle="tab" data-bs-target="#dev" type="button" role="tab"><i class="fa-solid fa-code me-1"></i> For Developer</button>
                         </li>
+                    </ul>
+
+                    <div class="tab-content" id="paymentTabsContent">
+                        
+                        <!-- ===== ADMIN TAB ===== -->
+                        <div class="tab-pane fade show active" id="admin" role="tabpanel">
+                            <h6 class="fw-bold mt-3"><i class="fa-solid fa-gear text-secondary me-2"></i>1. Where to enable and configure?</h6>
+                            <p>Go to <strong>Admin -> Payment Systems</strong>. You will see cards for all 8 gateways. Each card has a status of <span class="badge bg-secondary">OFF</span> or <span class="badge bg-success">LIVE</span>.</p>
+                            <ul>
+                                <li>Click <strong>"Configure"</strong> on the desired gateway.</li>
+                                <li>Enter the API keys. If testing, enable the <strong>"Test Mode"</strong> toggle (keys <code>sk_test_...</code>).</li>
+                                <li>Click <strong>"Check"</strong> — the system will make a request to the gateway's API and show if the keys are valid.</li>
+                                <li>Click <strong>"Enable"</strong> so the gateway appears on the deposit page.</li>
+                            </ul>
+
+                            <h6 class="fw-bold mt-4"><i class="fa-solid fa-link text-secondary me-2"></i>2. Webhooks (Critically Important!)</h6>
+                            <div class="alert alert-danger">
+                                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                <strong>Warning!</strong> Without setting up Webhooks, the balance will not be credited. You need to log into the payment system's dashboard and specify the notification URL.
+                            </div>
+                            <p>Copy the required URL and paste it into your gateway's control panel:</p>
+                            <table class="table table-sm table-bordered table-striped">
+                                <thead class="table-dark">
+                                    <tr><th>Gateway</th><th>Webhook URL</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Stripe</td><td><code>https://your-site/cabinet/deposit/stripe-callback</code> (event <code>checkout.session.completed</code>)</td></tr>
+                                    <tr><td>Robokassa</td><td><code>https://your-site/cabinet/deposit/robokassa-callback</code> (Result URL)</td></tr>
+                                    <tr><td>Unitpay</td><td><code>https://your-site/cabinet/deposit/unitpay-callback</code></td></tr>
+                                    <tr><td>PayOp</td><td><code>https://your-site/cabinet/deposit/payop-callback</code></td></tr>
+                                    <tr><td>NOWPayments</td><td><code>https://your-site/cabinet/deposit/nowpayments-callback</code></td></tr>
+                                    <tr><td>Interkassa</td><td><code>https://your-site/cabinet/deposit/interkassa-callback</code></td></tr>
+                                </tbody>
+                            </table>
+
+                            <h6 class="fw-bold mt-4"><i class="fa-solid fa-coins text-secondary me-2"></i>3. Fee Policy</h6>
+                            <p class="mb-0">The system is set up for <strong>"Fee Absorption"</strong>. If a player deposits 100 RUB, they get exactly 100 RUB. The gateway fee is covered by the project (handled in <code>DepositController</code>).</p>
+                        </div>
+
+                        <!-- ===== DEVELOPER TAB ===== -->
+                        <div class="tab-pane fade" id="dev" role="tabpanel">
+                            <h6 class="fw-bold mt-3"><i class="fa-solid fa-sitemap text-secondary me-2"></i>1. Architecture (Lifecycle)</h6>
+                            <ol class="mb-3">
+                                <li><strong>Creation:</strong> Player clicks "Pay" -> <code>DepositController::actionCreate</code> creates a DB record with status <code>new</code>.</li>
+                                <li><strong>Redirect:</strong> <code>Gateway::buildRedirectUrl()</code> is called, the player is sent to the gateway's site.</li>
+                                <li><strong>Payment:</strong> The player pays.</li>
+                                <li><strong>Webhook:</strong> The gateway sends a POST request to <code>cabinet/deposit/{provider}-callback</code>.</li>
+                                <li><strong>Validation:</strong> <code>Gateway::handleCallback()</code> verifies the signature (HMAC/SHA256).</li>
+                                <li><strong>Credit:</strong> <code>DepositController::finalizeAndRespond()</code> delivers items/balance and changes the status to <code>paid</code>.</li>
+                            </ol>
+
+                            <h6 class="fw-bold mt-4"><i class="fa-solid fa-shield-halved text-secondary me-2"></i>2. Callback Protection (CSRF)</h6>
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-bug me-2"></i>
+                                <strong>Important!</strong> All <code>*-callback</code> methods in <code>DepositController</code> must have <code>$this->enableCsrfValidation = false;</code> and be accessible to guests (<code>'roles' => ['?']</code>) in <code>AccessControl</code>. Otherwise, the gateway will receive a 403 error.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASN FILTER -->
+            <div class="card shadow-sm border-primary mb-4" id="asn-filter">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fa-solid fa-shield-halved me-2"></i>ASN Filter: Smart Bot Protection</h4>
+                </div>
+                <div class="card-body">
+                    <p>The project implements an advanced protection system against parsers and brute-force attacks. It does not block humans but creates a "trap" for bots.</p>
+                    
+                    <h6 class="fw-bold mt-3">1. How does it work?</h6>
+                    <ul>
+                        <li>Every time a user visits the site, the system determines the <strong>ASN</strong> (Autonomous System Number) of their IP address.</li>
+                        <li>If the IP belongs to a <strong>home or mobile ISP</strong> (Comcast, AT&T, Vodafone, etc.) — the user gets unrestricted access.</li>
+                        <li>If the IP belongs to a <strong>data center, hosting, or VPN</strong> — the system enables the <strong>"Shadow Ban"</strong>.</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-3">2. What is a "Shadow Ban"?</h6>
+                    <div class="alert alert-warning">
+                        <i class="fa-solid fa-ghost me-2"></i>
+                        We <strong>do not block</strong> the bot (it won't know it's caught). Instead, we feed it a <strong>fake session and "Zombie Cookies"</strong>. It thinks it successfully hacked the site, but all its actions occur in an isolated sandbox.
+                    </div>
+
+                    <h6 class="fw-bold mt-3">3. Admin Management</h6>
+                    <p class="mb-0">Go to <strong>Admin -> ASN Whitelist</strong>. There you can:</p>
+                    <ul class="mb-0">
+                        <li><i class="fa-solid fa-toggle-on text-success me-1"></i> Enable/disable the entire filter.</li>
+                        <li><i class="fa-solid fa-globe text-primary me-1"></i> Block an entire continent or country.</li>
+                        <li><i class="fa-solid fa-magnifying-glass text-secondary me-1"></i> Find a specific provider and disable only them.</li>
                     </ul>
                 </div>
             </div>
 
+            <!-- CSS -->
             <div class="card shadow-sm section-card mb-4" id="css">
                 <div class="card-body">
-                    <h4 class="mb-3"><i class="fa-solid fa-css3-alt text-primary me-2"></i>CSS Conventions</h4>
+                    <h4 class="mb-3"><i class="fa-brands fa-css3-alt text-primary me-2"></i>Main CSS Classes</h4>
                     <div class="row">
                         <div class="col-md-6">
-                            <h6>Auth / Public</h6>
+                            <h6>Cabinet / Shop</h6>
                             <ul class="list-unstyled small">
-                                <li><code>.auth-form</code> — auth forms container</li>
-                                <li><code>.login-form</code> — login form</li>
-                                <li><code>.form-title</code> — form title</li>
-                                <li><code>.captcha-inline</code> — horizontal captcha layout</li>
-                            </ul>
-                            <h6 class="mt-3">Backend</h6>
-                            <ul class="list-unstyled small">
-                                <li><code>.backend-default-index</code> — admin dashboard</li>
-                                <li><code>.login-box</code> — centered login form container</li>
-                                <li><code>.box</code> — general block container</li>
-                                <li><code>.box-primary</code> — primary block with emphasis</li>
+                                <li><code>.nav-mini</code> — horizontal cabinet menu</li>
+                                <li><code>.pack-items</code> — list of items in a pack</li>
+                                <li><code>.topup-select</code> — dropdown for deposit</li>
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <h6>Shop / Game Servers</h6>
+                            <h6>Notifications</h6>
                             <ul class="list-unstyled small">
-                                <li><code>.game-servers-index</code> — server list</li>
-                                <li><code>.shop-category</code> — shop category container</li>
-                                <li><code>.pack-items</code> — list of items inside a pack</li>
-                                <li><code>.item-form</code> — item form</li>
-                            </ul>
-                            <h6 class="mt-3">Bonuses</h6>
-                            <ul class="list-unstyled small">
-                                <li><code>.bonuses-index</code> — bonus list page</li>
-                                <li><code>.bonuses-form</code> — create/edit form</li>
-                                <li><code>.bonus-codes-index</code> — bonus code list</li>
+                                <li><code>.alert-success</code> — success (green)</li>
+                                <li><code>.alert-danger</code> — error (red)</li>
+                                <li><code>.alert-warning</code> — warning (yellow)</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Grid -->
             <div class="card shadow-sm section-card mb-4" id="grid">
                 <div class="card-body">
-                    <h4 class="mb-3"><i class="fa-solid fa-th text-primary me-2"></i>Grid & Utility</h4>
+                    <h4 class="mb-3"><i class="fa-solid fa-table-cells text-primary me-2"></i>Bootstrap Grid</h4>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered align-middle">
                             <thead class="table-light">
                             <tr>
                                 <th>Class</th>
                                 <th>Purpose</th>
-                                <th>Where used</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td><code>.row</code></td>
-                                <td>Grid row</td>
-                                <td>Forms, lists, blocks with columns</td>
-                            </tr>
-                            <tr>
-                                <td><code>.col-md-3</code></td>
-                                <td>Left auxiliary column</td>
-                                <td>Menu, filters, navigation</td>
-                            </tr>
-                            <tr>
-                                <td><code>.col-md-9</code></td>
-                                <td>Main content</td>
-                                <td>Page working area</td>
-                            </tr>
-                            <tr>
-                                <td><code>.col-lg-3</code></td>
-                                <td>Fixed left column on large screens</td>
-                                <td>Forms (label)</td>
-                            </tr>
-                            <tr>
-                                <td><code>.col-lg-9</code></td>
-                                <td>Right part of the form (inputs)</td>
-                                <td>Bonus, server, ticket forms</td>
-                            </tr>
-                            <tr>
-                                <td><code>.d-flex</code></td>
-                                <td>Flex container</td>
-                                <td>Control panels, headers + buttons</td>
-                            </tr>
-                            <tr>
-                                <td><code>.justify-content-between</code></td>
-                                <td>Spreads elements to the edges</td>
-                                <td>Header on the left — buttons on the right</td>
-                            </tr>
-                            <tr>
-                                <td><code>.align-items-center</code></td>
-                                <td>Vertical center alignment</td>
-                                <td>Toolbars, list rows</td>
-                            </tr>
-                            <tr>
-                                <td><code>.mb-3</code></td>
-                                <td>Bottom margin (small)</td>
-                                <td>Forms, headers, lists</td>
-                            </tr>
-                            <tr>
-                                <td><code>.mb-4</code></td>
-                                <td>Medium bottom margin</td>
-                                <td>Settings sections, forms</td>
-                            </tr>
-                            <tr>
-                                <td><code>.mb-5</code></td>
-                                <td>Large bottom margin</td>
-                                <td>Separation of large sections</td>
-                            </tr>
+                            <tr><td><code>.row</code></td><td>Wrapper for creating a grid row</td></tr>
+                            <tr><td><code>.col-md-6</code></td><td>Half screen width on desktop</td></tr>
+                            <tr><td><code>.d-flex</code></td><td>Flex container for aligning elements</td></tr>
+                            <tr><td><code>.justify-content-between</code></td><td>Spreads elements to the edges</td></tr>
+                            <tr><td><code>.align-items-center</code></td><td>Vertical center alignment</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm section-card mb-4" id="alerts">
-                <div class="card-body">
-                    <h4 class="mb-3"><i class="fa-solid fa-bell text-primary me-2"></i>Alerts and Buttons</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Alerts</h6>
-                            <div class="alert alert-success" role="alert">Successful action</div>
-                            <div class="alert alert-danger" role="alert">Error</div>
-                            <p class="text-danger mt-2">Red text — <code>.text-danger</code></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Buttons</h6>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                                <button class="btn btn-primary">btn-primary</button>
-                                <button class="btn btn-success">btn-success</button>
-                                <button class="btn btn-danger">btn-danger</button>
-                                <button class="btn btn-warning">btn-warning</button>
-                            </div>
-                            <p class="small text-muted">Use <code>.btn-*</code> to denote actions:
-                                primary — main, success — create, danger — delete, warning — status.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
-                <i class="fa-solid fa-lightbulb fa-xl me-3"></i>
-                <div>
-                    <strong>Tip:</strong> save the file in <code>\protected\l2j</code> and follow class naming conventions — this will make template maintenance and expansion easier in the future.
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<footer class="bg-light text-center py-4 mt-5 border-top">
+<footer class="bg-white text-center py-4 mt-5 border-top">
     <div class="container text-muted small">
-        Powered by Yii2 & Bootstrap 5 | Template Creation Guide
+        Powered by Yii2 & Bootstrap 5 | Project Knowledge Base
     </div>
 </footer>
 
@@ -290,5 +337,42 @@ $this->endPage();</code></pre>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<!-- ScrollSpy Script for dynamic menu highlighting -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('div[id]');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -70% 0px', // Triggers when section appears near the top
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    
+                    // Remove active class from all
+                    tocLinks.forEach(link => {
+                        link.classList.remove('active');
+                    });
+
+                    // Add active to the corresponding link
+                    const activeLink = document.querySelector(`.toc-link[href="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    });
+</script>
 </body>
 </html>
